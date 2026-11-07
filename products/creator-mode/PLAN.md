@@ -8,13 +8,13 @@
 
 | Item | What it is |
 | --- | --- |
-| **Creator Quest.html** | The kid-facing game. Opens in any browser, works offline (3D previews need internet). A Duolingo-style path of 29 steps (8 big games + 21 skill quests), XP + 10 ranks, daily streak, 14 badges, AI Brain quizzes, Boss Bug challenges, Prompt Lab mini-game, Dream Game Designer, Vault browser, certificate. Progress saves in the browser. |
+| **Creator Quest.html** | The kid-facing game. Opens in any browser, works offline (3D previews need internet). A Duolingo-style path of 32 steps (3-quest warm-up, 8 big games, 21 skill quests), kid profiles, simplified Studio drawings on every click-step, everything unlocking one step at a time, Vault packs unlocked per big game, XP + 10 ranks, daily streak, 15 badges, AI Brain quizzes, Boss Bug challenges, Prompt Lab mini-game, Dream Game Designer, Vault browser, certificate. Progress saves in the browser. |
 | **Creator Vault/** | 118 Roblox models in 10 packs (.rbxmx, Insert from File). 46 have working scripts: checkpoints, jump pads, moving platforms, coins, gems, portals, follow-you pets, swords, coils, zombie spawner, talking NPC, mini tycoon. |
 | **Rescue Scripts/** | A tested, single-script build of each of Missions 1–7. |
 | **Parent Guide.pdf** | 5 pages: co-pilot rule, setup, mission list, troubleshooting, safety, Creator Hours chart. |
 
 ### The path
-8 units. Each unit ends with a big game. From Unit 2 on, 3 skill quests (10–15 min: learn → try one prompt in Studio → one quiz question) come first and prepare for that game. Every unit has a "Model Maker" quest about getting detailed 3D models from prompts.
+Unit 0 warm-up: Get Roblox Studio · Studio Tour · Hello, Claude (unlocks the Vault + Nature pack). Then 8 units. Each unit ends with a big game. From Unit 2 on, 3 skill quests (10–15 min: learn → try one prompt in Studio → one quiz question) come first and prepare for that game. Every unit has a "Model Maker" quest about getting detailed 3D models from prompts.
 
 | Before | Skill quests |
 | --- | --- |
@@ -26,7 +26,11 @@
 | Boss Battle | Health & Damage · Special Effects · Model Maker: Boss Design |
 | Dream Game | World Builder (terrain) · Game Designer Brain · Polish & Publish |
 
-Quest content lives in `app/quests.js`.
+Quest content lives in `app/quests.js`, app logic in `app/app.js`, Studio drawings in `app/figures.js`.
+
+Unlocks: Vault + Nature after warm-up · Obby + Prompt Lab after Game 1 · Collectibles after 2 · Props + Game Systems after 3 · Spooky + Tools after 4 · Pets after 5 · Sci-Fi after 6 · Buildings after 7 · certificate after 8.
+
+The Studio pictures are drawings, not real screenshots. Swap in real screenshots later if you want (see `app/figures.js`).
 
 ### The big games (each builds a whole game system from one "Mega Prompt")
 1. Lava Tower: 25-stage spiral obby (elevators, spinning lasers, vanishing blocks, checkpoints, win pad). *AI = prediction.*

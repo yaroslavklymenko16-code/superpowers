@@ -195,6 +195,114 @@
   .cont { width: 100%; font-size: 1.15rem; padding: 14px; }
   .medal svg { width: 34px; height: 34px; fill: none; stroke: var(--ink); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 
+
+  /* v4: profiles, steps, figures, rewards */
+  button.me { background: none; border: 0; padding: 4px 6px; border-radius: 12px; cursor: pointer; text-align: left; }
+  button.me:hover { background: var(--panel); }
+  button.me:focus-visible { outline: 3px solid var(--yellow); }
+  .chip.is-locked { opacity: .55; }
+  .chip.is-locked::before { content: ""; display: inline-block; width: 9px; height: 9px; margin-right: 6px; border: 2px solid currentColor; border-radius: 2px; vertical-align: 0; }
+  .profiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 14px; width: 100%; max-width: 760px; margin-top: 10px; }
+  .profile { cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 20px 12px; background: var(--panel); border: 3px solid var(--ink); border-radius: 18px; box-shadow: 0 6px 0 var(--ink); transition: transform .1s; }
+  .profile:hover { transform: translateY(-3px); }
+  .profile:focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
+  .profile b { font: 700 1.2rem var(--display); }
+  .profile.add { border-style: dashed; background: transparent; }
+  .avatar.big { width: 72px; height: 72px; border-radius: 18px; }
+  .avatar.big::before, .avatar.big::after { top: 22px; width: 10px; height: 14px; }
+  .avatar.big::before { left: 18px; } .avatar.big::after { right: 18px; }
+  .avatar.plus { display: grid; place-items: center; background: var(--panel-2); font: 700 2rem var(--display); }
+  .avatar.plus::before, .avatar.plus::after { display: none; }
+  .path-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; max-width: 600px; margin: 0 auto; }
+  .continue-card { display: flex; align-items: center; gap: 14px; width: 100%; max-width: 600px; margin: 16px auto 0; padding: 14px 16px; cursor: pointer; text-align: left; background: var(--panel); border: 3px solid var(--ink); border-left: 10px solid var(--c, var(--yellow)); border-radius: 16px; box-shadow: 0 6px 0 var(--ink); }
+  .continue-card:focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
+  .cc-icon { width: 48px; height: 48px; flex: none; border-radius: 12px; border: 3px solid var(--ink); background: var(--c); display: grid; place-items: center; }
+  .cc-icon svg { width: 28px; height: 28px; fill: none; stroke: var(--ink); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  .cc-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+  .cc-text b { font: 700 1.2rem var(--display); }
+  .cc-go { font: 700 1rem var(--display); background: var(--yellow); color: var(--ink); border: 3px solid var(--ink); border-radius: 10px; padding: 6px 12px; white-space: nowrap; }
+  .unit.locked { filter: grayscale(.7) brightness(.75); }
+  .plabel.dim { opacity: .55; }
+  .lesson-count { font: 600 .8rem var(--mono); color: var(--muted); white-space: nowrap; }
+  .lesson-foot { display: flex; gap: 10px; align-items: center; }
+  .lesson-foot .cont { flex: 1; }
+  .lesson-body .mhead { margin-bottom: 4px; }
+  .tip.new { animation: pop .3s ease-out; }
+  .steps { display: flex; flex-direction: column; gap: 10px; }
+  .step { display: grid; grid-template-columns: 40px 1fr; gap: 12px; align-items: start; padding: 12px; border-radius: 14px; border: 3px solid var(--ink); background: var(--panel-2); }
+  .step > * { min-width: 0; }
+  .step-dot { width: 36px; height: 36px; border-radius: 50%; border: 3px solid var(--ink); display: grid; place-items: center; background: var(--edge); font: 700 1rem var(--display); }
+  .step-dot svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+  .step.done { background: transparent; border-color: rgba(54,214,122,.5); }
+  .step.done .step-dot { background: var(--green); color: var(--ink); }
+  .step.done p { color: var(--muted); }
+  .step.active { border-color: var(--yellow); box-shadow: 0 0 0 3px rgba(255,210,63,.25); }
+  .step.active .step-dot { background: var(--yellow); color: var(--ink); }
+  .step.locked { opacity: .45; }
+  .step.locked .step-dot { color: var(--muted); }
+  .step-main { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
+  .step-main p { font-weight: 700; padding-top: 5px; }
+  .pcard { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 14px; border: 3px solid var(--ink); background: var(--panel-2); }
+  .pcard svg { width: 22px; height: 22px; flex: none; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+  .pcard.done { border-color: rgba(54,214,122,.5); background: transparent; }
+  .pcard.done svg { stroke: var(--green); }
+  .pcard.locked { opacity: .5; }
+  .pcard b { font-family: var(--display); }
+  .pcode { display: block; font: .85rem/1.5 var(--mono); background: var(--bg-2); padding: 10px; border-radius: 10px; white-space: pre-wrap; color: #d9ffe9; }
+  .dream-ta { width: 100%; font: 1rem var(--body); padding: 12px; border-radius: 12px; border: 3px solid var(--ink); background: var(--bg-2); color: var(--fg); }
+  details.help summary { color: var(--yellow); }
+  .dots { display: flex; gap: 6px; } .dots i { width: 12px; height: 12px; border-radius: 50%; background: var(--edge); border: 2px solid var(--ink); } .dots i.on { background: var(--green); } .dots i.cur { background: var(--yellow); }
+  .big-medal { width: 84px !important; height: 84px !important; }
+  .big-medal svg { width: 44px; height: 44px; fill: none; stroke: var(--ink); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  .unlocks { width: 100%; display: flex; flex-direction: column; gap: 8px; background: var(--bg-2); border: 3px solid var(--ink); border-radius: 14px; padding: 12px; }
+  .unlock-item { display: flex; align-items: center; gap: 10px; font: 700 1.05rem var(--display); color: var(--yellow); animation: pop .4s ease-out both; }
+  .unlock-item svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+  .locked-packs { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+  .lpack { display: flex; flex-direction: column; gap: 4px; padding: 14px; border: 3px dashed #3b4a6b; border-radius: 14px; }
+  .lpack svg { width: 22px; height: 22px; fill: none; stroke: var(--muted); stroke-width: 2.4; }
+  .lpack b { font-family: var(--display); }
+  .cert-locked { filter: grayscale(1); opacity: .6; }
+  /* Studio drawings */
+  .fig { margin: 0; width: 100%; max-width: 520px; background: #2b2d31; border: 3px solid var(--ink); border-radius: 12px; overflow: hidden; color: #e4e6eb; font: 13px/1.35 var(--body); box-shadow: 0 4px 0 var(--ink); }
+  .fg-bar { display: flex; align-items: center; gap: 6px; padding: 6px 10px; background: #1e1f22; font: 600 11px var(--mono); color: #9aa0aa; }
+  .fg-bar i { width: 9px; height: 9px; border-radius: 50%; background: #4a4d55; }
+  .fg-bar span { margin-left: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .fg-body { padding: 10px; display: flex; flex-direction: column; gap: 8px; overflow-x: auto; }
+  .fig figcaption { padding: 8px 12px; background: var(--yellow); color: var(--ink); font: 700 .9rem var(--display); }
+  .fg-row { display: flex; gap: 10px; align-items: flex-start; }
+  .fg-side { display: flex; flex-direction: column; gap: 6px; min-width: 76px; } .fg-side span { color: #9aa0aa; }
+  .fg-tiles { display: grid; grid-template-columns: repeat(2, minmax(80px, 1fr)); gap: 8px; flex: 1; }
+  .fg-tile { position: relative; background: #383a40; border-radius: 8px; padding: 6px; display: flex; flex-direction: column; gap: 4px; font-weight: 700; font-size: 12px; }
+  .fg-tile i { display: block; height: 34px; border-radius: 5px; }
+  .fg-sky { background: linear-gradient(#7cc4ff 55%, #7a8a99 55%); } .fg-grass { background: linear-gradient(#9bd4ff 50%, #5fae4b 50%); } .fg-city { background: linear-gradient(#9bd4ff 40%, #8a8f98 40%); }
+  .fg-tabs { display: flex; gap: 12px; padding: 0 2px 6px; border-bottom: 1px solid #3c3f45; } .fg-tabs span { color: #9aa0aa; }
+  .fg-ribbon { display: flex; gap: 6px; flex-wrap: wrap; }
+  .fg-btn { background: #383a40; border-radius: 6px; padding: 6px 9px; font-weight: 700; font-size: 12px; white-space: nowrap; }
+  .fg-play { color: #7dffb0; }
+  .fg-panel { background: #232428; border-radius: 8px; padding: 6px; min-width: 190px; } .fg-panel.fg-wide { width: 100%; }
+  .fg-ptitle { font: 700 11px var(--mono); color: #9aa0aa; text-transform: uppercase; letter-spacing: .08em; padding: 2px 4px 6px; }
+  .fg-item { padding: 3px 6px; border-radius: 5px; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
+  .fg-prop { display: grid; grid-template-columns: 1fr 1fr; padding: 4px 6px; border-radius: 5px; gap: 8px; } .fg-prop span:first-child { color: #9aa0aa; }
+  .fg-sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: #ff5fa8; vertical-align: -1px; }
+  .fg-plus { margin-left: auto; width: 18px; height: 18px; border-radius: 4px; display: grid; place-items: center; background: #4a4d55; font-weight: 700; }
+  .fg-menu { background: #383a40; border-radius: 8px; padding: 4px; box-shadow: 0 4px 12px rgba(0,0,0,.4); margin-top: 92px; min-width: 130px; }
+  .fg-mi { padding: 5px 8px; border-radius: 5px; white-space: nowrap; position: relative; }
+  .fg-code { background: #1e1f22; border-radius: 6px; padding: 8px; font: 12px/1.7 var(--mono); }
+  .fg-code > div { display: flex; align-items: center; gap: 8px; }
+  .fg-ln { color: #5d6370; width: 14px; } .fg-dim { color: #8a909a; }
+  .fg-cursor { display: inline-block; width: 2px; height: 14px; background: #fff; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .fg-err { color: #ff7b7b; white-space: normal; }
+  .fg-hot { outline: 2px solid var(--yellow); outline-offset: 1px; border-radius: 5px; background-color: rgba(255,210,63,.18); }
+  .fg-hotrow { background: rgba(255,210,63,.18); outline: 2px solid var(--yellow); }
+  .fg-tag { font: 700 10px var(--display); font-style: normal; background: var(--yellow); color: var(--ink); border-radius: 6px; padding: 1px 6px; margin-left: 6px; white-space: nowrap; }
+  .fg-tile .fg-tag { position: absolute; top: -8px; right: -6px; }
+  .fg-chat { display: flex; flex-direction: column; gap: 8px; }
+  .fg-bubble { background: #383a40; border-radius: 10px; padding: 8px 10px; }
+  .fg-mini { font: 11px var(--mono); color: #a8e6c1; margin-top: 4px; }
+  .fg-input { display: flex; align-items: center; gap: 8px; background: #1e1f22; border-radius: 10px; padding: 8px 10px; } .fg-input span { flex: 1; color: #c9ccd2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .fg-send { width: 24px; height: 24px; border-radius: 50%; background: #d97757; color: #fff; display: grid; place-items: center; font-weight: 700; }
+
   /* Vault */
   .vault-top { display: grid; grid-template-columns: 1.2fr 1fr; gap: 18px; }
   .vault-top > * { min-width: 0; }
@@ -243,7 +351,7 @@
 
 <header class="hud" id="hud" hidden>
   <div class="wrap">
-    <div class="me"><div class="avatar" id="hud-avatar"></div><div><div class="me-name" id="hud-name"></div><div class="me-rank" id="hud-rank"></div></div></div>
+    <button class="me" id="hud-me" type="button" aria-label="Switch creator"><div class="avatar" id="hud-avatar"></div><div><div class="me-name" id="hud-name"></div><div class="me-rank" id="hud-rank"></div></div></button>
     <div class="xp"><span class="streak" id="hud-streak" title="Day streak"><i></i><b>0</b></span><span class="lvl" id="hud-lvl">LV 1</span><div class="bar"><i id="hud-bar" style="width:0%"></i></div><span class="xpnum" id="hud-xp">0 XP</span></div>
     <nav class="tabs" aria-label="Main">
       <button class="chip" data-go="map" type="button">Path</button>
@@ -264,729 +372,5 @@
 <script>/*INJECT:missions*/</script>
 <script>/*INJECT:quests*/</script>
 <script>/*INJECT:data*/</script>
-<script>
-(function () {
-  "use strict";
-  var M = window.MISSIONS, Q = window.QUESTS, LAB = window.PROMPT_LAB, RANKS = window.RANKS;
-  var COLORS = ["#3d8bff", "#ff4f4f", "#ffd23f", "#36d67a", "#ff8a2b", "#ff5fa8", "#b46bff", "#2fd3e0"];
-  var LEVELS = [0, 300, 800, 1500, 2400, 3500, 4800, 6300, 8000, 9800];
-  var SETUP = [
-    "Open Roblox Studio. Click New, then Baseplate.",
-    "Grown-up opens Claude (claude.ai) on their account. Paste the Mega Prompt below.",
-    "In Studio's Explorer, hover ServerScriptService, click +, choose Script. Delete the line inside.",
-    "Copy Claude's whole script into your Script. Press Play (F5)!",
-    "Something broken? Copy the red text from Output and send it to Claude with your script."
-  ];
-  var app = document.getElementById("app");
-
-  // ---------- state ----------
-  var KEY = "creator-quest-v1";
-  var state = { name: "", color: COLORS[0], done: {}, quiz: {}, steps: {}, boss: {}, power: {}, lab: {}, qdone: {}, qsteps: {}, qquiz: {}, days: [], unlockAll: false, sound: true, dream: null };
-  try { var saved = JSON.parse(localStorage.getItem(KEY) || "null"); if (saved) for (var k in saved) state[k] = saved[k]; } catch (e) {}
-  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
-
-  function count(o) { var n = 0; for (var k in o) if (o[k]) n++; return n; }
-  function xp() {
-    return count(state.quiz) * 50 + count(state.steps) * 20 + count(state.boss) * 100 + count(state.power) * 40 + count(state.done) * 250 + count(state.lab) * 30 + count(state.qsteps) * 20 + count(state.qquiz) * 50 + count(state.qdone) * 100;
-  }
-  function level(x) { var l = 1; for (var i = 0; i < LEVELS.length; i++) if (x >= LEVELS[i]) l = i + 1; return l; }
-
-  // ---------- sound + fx ----------
-  var actx = null;
-  function beep(notes) {
-    if (!state.sound) return;
-    try {
-      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
-      notes.forEach(function (n, i) {
-        var o = actx.createOscillator(), g = actx.createGain(), t = actx.currentTime + i * 0.09;
-        o.type = "square"; o.frequency.value = n;
-        g.gain.setValueAtTime(0.06, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
-        o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + 0.17);
-      });
-    } catch (e) {}
-  }
-  function toast(text) {
-    var t = document.createElement("div"); t.textContent = text;
-    document.getElementById("toast").appendChild(t);
-    setTimeout(function () { t.remove(); }, 2200);
-  }
-  var cv = document.getElementById("confetti"), cx = cv.getContext("2d"), bits = [], raf = 0;
-  function confetti() {
-    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    cv.width = innerWidth; cv.height = innerHeight;
-    for (var i = 0; i < 140; i++) bits.push({ x: innerWidth / 2, y: innerHeight / 3, vx: (Math.random() - .5) * 14, vy: -Math.random() * 12 - 4, s: 6 + Math.random() * 8, c: COLORS[i % COLORS.length], r: Math.random() * 6, life: 120 });
-    if (!raf) tick();
-  }
-  function tick() {
-    cx.clearRect(0, 0, cv.width, cv.height);
-    bits = bits.filter(function (b) { return b.life-- > 0; });
-    bits.forEach(function (b) { b.vy += 0.35; b.x += b.vx; b.y += b.vy; b.r += 0.1; cx.save(); cx.translate(b.x, b.y); cx.rotate(b.r); cx.fillStyle = b.c; cx.fillRect(-b.s / 2, -b.s / 2, b.s, b.s); cx.restore(); });
-    raf = bits.length ? requestAnimationFrame(tick) : 0;
-    if (!raf) cx.clearRect(0, 0, cv.width, cv.height);
-  }
-  function award(bucket, key, label) {
-    if (state[bucket][key]) return false;
-    var before = level(xp());
-    state[bucket][key] = true; save();
-    var gained = { quiz: 50, steps: 20, boss: 100, power: 40, done: 250, lab: 30, qsteps: 20, qquiz: 50, qdone: 100 }[bucket];
-    markToday();
-    toast("+" + gained + " XP" + (label ? "  " + label : ""));
-    beep([660, 880]);
-    var after = level(xp());
-    if (after > before) { setTimeout(function () { confetti(); beep([523, 659, 784, 1046]); toast("LEVEL UP! You're a " + RANKS[after - 1]); }, 400); }
-    hud();
-    return true;
-  }
-  function copy(text, btn) {
-    function done() { var old = btn.textContent; btn.textContent = "Copied!"; setTimeout(function () { btn.textContent = old; }, 1500); }
-    try {
-      navigator.clipboard.writeText(text).then(done, function () { fallback(); });
-    } catch (e) { fallback(); }
-    function fallback() {
-      var ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select();
-      try { document.execCommand("copy"); done(); } catch (e) { btn.textContent = "Select + copy it"; }
-      ta.remove();
-    }
-  }
-
-  // ---------- helpers ----------
-  function el(tag, attrs, kids) {
-    var n = document.createElement(tag);
-    if (attrs) for (var k in attrs) {
-      if (k === "text") n.textContent = attrs[k];
-      else if (k === "html") n.innerHTML = attrs[k];
-      else if (k.slice(0, 2) === "on") n.addEventListener(k.slice(2), attrs[k]);
-      else if (k === "style") n.style.cssText = attrs[k];
-      else n.setAttribute(k, attrs[k]);
-    }
-    (kids || []).forEach(function (c) { if (c) n.appendChild(typeof c === "string" ? document.createTextNode(c) : c); });
-    return n;
-  }
-  function stars(n) { var s = el("span", { class: "stars", "aria-label": n + " of 5 difficulty" }); for (var i = 1; i <= 5; i++) s.appendChild(el("span", { class: i <= n ? "" : "off", text: "■" })); return s; }
-  // ---------- path (Duolingo-style) ----------
-  var PATH = [];
-  M.forEach(function (m) {
-    Q.forEach(function (q) { if (q.before === m.id) PATH.push({ kind: "quest", id: q.id, q: q, unit: m.id }); });
-    PATH.push({ kind: "mission", id: m.id, m: m, unit: m.id });
-  });
-  function nodeDone(n) { return n.kind === "mission" ? !!state.done[n.id] : !!state.qdone[n.id]; }
-  function nodeIndex(kind, id) { for (var i = 0; i < PATH.length; i++) if (PATH[i].kind === kind && String(PATH[i].id) === String(id)) return i; return -1; }
-  function nodeOpen(i) { return state.unlockAll || i === 0 || (i > 0 && nodeDone(PATH[i - 1])); }
-  function unlocked(m) { return nodeOpen(nodeIndex("mission", m.id)); }
-  function nodeRoute(n) { return n.kind === "mission" ? "mission-" + n.id : "quest-" + n.id; }
-  function nextAfter(kind, id) { var i = nodeIndex(kind, id); return PATH[i + 1] || null; }
-  function today() { var d = new Date(); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
-  function markToday() { if (!state.days) state.days = []; if (state.days.indexOf(today()) < 0) { state.days.push(today()); if (state.days.length > 400) state.days.shift(); save(); } }
-  function streak() {
-    var set = {}; (state.days || []).forEach(function (d) { set[d] = 1; });
-    var d = new Date(), n = 0;
-    function key(x) { return x.getFullYear() + "-" + (x.getMonth() + 1) + "-" + x.getDate(); }
-    if (!set[key(d)]) d.setDate(d.getDate() - 1);
-    while (set[key(d)]) { n++; d.setDate(d.getDate() - 1); }
-    return n;
-  }
-  function go(view) { location.hash = view; }
-
-  function hud() {
-    var h = document.getElementById("hud");
-    h.hidden = !state.name;
-    if (!state.name) return;
-    var x = xp(), l = level(x), lo = LEVELS[l - 1], hi = LEVELS[l] || (lo + 1000);
-    document.getElementById("hud-avatar").style.background = state.color;
-    document.getElementById("hud-name").textContent = state.name;
-    document.getElementById("hud-rank").textContent = RANKS[l - 1];
-    document.getElementById("hud-lvl").textContent = "LV " + l;
-    document.getElementById("hud-bar").style.width = (l >= LEVELS.length ? 100 : Math.round(((x - lo) / (hi - lo)) * 100)) + "%";
-    document.getElementById("hud-xp").textContent = x + " XP";
-    var st = streak(), se = document.getElementById("hud-streak");
-    se.querySelector("b").textContent = st; se.classList.toggle("on", st > 0); se.title = st + " day streak";
-    var view = (location.hash || "#map").slice(1).split("-")[0];
-    document.querySelectorAll("[data-go]").forEach(function (b) {
-      if (b.getAttribute("data-go") === view) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
-    });
-  }
-  document.querySelectorAll("[data-go]").forEach(function (b) { b.addEventListener("click", function () { go(b.getAttribute("data-go")); }); });
-
-  // ---------- views ----------
-  function viewWelcome() {
-    var chosen = state.color;
-    var input = el("input", { type: "text", id: "creator-name", maxlength: "18", placeholder: "Your creator name", autocomplete: "off" });
-    var sw = el("div", { class: "swatches", role: "group", "aria-label": "Pick your color" });
-    COLORS.forEach(function (c) {
-      var b = el("button", { type: "button", class: "swatch", style: "background:" + c, "aria-label": "Color " + c, "aria-pressed": String(c === chosen), onclick: function () {
-        chosen = c; sw.querySelectorAll(".swatch").forEach(function (s) { s.setAttribute("aria-pressed", "false"); }); b.setAttribute("aria-pressed", "true"); beep([520]);
-      } });
-      sw.appendChild(b);
-    });
-    var start = el("button", { class: "btn yellow", type: "button", text: "Start my quest", onclick: function () {
-      var name = input.value.trim().slice(0, 18);
-      if (!name) { input.focus(); input.placeholder = "Type a name first!"; return; }
-      state.name = name; state.color = chosen; save(); beep([523, 659, 784]); confetti(); go("map"); render();
-    } });
-    app.replaceChildren(el("section", { class: "welcome" }, [
-      el("div", { class: "stack" }, [
-        el("div", { class: "title-blocks" }, COLORS.slice(0, 5).map(function (c) { return el("span", { style: "background:" + c }); })),
-        el("h1", { html: "Creator <span>Quest</span>" }),
-        el("p", { style: "font-size:1.2rem;max-width:34ch", text: "Stop playing other people's games. Build your own, with AI as your sidekick." }),
-        el("p", { class: "muted", text: "8 big games · 21 skill quests · obbies, tycoons, zombies, pets, bosses · 118 free 3D models" })
-      ]),
-      el("div", { class: "panel stack" }, [
-        el("label", { class: "label", for: "creator-name", text: "Your creator name" }), input,
-        el("span", { class: "label", text: "Your color" }), sw,
-        el("div", { class: "copilot-note", html: "<b>Grab your grown-up!</b> You'll use Claude on their account, with them next to you. They're your co-pilot." }),
-        start
-      ])
-    ]));
-  }
-
-  var ICONS = {
-    model: '<path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/>',
-    code: '<path d="M8 6 2 12l6 6M16 6l6 6-6 6M14 4l-4 16"/>',
-    look: '<circle cx="12" cy="12" r="3.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/>',
-    ai: '<path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/>',
-    game: '<path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H3v2a4 4 0 0 0 4 4M17 6h4v2a4 4 0 0 1-4 4M10 14h4v4h-4zM7 21h10"/>',
-    done: '<path d="M4 12.5l5 5L20 6.5"/>',
-    lock: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>'
-  };
-  function icon(name) {
-    var s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    s.setAttribute("viewBox", "0 0 24 24"); s.setAttribute("aria-hidden", "true");
-    s.innerHTML = ICONS[name];
-    return s;
-  }
-  var WAVE = [0, 70, 105, 70, 0, -70, -105, -70];
-
-  function viewMap() {
-    var path = el("div", { class: "path" });
-    var firstOpen = -1;
-    for (var i = 0; i < PATH.length; i++) if (nodeOpen(i) && !nodeDone(PATH[i])) { firstOpen = i; break; }
-    var openPop = null, waveI = 0, lastUnit = 0;
-
-    PATH.forEach(function (n, i) {
-      if (n.unit !== lastUnit) {
-        lastUnit = n.unit; waveI = 0;
-        var m = M[n.unit - 1];
-        var unitNodes = PATH.filter(function (x) { return x.unit === n.unit; });
-        var doneN = unitNodes.filter(nodeDone).length;
-        path.appendChild(el("div", { class: "unit", style: "background:" + m.color }, [
-          el("div", {}, [el("span", { class: "label", text: "Unit " + n.unit }), el("h3", { text: n.unit === 1 ? "Your first game: " + m.title : "Get ready for " + m.title })]),
-          el("span", { class: "unit-count", text: doneN + "/" + unitNodes.length })
-        ]));
-      }
-      var open = nodeOpen(i), done = nodeDone(n), current = i === firstOpen;
-      var isGame = n.kind === "mission";
-      var color = isGame ? n.m.color : M[n.unit - 1].color;
-      var wrap = el("div", { class: "pwrap", style: "--x:" + WAVE[waveI++ % WAVE.length] });
-      var btn = el("button", { type: "button", class: "pnode" + (isGame ? " big" : "") + (done ? " done" : "") + (!open ? " locked" : "") + (current ? " current" : ""),
-        style: open && !done ? "background:" + color : "",
-        "aria-label": (isGame ? "Game " + n.id + ": " + n.m.title : "Skill quest: " + n.q.title) + (done ? ", complete" : open ? "" : ", locked") });
-      btn.appendChild(icon(done ? "done" : isGame ? "game" : !open ? "lock" : n.q.icon));
-      if (current) wrap.appendChild(el("span", { class: "bubble", text: i === 0 && !done ? "START" : "NEXT" }));
-      wrap.appendChild(btn);
-      wrap.appendChild(el("span", { class: "plabel" + (isGame ? " big" : ""), text: isGame ? n.m.title : n.q.title }));
-
-      btn.addEventListener("click", function () {
-        if (openPop) { var same = openPop.parentNode === wrap; openPop.parentNode.classList.remove("has-pop"); openPop.remove(); openPop = null; if (same) return; }
-        if (!open) { beep([200]); toast("Finish the step before this one first!"); return; }
-        beep([600]);
-        var title = isGame ? "Big Game " + n.id + ": " + n.m.title : n.q.title;
-        var sub = isGame ? n.m.tagline : n.q.learn;
-        var xpText = isGame ? "Up to 730 XP" : "Up to 210 XP";
-        openPop = el("div", { class: "pop", style: "--c:" + color }, [
-          el("span", { class: "label", text: (isGame ? "Big game project" : "Skill quest") + " · " + (isGame ? n.m.time : n.q.time) }),
-          el("h3", { text: title }), el("p", { text: sub }),
-          el("button", { class: "btn " + (done ? "ghost" : "yellow"), type: "button", text: done ? "Play again" : "Start  ·  " + xpText, onclick: function () { go(nodeRoute(n)); } })
-        ]);
-        wrap.appendChild(openPop);
-        wrap.classList.add("has-pop");
-      });
-      path.appendChild(wrap);
-    });
-
-    var doneCount = PATH.filter(nodeDone).length;
-    app.replaceChildren(
-      el("div", { class: "row", style: "justify-content:space-between;align-items:flex-end;max-width:600px;margin:0 auto" }, [
-        el("div", {}, [el("span", { class: "label", text: "Your path" }), el("h2", { text: doneCount === 0 ? "Let's go, " + state.name + "!" : doneCount + " of " + PATH.length + " steps done" })]),
-        el("span", { class: "streak big" + (streak() > 0 ? " on" : ""), title: "Day streak" }, [el("i"), el("b", { text: String(streak()) }), el("span", { text: " day streak" })])
-      ]),
-      path
-    );
-    var cur = app.querySelector(".pnode.current");
-    if (cur && cur.scrollIntoView) setTimeout(function () { cur.scrollIntoView({ block: "center", behavior: "smooth" }); }, 120);
-  }
-
-  function viewQuest(id) {
-    var idx = nodeIndex("quest", id);
-    if (idx < 0) return go("map");
-    if (!nodeOpen(idx)) { toast("That quest is still locked!"); return go("map"); }
-    var q = PATH[idx].q, m = M[q.before - 1];
-    var screen = 0, SCREENS = 4;
-    var bar = el("i"), body = el("div", { class: "lesson-body" });
-
-    function stepsDone() { for (var i = 0; i < q.steps.length; i++) if (!state.qsteps[q.id + "-" + i]) return false; return true; }
-    function canContinue() { return screen === 0 || (screen === 1 && stepsDone()) || (screen === 2 && !!state.qquiz[q.id]) || screen === 3; }
-
-    function draw() {
-      bar.style.width = Math.round((screen / (SCREENS - 1)) * 100) + "%";
-      var kids = [];
-      if (screen === 0) {
-        kids.push(el("span", { class: "label", text: "Skill quest · Unit " + q.before + " · " + q.time }), el("h1", { text: q.title }), el("p", { class: "lesson", text: q.learn }));
-        q.know.forEach(function (t, i) { kids.push(el("div", { class: "tip" }, [el("span", { class: "tipnum", style: "background:" + m.color, text: String(i + 1) }), el("p", { text: t })])); });
-      } else if (screen === 1) {
-        var cbtn = el("button", { class: "btn small green", type: "button", text: "Copy prompt" });
-        cbtn.addEventListener("click", function () { copy(q.prompt, cbtn); });
-        kids.push(el("span", { class: "label", text: "Try it" }), el("h2", { text: "Send this to Claude" }),
-          el("div", { class: "prompt-box" }, [el("pre", { text: q.prompt })]), el("div", { class: "row" }, [cbtn, el("span", { class: "muted", text: "Grown-up pastes it into Claude. Change any part you like!" })]),
-          el("span", { class: "label", style: "margin-top:8px", text: "Do it" }));
-        kids.push(el("div", { class: "stack", style: "gap:8px" }, q.steps.map(function (t, i) {
-          var key = q.id + "-" + i, box = el("input", { type: "checkbox", id: "qs-" + key });
-          box.checked = !!state.qsteps[key];
-          box.addEventListener("change", function () { if (box.checked) award("qsteps", key); else { state.qsteps[key] = false; save(); hud(); } foot(); });
-          return el("label", { class: "check", for: "qs-" + key }, [box, el("span", { text: t })]);
-        })));
-      } else if (screen === 2) {
-        var c = q.check, exp = el("p", { class: "explain", text: c.explain });
-        exp.hidden = !state.qquiz[q.id];
-        kids.push(el("span", { class: "label", text: "Quick check" }), el("h2", { text: c.q }));
-        c.options.forEach(function (o, oi) {
-          var b = el("button", { type: "button", class: "opt" + (state.qquiz[q.id] && oi === c.answer ? " right" : ""), text: o, onclick: function () {
-            if (oi === c.answer) { b.className = "opt right"; exp.hidden = false; award("qquiz", q.id, "Correct!"); foot(); }
-            else { b.className = "opt"; void b.offsetWidth; b.className = "opt wrong"; beep([180, 140]); }
-          } });
-          kids.push(b);
-        });
-        kids.push(exp);
-      } else {
-        var nxt = nextAfter("quest", q.id);
-        kids.push(el("div", { class: "stack", style: "align-items:center;text-align:center;padding-block:20px" }, [
-          el("div", { class: "badge" }, [el("div", { class: "medal", style: "background:" + m.color }, [icon(q.icon)])]),
-          el("h1", { text: "Quest complete!" }),
-          el("p", { class: "lesson", text: "You learned: " + q.learn }),
-          el("span", { class: "streak big on" }, [el("i"), el("b", { text: String(Math.max(1, streak())) }), el("span", { text: " day streak" })]),
-          nxt ? el("p", { class: "muted", text: "Up next: " + (nxt.kind === "mission" ? "Big game: " + nxt.m.title : nxt.q.title) }) : null
-        ]));
-      }
-      body.replaceChildren.apply(body, kids.filter(Boolean));
-      foot();
-    }
-
-    var cont = el("button", { class: "btn yellow cont", type: "button" });
-    function foot() {
-      var ok = canContinue();
-      cont.disabled = !ok;
-      cont.textContent = screen === 3 ? "Continue" : !ok ? (screen === 1 ? "Check off every step" : "Pick the right answer") : "Continue";
-    }
-    cont.addEventListener("click", function () {
-      if (!canContinue()) return;
-      if (screen === 2) { screen = 3; draw(); if (award("qdone", q.id, q.title)) { confetti(); beep([523, 659, 784, 1046]); } return; }
-      if (screen === 3) { go("map"); return; }
-      screen++; draw(); window.scrollTo(0, 0);
-    });
-
-    app.replaceChildren(el("div", { class: "lesson-wrap" }, [
-      el("div", { class: "lesson-top" }, [
-        el("button", { class: "x", type: "button", "aria-label": "Back to path", text: "✕", onclick: function () { go("map"); } }),
-        el("div", { class: "bar lbar" }, [bar])
-      ]),
-      el("div", { class: "panel lesson-card" }, [body, cont])
-    ]));
-    draw();
-  }
-
-  function viewMission(id) {
-    var m = M[id - 1];
-    if (!m) return go("map");
-    if (!unlocked(m)) { toast("That mission is still locked!"); return go("map"); }
-    var STEPS = m.bossBug ? ["AI Brain", "Build", "Boss Bug", "Power-ups", "Finish"] : ["AI Brain", "Build", "Power-ups", "Finish"];
-    var current = 0;
-    var body = el("div", { class: "stack" });
-    var stepper = el("div", { class: "stepper", role: "tablist" });
-
-    function stepDone(name) {
-      if (name === "AI Brain") return m.brain.quiz.every(function (_, i) { return state.quiz[m.id + "-" + i]; });
-      if (name === "Build") { var n = (m.megaPrompt ? SETUP.length : 0) + m.test.length; for (var i = 0; i < n; i++) if (!state.steps[m.id + "-" + i]) return false; return true; }
-      if (name === "Boss Bug") return !!state.boss[m.id];
-      if (name === "Power-ups") return m.powerups.some(function (_, i) { return state.power[m.id + "-" + i]; });
-      return !!state.done[m.id];
-    }
-    function drawStepper() {
-      stepper.replaceChildren.apply(stepper, STEPS.map(function (s, i) {
-        return el("button", { type: "button", class: "chip", role: "tab", "aria-selected": String(i === current), "aria-pressed": String(i === current), onclick: function () { current = i; draw(); } },
-          [el("span", { class: "ok" + (stepDone(s) ? " on" : "") }), (i + 1) + ". " + s]);
-      }));
-    }
-    function next() {
-      return current < STEPS.length - 1 ? el("button", { class: "btn yellow", type: "button", text: "Next: " + STEPS[current + 1] + " →", onclick: function () { current++; draw(); window.scrollTo({ top: stepper.offsetTop - 90, behavior: "smooth" }); } }) : null;
-    }
-    function checklist(items, offset) {
-      return el("div", { class: "stack", style: "gap:8px" }, items.map(function (t, i) {
-        var key = m.id + "-" + (offset + i);
-        var box = el("input", { type: "checkbox", id: "step-" + key });
-        box.checked = !!state.steps[key];
-        box.addEventListener("change", function () {
-          if (box.checked) award("steps", key); else { state.steps[key] = false; save(); hud(); }
-          drawStepper();
-        });
-        return el("label", { class: "check", for: "step-" + key }, [box, el("span", { text: t })]);
-      }));
-    }
-
-    function brain() {
-      var quiz = el("div", { class: "stack" });
-      m.brain.quiz.forEach(function (q, qi) {
-        var key = m.id + "-" + qi, card = el("div", { class: "panel stack" }, [el("span", { class: "label", text: "Question " + (qi + 1) }), el("h3", { text: q.q })]);
-        var exp = el("p", { class: "explain", text: q.explain });
-        exp.hidden = !state.quiz[key];
-        q.options.forEach(function (o, oi) {
-          var b = el("button", { type: "button", class: "opt" + (state.quiz[key] && oi === q.answer ? " right" : ""), text: o, onclick: function () {
-            if (oi === q.answer) { b.className = "opt right"; exp.hidden = false; award("quiz", key, "Brain power!"); drawStepper(); }
-            else { b.className = "opt"; void b.offsetWidth; b.className = "opt wrong"; beep([180, 140]); }
-          } });
-          card.appendChild(b);
-        });
-        card.appendChild(exp);
-        quiz.appendChild(card);
-      });
-      return [
-        el("div", { class: "panel stack", style: "border-color:var(--ink);background:var(--panel-2)" }, [el("span", { class: "label", text: "AI Brain unlock" }), el("h2", { text: m.brain.title })].concat(m.brain.text.map(function (t) { return el("p", { class: "lesson", text: t }); }))),
-        quiz, next()
-      ];
-    }
-
-    function build() {
-      var out = [];
-      if (m.megaPrompt) {
-        var cbtn = el("button", { class: "btn small green", type: "button", text: "Copy prompt" });
-        cbtn.addEventListener("click", function () { copy(m.megaPrompt, cbtn); });
-        var rescue = window.RESCUE[m.key] || "";
-        var rbtn = el("button", { class: "btn small", type: "button", text: "Copy rescue script" });
-        rbtn.addEventListener("click", function () { copy(rescue, rbtn); });
-        out.push(
-          el("div", { class: "stack" }, [el("span", { class: "label", text: "Setup" }), checklist(SETUP, 0)]),
-          el("div", { class: "stack" }, [
-            el("div", { class: "row", style: "justify-content:space-between" }, [el("div", {}, [el("span", { class: "label", text: "The Mega Prompt" }), el("h3", { text: "Send this to Claude" })]), cbtn]),
-            el("div", { class: "prompt-box" }, [el("pre", { text: m.megaPrompt })]),
-            el("p", { class: "muted", text: "Tip: change anything you want! Add your own ideas to the list before you send it. Claude may give a slightly different script each time, and that's normal." })
-          ]),
-          el("div", { class: "stack" }, [el("span", { class: "label", text: "Test it" }), checklist(m.test, SETUP.length)]),
-          el("details", { class: "rescue panel" }, [
-            el("summary", { text: "Stuck? Use the rescue script" }),
-            el("div", { class: "stack", style: "margin-top:12px" }, [
-              el("p", { class: "muted", text: "Claude's version broken and you can't fix it? This tested script builds the whole mission. Even pro developers use backups. Paste it into a Script in ServerScriptService." }),
-              rbtn, el("div", { class: "code" }, [el("pre", { text: rescue })])
-            ])
-          ])
-        );
-      } else {
-        out.push(dream(), el("div", { class: "stack" }, [el("span", { class: "label", text: "Ship it" }), checklist(m.test, 0)]));
-      }
-      out.push(next());
-      return out;
-    }
-
-    function dream() {
-      var D = window.DREAM;
-      var pick = state.dream || { genre: D.genre[0], theme: D.theme[1], twist: D.twist[0], idea: "" };
-      var slots = el("div", { class: "slot" });
-      var ta = el("textarea", { id: "dream-idea", rows: "3", style: "width:100%;font:1rem var(--body);padding:12px;border-radius:12px;border:3px solid var(--ink);background:var(--bg-2);color:var(--fg)", placeholder: "Add your own idea (optional): a character, a power, a secret..." });
-      ta.value = pick.idea || "";
-      var promptBox = el("pre", {});
-      function prompt() {
-        return "I'm designing my own Roblox game with my parent. It's a " + pick.genre + " game set in " + pick.theme + ", and the twist is: " + pick.twist + "." + (pick.idea ? " My extra idea: " + pick.idea + "." : "") +
-          "\nFirst, help me plan it: give it 3 possible names, describe the main game loop in 3 steps, and list the 5 most important pieces to build in order." +
-          "\nThen write ONE Script for ServerScriptService for piece #1 so I can test it right away. Put settings at the top and explain where to paste it. After I test it, I'll ask for the next piece.";
-      }
-      function drawSlots() {
-        slots.replaceChildren(
-          el("div", {}, [el("span", { class: "label", text: "Genre" }), el("b", { text: pick.genre })]),
-          el("div", {}, [el("span", { class: "label", text: "World" }), el("b", { text: pick.theme })]),
-          el("div", {}, [el("span", { class: "label", text: "Twist" }), el("b", { text: pick.twist })])
-        );
-        promptBox.textContent = prompt();
-      }
-      function spin() {
-        var n = 0, t = setInterval(function () {
-          pick.genre = D.genre[Math.floor(Math.random() * D.genre.length)];
-          pick.theme = D.theme[Math.floor(Math.random() * D.theme.length)];
-          pick.twist = D.twist[Math.floor(Math.random() * D.twist.length)];
-          drawSlots(); beep([300 + n * 40]);
-          if (++n > 10) { clearInterval(t); state.dream = pick; save(); beep([784, 1046]); }
-        }, 80);
-      }
-      ta.addEventListener("input", function () { pick.idea = ta.value.trim().slice(0, 200); state.dream = pick; save(); promptBox.textContent = prompt(); });
-      drawSlots();
-      var cbtn = el("button", { class: "btn small green", type: "button", text: "Copy prompt" });
-      cbtn.addEventListener("click", function () { copy(prompt(), cbtn); });
-      return el("div", { class: "panel stack" }, [
-        el("span", { class: "label", text: "Dream Game Designer" }),
-        el("h2", { text: "Spin up a game idea" }),
-        slots,
-        el("div", { class: "row" }, [el("button", { class: "btn yellow", type: "button", text: "Spin!", onclick: spin }), el("span", { class: "muted", text: "Spin until you love it. Or use your own idea." })]),
-        ta,
-        el("div", { class: "row", style: "justify-content:space-between" }, [el("span", { class: "label", text: "Your Dream Prompt" }), cbtn]),
-        el("div", { class: "prompt-box" }, [promptBox]),
-        el("p", { class: "muted", text: "Build piece by piece. Use the Creator Vault for trees, buildings, coins, pets and more: in Studio, right-click Workspace, choose Insert from File, and pick a Vault pack." })
-      ]);
-    }
-
-    function bossBug() {
-      var b = m.bossBug, box = el("div", { class: "bugbox", role: "group", "aria-label": "Code with a bug" });
-      var res = el("p", { class: "explain", text: "BUG SQUASHED! " + b.explain });
-      res.hidden = !state.boss[m.id];
-      b.code.forEach(function (line, i) {
-        var btn = el("button", { type: "button", class: "codeline" + (state.boss[m.id] && i === b.bug ? " right" : "") }, [el("span", { class: "ln", text: String(i + 1) }), el("span", { text: line.replace(/\t/g, "    ") })]);
-        btn.addEventListener("click", function () {
-          if (i === b.bug) { btn.className = "codeline right"; res.hidden = false; if (award("boss", m.id, "Bug squashed!")) confetti(); drawStepper(); }
-          else { btn.className = "codeline"; void btn.offsetWidth; btn.className = "codeline wrong"; beep([180, 140]); }
-        });
-        box.appendChild(btn);
-      });
-      return [el("div", { class: "panel stack" }, [el("span", { class: "label", text: "Boss Bug" }), el("h2", { text: "Find the bug!" }), el("p", { class: "lesson", text: b.intro }), el("p", { class: "muted", text: "Tap the line with the bug." }), box, res]), next()];
-    }
-
-    function powerups() {
-      return [el("div", { class: "stack" }, [el("span", { class: "label", text: "Power-ups" }), el("h2", { text: "Level up your game" }), el("p", { class: "muted", text: "Send any of these to Claude to add new features. Test each one before you move on!" })]),
-        el("div", { class: "power" }, m.powerups.map(function (p, i) {
-          var key = m.id + "-" + i, cbtn = el("button", { class: "btn small ghost", type: "button", text: "Copy" });
-          cbtn.addEventListener("click", function () { copy(p.prompt, cbtn); });
-          var did = el("button", { class: "btn small " + (state.power[key] ? "green" : "yellow"), type: "button", text: state.power[key] ? "Done!" : "I added it!" });
-          did.addEventListener("click", function () { if (award("power", key, p.name)) { did.className = "btn small green"; did.textContent = "Done!"; drawStepper(); } });
-          return el("div", { class: "panel" }, [el("h3", { text: p.name }), el("code", { text: p.prompt }), el("div", { class: "row" }, [cbtn, did])]);
-        })), next()];
-    }
-
-    function finish() {
-      var done = state.done[m.id];
-      var btn = el("button", { class: "btn green hold", type: "button", style: "font-size:1.2rem;padding:16px 26px" }, [el("span", { class: "fill" }), done ? "Mission complete!" : "Grown-up: hold to stamp"]);
-      var fill = btn.querySelector(".fill"), timer = null, t0 = 0;
-      function startHold(e) {
-        if (done) return; e.preventDefault(); t0 = Date.now();
-        timer = setInterval(function () {
-          var p = Math.min(1, (Date.now() - t0) / 1500); fill.style.width = (p * 100) + "%";
-          if (p >= 1) { stopHold(); complete(); }
-        }, 30);
-      }
-      function stopHold() { clearInterval(timer); timer = null; if (!state.done[m.id]) fill.style.width = "0"; }
-      function complete() {
-        award("done", m.id, m.badge + " badge!"); confetti(); beep([523, 659, 784, 1046, 1318]);
-        draw(); setTimeout(function () { openModal(m); }, 300);
-      }
-      btn.addEventListener("pointerdown", startHold); btn.addEventListener("pointerup", stopHold); btn.addEventListener("pointerleave", stopHold);
-      btn.addEventListener("keydown", function (e) { if ((e.key === " " || e.key === "Enter") && !timer) startHold(e); });
-      btn.addEventListener("keyup", stopHold);
-      return [el("div", { class: "panel stack", style: "text-align:center;align-items:center" }, [
-        el("span", { class: "label", text: "Co-pilot check" }),
-        el("h2", { text: done ? "You did it!" : "Show your grown-up what you built" }),
-        el("p", { class: "lesson", text: m.copilot }),
-        btn,
-        done && nextAfter("mission", m.id) ? el("button", { class: "btn yellow", type: "button", text: "Back to the path →", onclick: function () { go("map"); } }) : null,
-        done && !M[m.id] ? el("button", { class: "btn yellow", type: "button", text: "See your certificate →", onclick: function () { go("badges"); } }) : null
-      ])];
-    }
-
-    function draw() {
-      drawStepper();
-      var s = STEPS[current];
-      var parts = s === "AI Brain" ? brain() : s === "Build" ? build() : s === "Boss Bug" ? bossBug() : s === "Power-ups" ? powerups() : finish();
-      body.replaceChildren.apply(body, parts.filter(Boolean));
-    }
-
-    app.replaceChildren(
-      el("button", { class: "btn small ghost", type: "button", text: "← Path", onclick: function () { go("map"); }, style: "margin-bottom:14px" }),
-      el("section", { class: "mhead", style: "background:" + m.color }, [
-        el("div", {}, [el("span", { class: "label", text: "Mission " + m.id + " · " + m.time }), el("h1", { text: m.title }), el("p", { text: m.story })]),
-        stars(m.stars)
-      ]),
-      el("div", { class: "stack", style: "margin-top:18px" }, [el("span", { class: "label", text: "You'll build" }), el("ul", { class: "builds" }, m.builds.map(function (b) { return el("li", { text: b }); }))]),
-      stepper, body
-    );
-    draw();
-  }
-
-  function openModal(m) {
-    var bg = el("div", { class: "modal-bg", role: "dialog", "aria-modal": "true", "aria-label": "Badge earned" });
-    bg.appendChild(el("div", { class: "panel modal stack", style: "align-items:center" }, [
-      el("span", { class: "label", text: "Badge unlocked" }),
-      el("div", { class: "badge" }, [el("div", { class: "medal", style: "background:" + m.color, text: "★" })]),
-      el("h2", { text: m.badge }),
-      el("p", { class: "muted", text: "Mission " + m.id + " complete. +250 XP" }),
-      el("button", { class: "btn yellow", type: "button", text: "Awesome!", onclick: function () { bg.remove(); } })
-    ]));
-    document.body.appendChild(bg);
-    bg.querySelector("button").focus();
-  }
-
-  function viewLab() {
-    var i = 0, wrap = el("div", { class: "stack" });
-    function draw() {
-      var r = LAB[i], key = String(i);
-      var why = el("p", { class: "explain", text: r.why }); why.hidden = !state.lab[key];
-      var card = el("div", { class: "panel stack" }, [el("span", { class: "label", text: "Round " + (i + 1) + " of " + LAB.length }), el("h2", { text: r.goal }), el("p", { class: "muted", text: "Which prompt should you send to Claude?" })]);
-      r.options.forEach(function (o, oi) {
-        var b = el("button", { type: "button", class: "opt" + (state.lab[key] && oi === r.answer ? " right" : ""), style: "font-family:var(--mono);font-weight:500", text: o, onclick: function () {
-          if (oi === r.answer) { b.className = "opt right"; why.hidden = false; award("lab", key, "Prompt pro!"); }
-          else { b.className = "opt"; void b.offsetWidth; b.className = "opt wrong"; beep([180, 140]); }
-        } });
-        card.appendChild(b);
-      });
-      card.appendChild(why);
-      card.appendChild(el("div", { class: "row" }, [
-        i > 0 ? el("button", { class: "btn small ghost", type: "button", text: "← Back", onclick: function () { i--; draw(); } }) : null,
-        i < LAB.length - 1 ? el("button", { class: "btn small yellow", type: "button", text: "Next round →", onclick: function () { i++; draw(); } }) : el("span", { class: "muted", text: count(state.lab) === LAB.length ? "Perfect score! You're a Prompt Wizard." : "Get every round right for the Prompt Wizard badge." })
-      ].filter(Boolean)));
-      wrap.replaceChildren(card);
-    }
-    app.replaceChildren(el("div", { class: "stack" }, [el("span", { class: "label", text: "Mini-game" }), el("h2", { text: "Prompt Lab" }), el("p", { class: "muted", text: "Pick the best prompt each round. Great prompts = great games." }), wrap]));
-    draw();
-  }
-
-  function viewVault() {
-    var CAT = window.VAULT || [];
-    var packs = ["All"]; CAT.forEach(function (m) { if (packs.indexOf(m.pack) < 0) packs.push(m.pack); });
-    var filter = "All", viewer = null, selected = 0;
-    var canvas = el("canvas", { "aria-label": "3D model preview" });
-    var info = el("div", { class: "stack" });
-    var grid = el("div", { class: "grid" });
-    var chips = el("div", { class: "row", role: "group", "aria-label": "Packs" });
-    var has3D = typeof THREE !== "undefined";
-    var thumbs = {};
-
-    function showInfo(idx) {
-      var m = CAT[idx]; selected = idx;
-      if (viewer) viewer.show(m);
-      info.replaceChildren(
-        el("span", { class: "label", text: m.pack + " pack" }), el("h2", { text: m.name }), el("p", { class: "lesson", text: m.desc }),
-        el("div", { class: "row" }, [m.scripted ? el("span", { class: "pill", text: "Works out of the box" }) : el("span", { class: "pill", style: "background:var(--panel-2);color:var(--fg)", text: "Decoration" }), m.tool ? el("span", { class: "pill", style: "background:var(--yellow)", text: "Tool: touch to pick up" }) : null].filter(Boolean)),
-        el("p", { class: "muted", text: "Find it in: Creator Vault - " + m.pack + ".rbxmx" })
-      );
-      grid.querySelectorAll(".tile").forEach(function (t) { t.setAttribute("aria-pressed", String(+t.getAttribute("data-i") === idx)); });
-    }
-    function drawGrid() {
-      chips.replaceChildren.apply(chips, packs.map(function (p) {
-        return el("button", { type: "button", class: "chip", "aria-pressed": String(p === filter), text: p, onclick: function () { filter = p; drawGrid(); } });
-      }));
-      grid.replaceChildren();
-      var queue = [];
-      CAT.forEach(function (m, i) {
-        if (filter !== "All" && m.pack !== filter) return;
-        var img = el("img", { alt: "", width: "120", height: "120" });
-        var tile = el("button", { type: "button", class: "tile", "data-i": String(i), "aria-pressed": String(i === selected), onclick: function () { showInfo(i); beep([600]); } }, [img, el("span", { text: m.name })]);
-        grid.appendChild(tile);
-        if (thumbs[i]) img.src = thumbs[i]; else queue.push([i, img]);
-      });
-      (function pump() {
-        if (!has3D || !queue.length) return;
-        var job = queue.shift();
-        try { thumbs[job[0]] = VaultViewer.thumbnail(CAT[job[0]], 160); job[1].src = thumbs[job[0]]; } catch (e) {}
-        setTimeout(pump, 0);
-      })();
-    }
-
-    app.replaceChildren(el("div", { class: "stack" }, [
-      el("span", { class: "label", text: "Bonus pack" }),
-      el("h2", { text: "Creator Vault · " + CAT.length + " models" }),
-      el("p", { class: "muted", style: "max-width:70ch", text: "Ready-made Roblox models for any game. The ones marked \"works out of the box\" have scripts inside: coins you can collect, checkpoints, jump pads, portals, pets that follow you, swords and more." }),
-      el("div", { class: "vault-top" }, [
-        el("div", { class: "viewer" }, [canvas, el("span", { class: "hint", text: has3D ? "Drag to spin" : "3D preview needs an internet connection" })]),
-        el("div", { class: "panel stack" }, [info, el("details", { class: "rescue", open: "" }, [el("summary", { text: "How to add models to your game" }), el("ol", { style: "margin:10px 0 0;padding-left:1.2em" }, [
-          el("li", { text: "In Roblox Studio, right-click Workspace in the Explorer." }),
-          el("li", { text: "Choose Insert from File." }),
-          el("li", { text: "Open the Creator Vault folder and pick a pack, like Creator Vault - Nature.rbxmx." }),
-          el("li", { text: "The whole pack appears in a row. Move what you want, delete the rest." }),
-          el("li", { text: "Recolor anything in Properties. Scripts are inside, so ask Claude to change them!" })
-        ])])])
-      ]),
-      chips, grid
-    ]));
-    if (has3D) { try { viewer = VaultViewer.mount(canvas); } catch (e) { viewer = null; } }
-    drawGrid();
-    if (CAT.length) showInfo(0);
-  }
-
-  function badgeList() {
-    var list = M.map(function (m) { return { name: m.badge, color: m.color, got: !!state.done[m.id], how: "Finish Mission " + m.id }; });
-    list.push({ name: "Skill Master", color: "#36d67a", got: count(state.qdone) >= Q.length, how: "Finish all " + Q.length + " skill quests" });
-    list.push({ name: "On Fire", color: "#ff8a2b", got: streak() >= 3, how: "Build 3 days in a row" });
-    list.push({ name: "Bug Hunter", color: "#ff4f4f", got: count(state.boss) >= 7, how: "Squash all 7 Boss Bugs" });
-    list.push({ name: "Brainiac", color: "#2fd3e0", got: count(state.quiz) >= 16, how: "Ace every AI Brain quiz" });
-    list.push({ name: "Prompt Wizard", color: "#b46bff", got: count(state.lab) >= LAB.length, how: "Perfect score in Prompt Lab" });
-    list.push({ name: "Power Player", color: "#ffd23f", got: count(state.power) >= 10, how: "Add 10 power-ups" });
-    return list;
-  }
-
-  function viewBadges() {
-    var list = badgeList(), got = list.filter(function (b) { return b.got; }).length;
-    var x = xp(), l = level(x), finished = !!state.done[8];
-    app.replaceChildren(el("div", { class: "stack" }, [
-      el("span", { class: "label", text: "Trophy room" }),
-      el("h2", { text: got + " of " + list.length + " badges" }),
-      el("div", { class: "badges" }, list.map(function (b) {
-        return el("div", { class: "panel badge" + (b.got ? "" : " off") }, [el("div", { class: "medal", style: "background:" + b.color, text: b.got ? "★" : "?" }), el("h3", { text: b.name }), el("p", { class: "muted", style: "font-size:.85rem", text: b.how })]);
-      })),
-      el("span", { class: "label", style: "margin-top:20px", text: "Your certificate" }),
-      el("div", { class: "cert" }, [
-        el("div", { class: "title-blocks", style: "justify-content:center" }, COLORS.slice(0, 5).map(function (c) { return el("span", { style: "background:" + c }); })),
-        el("span", { class: "label", style: "color:#5b6275", text: finished ? "Certificate of completion" : "Certificate (unlocks after Mission 8)" }),
-        el("div", { class: "name", text: state.name }),
-        el("p", { style: "font-size:1.1rem;max-width:40ch", text: "designed, built, tested and published Roblox games with AI, and knows how to use AI smartly and safely." }),
-        el("p", { style: "font-family:var(--display);font-weight:700;font-size:1.2rem", text: "Rank: " + RANKS[l - 1] + " · " + x + " XP · " + count(state.done) + "/8 games · " + count(state.qdone) + "/" + Q.length + " quests" }),
-        el("p", { style: "color:#5b6275;font-size:.9rem", text: finished ? "Ask your grown-up to screenshot or print this and stick it on the fridge!" : "Finish all 8 missions to complete it." })
-      ])
-    ]));
-  }
-
-  function viewGrownups() {
-    var confirmBox = el("div", { class: "row" });
-    function resetAsk() {
-      confirmBox.replaceChildren(el("span", { text: "Erase all progress on this device?" }),
-        el("button", { class: "btn small", style: "background:var(--red)", type: "button", text: "Yes, erase", onclick: function () { try { localStorage.removeItem(KEY); } catch (e) {} location.hash = ""; location.reload(); } }),
-        el("button", { class: "btn small ghost", type: "button", text: "Cancel", onclick: function () { confirmBox.replaceChildren(resetBtn); } }));
-    }
-    var resetBtn = el("button", { class: "btn small ghost", type: "button", text: "Reset progress", onclick: resetAsk });
-    confirmBox.appendChild(resetBtn);
-    var unlock = el("button", { class: "btn small " + (state.unlockAll ? "green" : "ghost"), type: "button", text: state.unlockAll ? "All missions unlocked" : "Unlock all missions", onclick: function () { state.unlockAll = !state.unlockAll; save(); viewGrownups(); } });
-    var sound = el("button", { class: "btn small ghost", type: "button", text: state.sound ? "Sound: on" : "Sound: off", onclick: function () { state.sound = !state.sound; save(); viewGrownups(); } });
-    app.replaceChildren(el("div", { class: "stack", style: "max-width:760px" }, [
-      el("span", { class: "label", text: "For grown-ups" }),
-      el("h2", { text: "You're the co-pilot" }),
-      el("div", { class: "panel stack" }, [
-        el("h3", { text: "Why you need to be there" }),
-        el("p", { text: "Claude's terms require users to be 18 or older. Creator Quest is built for you and your kid together: Claude runs on your account, on your screen. Your kid picks what to build, edits the prompts and does the testing. You paste prompts into Claude and stamp each mission when it's done." })
-      ]),
-      el("div", { class: "panel stack" }, [
-        el("h3", { text: "What you need" }),
-        el("ul", { style: "margin:0;padding-left:1.2em" }, [
-          el("li", { text: "A Windows PC or Mac. Roblox Studio doesn't run on phones, tablets or Chromebooks." }),
-          el("li", { text: "Roblox Studio, free from create.roblox.com, and a Roblox account for your kid (turn on Parental Controls for under-13s)." }),
-          el("li", { text: "A Claude account for you at claude.ai. The free plan works; bigger missions go smoother on a paid plan because the scripts are long." })
-        ])
-      ]),
-      el("div", { class: "panel stack" }, [
-        el("h3", { text: "How the path works" }),
-        el("p", { text: "The path has 8 units. Each unit ends with a big game project, and from Unit 2 on, 3 short skill quests (10–15 minutes each) come first to teach the skills that game needs: detailed models, leaderboards, tools, NPCs, tweens, screen GUIs, effects, terrain and more. Each step unlocks the next. Building on more days in a row grows the streak." }),
-        el("h3", { text: "How each big game works" }),
-        el("p", { text: "AI Brain: a short lesson on how AI works, with a quiz. Build: one Mega Prompt makes Claude write a whole game system; a tested rescue script is included if Claude's version breaks. Boss Bug: find the bug in real code. Power-ups: prompts that add features. Finish: you hold the stamp button to complete it." })
-      ]),
-      el("div", { class: "panel stack" }, [el("h3", { text: "Settings" }), el("div", { class: "row" }, [unlock, sound]), confirmBox,
-        el("p", { class: "muted", style: "font-size:.9rem", text: "Progress is saved in this browser on this device." })]),
-      el("p", { class: "muted", style: "font-size:.85rem", text: "Creator Quest is an independent course. It is not made, sponsored or endorsed by Roblox Corporation or Anthropic. Roblox and Roblox Studio are trademarks of Roblox Corporation. Claude is a product of Anthropic." })
-    ]));
-  }
-
-  function render() {
-    hud();
-    if (!state.name) return viewWelcome();
-    var h = (location.hash || "#map").slice(1);
-    if (h.indexOf("mission-") === 0) viewMission(parseInt(h.slice(8), 10));
-    else if (h.indexOf("quest-") === 0) viewQuest(h.slice(6));
-    else if (h === "lab") viewLab();
-    else if (h === "vault") viewVault();
-    else if (h === "badges") viewBadges();
-    else if (h === "grownups") viewGrownups();
-    else viewMap();
-    hud();
-  }
-  window.addEventListener("hashchange", function () { render(); window.scrollTo(0, 0); });
-  render();
-})();
-</script>
+<script>/*INJECT:figures*/</script>
+<script>/*INJECT:app*/</script>

@@ -1,6 +1,57 @@
 // Skill Quests: 3 short lessons before each big game (Missions 2-8). Each one prepares for the next game.
 // icon: model | code | look | ai
 window.QUESTS = [
+  // ---- Unit 0: warm-up before Mission 1 ----
+  {
+    id: "0a", before: 1, icon: "look", title: "Get Roblox Studio", time: "15 min",
+    learn: "Install the free app real Roblox developers use.",
+    know: [
+      "Every Roblox game, even the giant ones, was built in Roblox Studio. It's free!",
+      "Studio runs on a Windows PC or a Mac. It doesn't work on phones, tablets or Chromebooks.",
+      "You log in with your normal Roblox account. Ask your grown-up to help with the download."
+    ],
+    prompt: null,
+    steps: [
+      { t: "Grown-up: go to create.roblox.com on the computer and download Roblox Studio." },
+      { t: "Install it and log in with your Roblox account." },
+      { t: "Open Studio. Click New, then the Baseplate template.", fig: "new" }
+    ],
+    check: { q: "Where are Roblox games built?", options: ["In the Roblox app on a phone", "In Roblox Studio on a computer", "In a web browser game"], answer: 1, explain: "Roblox Studio on a PC or Mac. You've got it now!" }
+  },
+  {
+    id: "0b", before: 1, icon: "look", title: "Studio Tour", time: "15 min",
+    learn: "Find the 3 panels you'll use in every mission.",
+    know: [
+      "Explorer is the list of everything in your game. Scripts go in a folder called ServerScriptService.",
+      "Properties shows the settings of whatever you click: color, size, material...",
+      "Output is where errors show up in red. When something breaks, Output tells you why."
+    ],
+    prompt: null,
+    steps: [
+      { t: "Click the View tab and turn on Explorer, Properties and Output.", fig: "panels" },
+      { t: "Find ServerScriptService in the Explorer. You'll use it a lot!", fig: "explorer" },
+      { t: "On the Home tab click Part. Then change its Color and Material in Properties.", fig: "properties" },
+      { t: "Press Play to walk around your world. Press Stop to go back to building.", fig: "play" }
+    ],
+    check: { q: "Which panel shows errors when something breaks?", options: ["Properties", "Output", "Toolbox"], answer: 1, explain: "Output! Red text there means something needs fixing." }
+  },
+  {
+    id: "0c", before: 1, icon: "ai", title: "Hello, Claude", time: "15 min",
+    learn: "Your first script, written by AI and run by you.",
+    know: [
+      "Claude is an AI that can write code. You tell it what you want, it writes the script.",
+      "Claude is for grown-ups (18+), so your grown-up types into Claude on their account. You decide what to ask!",
+      "Then you copy the script into Studio and press Play. That's the loop for every mission."
+    ],
+    prompt: "Hi Claude! I'm learning to make Roblox games with my parent. Please write a Roblox Script for ServerScriptService that creates a big glowing Neon block floating above the spawn. It should change to a random color every second and slowly spin. Explain simply where to paste it.",
+    steps: [
+      { t: "Grown-up: open claude.ai, paste the prompt and send it.", fig: "claude" },
+      { t: "In Studio's Explorer, hover ServerScriptService, click +, and choose Script.", fig: "explorer" },
+      { t: "Delete the line inside, then paste Claude's whole script.", fig: "editor" },
+      { t: "Press Play. Is your block glowing and spinning?", fig: "play" }
+    ],
+    check: { q: "Who types into Claude?", options: ["Me, on my own account", "My grown-up, on their account, with me deciding what to ask", "Nobody"], answer: 1, explain: "Claude is 18+, so your grown-up is your co-pilot. You're the game designer!" }
+  },
   // ---- before Mission 2: Coin Rush ----
   {
     id: "2a", before: 2, icon: "model", title: "Model Maker: Detail Boost", time: "15 min",

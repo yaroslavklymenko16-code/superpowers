@@ -27,6 +27,8 @@ page = read(J("app", "template.html"))
 page = page.replace("/*INJECT:viewer*/", read(J("app", "viewer.js")))
 page = page.replace("/*INJECT:missions*/", read(J("app", "missions.js")))
 page = page.replace("/*INJECT:quests*/", read(J("app", "quests.js")))
+page = page.replace("/*INJECT:figures*/", read(J("app", "figures.js")))
+page = page.replace("/*INJECT:app*/", read(J("app", "app.js")))
 page = page.replace("/*INJECT:data*/", "window.RESCUE=" + js_json(rescue) + ";window.VAULT=" + js_json(catalog) + ";")
 assert "/*INJECT" not in page
 
