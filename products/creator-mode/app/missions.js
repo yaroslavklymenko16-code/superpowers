@@ -270,7 +270,7 @@ window.PROMPT_LAB = [
   { goal: "You want Claude to give a hint, not the answer.", options: ["Answer pls", "Don't give me the answer. Give me a hint so I can figure out why my coin isn't adding to my score.", "Fix coin"], answer: 1, why: "You can ask Claude to coach you instead of solving it for you." }
 ];
 
-window.RANKS = ["Noob Builder", "Block Stacker", "Script Kid", "Bug Hunter", "Prompt Wizard", "Game Dev", "Studio Boss", "Legendary Creator"];
+window.RANKS = ["Noob Builder", "Block Stacker", "Script Kid", "Bug Hunter", "Prompt Wizard", "Pro Builder", "Game Dev", "Code Ninja", "Studio Boss", "Legendary Creator"];
 
 window.DREAM = {
   genre: ["Obby", "Tycoon", "Survival", "Pet Simulator", "Minigames", "Boss Rush", "Adventure", "Racing"],

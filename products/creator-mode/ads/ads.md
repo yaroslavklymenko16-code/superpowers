@@ -2,7 +2,7 @@
 
 Audience: **parents** (not kids) of 9–14 year olds who play a lot of Roblox.
 Promise: turn Roblox time into building time, and learn AI together.
-Offer: $29 one-time download: Creator Quest (a game with 8 missions, XP and badges), 118 Roblox 3D models, rescue scripts, parent guide. Send ad clicks to the checkout/product page.
+Offer: $29 one-time download: Creator Quest (a Duolingo-style path: 8 big games + 21 skill quests, XP, streaks, badges), 118 Roblox 3D models, rescue scripts, parent guide. Send ad clicks to the checkout/product page.
 
 ## Rules that keep the ads approved
 
@@ -31,6 +31,12 @@ Offer: $29 one-time download: Creator Quest (a game with 8 missions, XP and badg
 - Headline: A screen-time project you do together
 - Description: No coding experience needed
 - CTA: Shop Now
+
+**Ad F: like Duolingo, but for making games**
+- Primary text: Your kid would never skip a Duolingo streak. Now point that at something they love. Creator Quest is a path of 29 steps: short 10-minute skill quests (3D models, tools, NPCs, special effects) that build up to big Roblox games like zombie survival and boss fights. With an AI sidekick and you as co-pilot.
+- Headline: The Duolingo of Roblox game-making
+- Use the path screenshot (`build/img/shot-map.jpg`).
+- Note: don't use Duolingo's name, owl or green in the creative itself; it's fine as a comparison in the text.
 
 **Ad E: the bonus pack**
 - Primary text: Every model your kid needs to build their dream Roblox game: castles, rockets, pets that follow you, jump pads, portals, swords. 118 drag-and-drop models come free with Creator Quest.

@@ -26,6 +26,7 @@ catalog = json.loads(read(J("build", "vault_catalog.json")))
 page = read(J("app", "template.html"))
 page = page.replace("/*INJECT:viewer*/", read(J("app", "viewer.js")))
 page = page.replace("/*INJECT:missions*/", read(J("app", "missions.js")))
+page = page.replace("/*INJECT:quests*/", read(J("app", "quests.js")))
 page = page.replace("/*INJECT:data*/", "window.RESCUE=" + js_json(rescue) + ";window.VAULT=" + js_json(catalog) + ";")
 assert "/*INJECT" not in page
 
