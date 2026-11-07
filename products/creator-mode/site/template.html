@@ -1,0 +1,253 @@
+<title>Creator Mode</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Creator Quest: a game where kids build real Roblox games with AI. 8 missions, XP and badges, plus 118 free 3D models.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+  /* Layout: light parent-facing page that frames the dark kid app like a game screen. */
+  :root {
+    --bg: #f5f7fc; --surface: #ffffff; --fg: #13213a; --muted: #56627a; --line: #dde2ee; --grid: #e7ebf4;
+    --blue: #2f6bff; --red: #ff4f4f; --yellow: #ffd23f; --green: #1fbf66; --orange: #ff8a2b; --pink: #ff5fa8; --purple: #9b5cff;
+    --night: #13213a; --on-night: #f3f7ff; --ink: #0b1528;
+    --display: "Fredoka", "Trebuchet MS", system-ui, sans-serif;
+    --body: "Atkinson Hyperlegible", system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --bg: #0f1626; --surface: #18233a; --fg: #eef2fa; --muted: #a3afc6; --line: #2a3754; --grid: #152036;
+    --blue: #6b98ff; --green: #3cd685; --night: #0a1222; --on-night: #f3f7ff; --ink: #05090f; color-scheme: dark; } }
+  :root[data-theme="dark"] {
+    --bg: #0f1626; --surface: #18233a; --fg: #eef2fa; --muted: #a3afc6; --line: #2a3754; --grid: #152036;
+    --blue: #6b98ff; --green: #3cd685; --night: #0a1222; --on-night: #f3f7ff; --ink: #05090f; color-scheme: dark; }
+
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--fg); font: 17px/1.55 var(--body);
+    background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: 30px 30px; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  h1, h2, h3 { font-family: var(--display); font-weight: 700; line-height: 1.04; text-wrap: balance; margin: 0; }
+  h1 { font-size: clamp(2.6rem, 6.8vw, 4.8rem); letter-spacing: -0.01em; }
+  h2 { font-size: clamp(1.8rem, 4vw, 2.7rem); }
+  h3 { font-size: 1.2rem; }
+  p { margin: 0; }
+  section { padding-block: 64px; }
+  .label { font: 700 .78rem/1 var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .lede { font-size: 1.2rem; color: var(--muted); max-width: 40ch; }
+  img { display: block; max-width: 100%; height: auto; }
+
+  .btn { display: inline-flex; align-items: center; gap: 10px; font: 700 1.1rem var(--display); padding: 14px 26px; border-radius: 14px; text-decoration: none;
+    background: var(--yellow); color: #0b1528; border: 3px solid var(--ink); box-shadow: 0 6px 0 var(--ink); transition: transform .08s, box-shadow .08s; }
+  .btn:active { transform: translateY(5px); box-shadow: 0 1px 0 var(--ink); }
+  .btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+  .btn.small { font-size: .95rem; padding: 9px 16px; box-shadow: 0 4px 0 var(--ink); }
+
+  header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 16px; }
+  .logo { display: flex; gap: 10px; align-items: center; font: 700 1.25rem var(--display); }
+  .studs { display: flex; gap: 4px; } .studs i { display: block; width: 14px; height: 14px; border-radius: 3px; border: 2px solid var(--ink); }
+
+  .hero { padding-block: 28px 72px; }
+  .hero-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 44px; align-items: center; }
+  .hero-grid > * { min-width: 0; }
+  .hero h1 em { font-style: normal; color: var(--blue); }
+  .cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; margin-top: 28px; }
+  .price { font: 700 1.7rem var(--display); }
+  .price small { display: block; font: 400 .9rem var(--body); color: var(--muted); }
+  .screen { background: var(--night); border: 4px solid var(--ink); border-radius: 18px; padding: 10px; box-shadow: 0 10px 0 var(--ink); transform: rotate(1.2deg); }
+  .screen img { border-radius: 10px; }
+  .sticker { display: inline-block; font: 700 .9rem var(--display); background: var(--pink); color: #fff; border: 3px solid var(--ink); border-radius: 10px; padding: 4px 10px; box-shadow: 0 3px 0 var(--ink); transform: rotate(-3deg); }
+
+  .band { background: var(--night); color: var(--on-night); }
+  .band .wrap { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; }
+  .band .wrap > * { min-width: 0; }
+  .band p { color: #c3cee3; font-size: 1.1rem; max-width: 54ch; }
+  .band p + p { margin-top: 14px; }
+
+  .missions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 30px; }
+  .m { background: var(--surface); border: 3px solid var(--ink); border-radius: 14px; box-shadow: 0 5px 0 var(--ink); overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+  .m .top { padding: 12px 14px; color: #0b1528; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .m .top b { font: 700 1.6rem var(--display); }
+  .m .top span { font: 700 1.05rem var(--display); text-align: right; }
+  .m p { padding: 12px 14px 14px; font-size: .92rem; color: var(--muted); }
+
+  .feature { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: center; }
+  .feature > * { min-width: 0; }
+  .feature.flip > :first-child { order: 2; }
+  .shot { border: 4px solid var(--ink); border-radius: 16px; overflow: hidden; box-shadow: 0 8px 0 var(--ink); background: var(--night); }
+  ul.ticks { list-style: none; padding: 0; margin: 18px 0 0; display: flex; flex-direction: column; gap: 10px; }
+  ul.ticks li { padding-left: 32px; position: relative; }
+  ul.ticks li::before { content: ""; position: absolute; left: 0; top: 4px; width: 18px; height: 18px; border-radius: 5px; border: 3px solid var(--ink); background: var(--green); }
+  .strip { border: 4px solid var(--ink); border-radius: 16px; overflow: hidden; box-shadow: 0 8px 0 var(--ink); margin-top: 26px; background: #dfe9f5; }
+  .stats { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+  .stat { background: var(--surface); border: 3px solid var(--ink); border-radius: 12px; padding: 10px 14px; font-weight: 700; }
+  .stat b { font: 700 1.5rem var(--display); color: var(--blue); margin-right: 6px; font-variant-numeric: tabular-nums; }
+
+  .copilot { background: var(--surface); border: 3px dashed var(--muted); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 10px; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .two > * { min-width: 0; }
+
+  details { background: var(--surface); border: 3px solid var(--line); border-radius: 12px; padding: 14px 18px; }
+  details + details { margin-top: 10px; }
+  summary { font: 700 1.05rem var(--display); cursor: pointer; }
+  summary:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+  details p { margin-top: 10px; color: var(--muted); max-width: 70ch; }
+
+  .final { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  .box-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; max-width: 760px; }
+  .box-list span { background: var(--surface); border: 3px solid var(--ink); border-radius: 10px; padding: 6px 12px; font-weight: 700; font-size: .95rem; }
+  footer { padding-block: 30px; font-size: .82rem; color: var(--muted); border-top: 1px solid var(--line); background: var(--bg); }
+  footer p { max-width: 82ch; }
+
+  @media (max-width: 880px) {
+    .hero-grid, .band .wrap, .feature, .two { grid-template-columns: 1fr; gap: 30px; }
+    .feature.flip > :first-child { order: 0; }
+    .missions { grid-template-columns: repeat(2, 1fr); }
+    .screen { transform: none; }
+  }
+  @media (max-width: 480px) { .missions { grid-template-columns: 1fr; } section { padding-block: 48px; } }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<header>
+  <div class="wrap">
+    <div class="logo"><span class="studs"><i style="background:var(--blue)"></i><i style="background:var(--red)"></i><i style="background:var(--yellow)"></i><i style="background:var(--green)"></i></span>Creator Mode</div>
+    <a class="btn small" href="#buy">Get it</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="label">For Roblox-obsessed kids, ages 9–14</p>
+        <h1 style="margin-top:14px">Stop playing Roblox. Start <em>building</em> it.</h1>
+        <p class="lede" style="margin-top:20px">Creator Quest is a game where your kid builds real Roblox games with AI: obbies, tycoons, zombie survival, pet simulators, boss fights. They earn XP and badges, and learn how AI actually works.</p>
+        <div class="cta-row">
+          <a class="btn" href="#buy">Get Creator Mode</a>
+          <div class="price">$29 <small>One-time · instant download</small></div>
+        </div>
+      </div>
+      <div>
+        <div class="screen"><img src="{{IMG_MAP}}" alt="Creator Quest world map showing 8 missions, XP bar and level" width="1100" height="760"></div>
+        <p style="margin-top:22px;text-align:right"><span class="sticker">+ 118 free 3D models</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <h2>They already love Roblox. Point that energy somewhere.</h2>
+      <div>
+        <p>Your kid can spend a whole afternoon in Roblox. Every game they love was made in Roblox Studio, a free tool anyone can download. Creator Quest turns that obsession into building.</p>
+        <p>With Claude as a coding sidekick, a 10-year-old can build a 25-stage lava obby in their first session. By Mission 7 they're coding a giant boss with attack phases and a health bar.</p>
+        <p>Along the way, every mission teaches one big idea about AI: how it predicts, why it makes mistakes, how to give clear instructions, and how to stay safe.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="label">8 missions</p>
+      <h2 style="margin-top:10px">Real games. Fast.</h2>
+      <p class="lede" style="margin-top:12px;max-width:62ch">Each mission is one big build. One "Mega Prompt" gets Claude to write a whole game system, then your kid tests it, hunts bugs and adds power-ups.</p>
+      <div class="missions">
+        <div class="m"><div class="top" style="background:#ff5a36"><b>1</b><span>Lava Tower</span></div><p>25-stage spiral obby with spinning lasers, elevators and checkpoints</p></div>
+        <div class="m"><div class="top" style="background:#ffc83d"><b>2</b><span>Coin Rush</span></div><p>Coins, Gold Rain events and a shop with Speed Boots and Giant Mode</p></div>
+        <div class="m"><div class="top" style="background:#36d67a"><b>3</b><span>Tycoon Factory</span></div><p>Droppers, conveyors, upgrades and a Golden Statue</p></div>
+        <div class="m"><div class="top" style="background:#7cc642"><b>4</b><span>Zombie Night</span></div><p>Swords, zombie waves and a GIANT zombie every 5th wave</p></div>
+        <div class="m"><div class="top" style="background:#ff5fa8"><b>5</b><span>Pet Hatchery</span></div><p>Mystery eggs, 5 rarities and pets that follow you</p></div>
+        <div class="m"><div class="top" style="background:#3d8bff"><b>6</b><span>Round Arena</span></div><p>Lobby, countdown and two deadly minigame modes</p></div>
+        <div class="m"><div class="top" style="background:#ff8a2b"><b>7</b><span>Boss Battle</span></div><p>A giant Lava King with slams, meteors and rage mode</p></div>
+        <div class="m"><div class="top" style="background:#b46bff"><b>8</b><span>Dream Game</span></div><p>Design their own game, then publish it on Roblox</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap feature">
+      <div class="shot"><img src="{{IMG_BUG}}" alt="A Boss Bug challenge: tap the line of code with the bug" width="1008" height="470"></div>
+      <div>
+        <p class="label">Feels like a game</p>
+        <h2 style="margin-top:10px">XP, levels, badges and Boss Bugs</h2>
+        <ul class="ticks">
+          <li><b>AI Brain quizzes</b> explain how AI works in kid language</li>
+          <li><b>Boss Bugs:</b> find the broken line in real code</li>
+          <li><b>Prompt Lab:</b> a mini-game for writing better prompts</li>
+          <li><b>Dream Game Designer:</b> spin up a genre, world and twist</li>
+          <li>Level up from <i>Noob Builder</i> to <i>Legendary Creator</i></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="feature flip">
+        <div class="shot"><img src="{{IMG_VAULT}}" alt="Creator Vault: a 3D model browser with pets, trees and buildings" width="1100" height="760"></div>
+        <div>
+          <p class="label">Bonus: the Creator Vault</p>
+          <h2 style="margin-top:10px">118 models to build any game</h2>
+          <p class="lede" style="margin-top:12px">Drag-and-drop Roblox models: trees, castles, crates, campfires, rockets, pumpkins. 46 of them have scripts inside and work as soon as you press Play.</p>
+          <div class="stats">
+            <span class="stat"><b>17</b>obby pieces</span>
+            <span class="stat"><b>8</b>pets that follow you</span>
+            <span class="stat"><b>5</b>tools</span>
+            <span class="stat"><b>10</b>packs</span>
+          </div>
+        </div>
+      </div>
+      <div class="strip"><img src="{{IMG_STRIP}}" alt="A row of Creator Vault models: trees, cottage, castle tower, rocket, pumpkin, pets" width="1170" height="260"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap two">
+      <div>
+        <h2>What your kid walks away with</h2>
+        <ul class="ticks">
+          <li>Their own Roblox game, published for friends and family</li>
+          <li>Real Luau code skills: events, loops, leaderboards, saving data, GUIs</li>
+          <li>How AI predicts, why it's sometimes wrong, and how to check it</li>
+          <li>How to break big problems into small steps and debug them</li>
+          <li>Rules for staying safe and private online</li>
+        </ul>
+      </div>
+      <div class="copilot">
+        <p class="label">Built for doing together</p>
+        <h3>You're the co-pilot</h3>
+        <p>Claude's terms require users to be 18+, so Creator Quest runs Claude on your account, with you beside your kid. They pick what to build, edit the prompts and do the testing. You paste prompts into Claude and hold the "stamp" button when a mission is done.</p>
+        <p style="color:var(--muted)">And if Claude's code breaks, every mission includes a tested rescue script. Nobody gets stuck.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap" style="max-width:800px">
+      <h2 style="margin-bottom:22px">Questions parents ask</h2>
+      <details><summary>Does my kid need to know how to code?</summary><p>No. Mission 1 starts with opening Roblox Studio for the first time. If they can read and follow steps, they're ready. Best for ages 9–14.</p></details>
+      <details><summary>What do we need?</summary><p>A Windows PC or Mac (Roblox Studio doesn't run on phones, tablets or Chromebooks), the free Roblox Studio app, a Roblox account for your kid, and a Claude account for you. The free Claude plan works to start; a paid plan is smoother for long sessions because the scripts are big.</p></details>
+      <details><summary>What exactly do I download?</summary><p>A zip with Creator Quest (opens in any web browser), the Creator Vault (118 Roblox model files), rescue scripts for every mission, and a 4-page parent guide.</p></details>
+      <details><summary>Isn't this just more screen time?</summary><p>It's screen time where they make something. The parent guide includes a Creator Hours chart so you can agree on a deal, like "an hour of building earns thirty minutes of playing."</p></details>
+      <details><summary>Is the AI safe for kids?</summary><p>Claude runs on your account with you in the room. Mission 6 teaches the safety rules directly: never share personal info, check what AI says, and remember AI is a tool, not a friend.</p></details>
+      <details><summary>What if it's not a fit?</summary><p>Email us within 30 days for a full refund.</p></details>
+    </div>
+  </section>
+
+  <section id="buy">
+    <div class="wrap final">
+      <span class="studs" style="gap:6px"><i style="background:var(--blue);width:24px;height:24px"></i><i style="background:var(--red);width:24px;height:24px"></i><i style="background:var(--yellow);width:24px;height:24px"></i><i style="background:var(--green);width:24px;height:24px"></i></span>
+      <h2>This weekend, build a game together.</h2>
+      <div class="box-list"><span>Creator Quest app</span><span>8 missions</span><span>118 3D models</span><span>7 rescue scripts</span><span>Parent guide</span></div>
+      <a class="btn" id="checkout" href="https://gumroad.com/">Get Creator Mode for $29</a>
+      <p style="color:var(--muted);font-size:.95rem">One-time payment. Instant download.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Creator Mode is an independent course. It is not made, sponsored or endorsed by Roblox Corporation or Anthropic. Roblox and Roblox Studio are trademarks of Roblox Corporation. Claude is a product of Anthropic. Claude requires users to be 18 or older; Creator Quest is designed for a parent and child to use together.</p>
+  </div>
+</footer>
+
+<script>
+  // Set this to your Gumroad / Stripe / Lemon Squeezy product link.
+  const CHECKOUT_URL = "https://gumroad.com/";
+  document.getElementById("checkout").href = CHECKOUT_URL;
+</script>

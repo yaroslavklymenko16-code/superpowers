@@ -1,0 +1,783 @@
+<title>Creator Quest</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+  /* Game UI: night "baseplate" grid, chunky toy-brick buttons. Single dark look on purpose. */
+  :root {
+    --bg: #13213a; --bg-2: #0e1a2f; --panel: #1d3157; --panel-2: #24406f; --edge: #0a1324;
+    --fg: #f3f7ff; --muted: #a9b9d6; --grid: rgba(255,255,255,0.045);
+    --blue: #3d8bff; --red: #ff4f4f; --yellow: #ffd23f; --green: #36d67a; --orange: #ff8a2b; --pink: #ff5fa8; --purple: #b46bff;
+    --ink: #0b1528;
+    --display: "Fredoka", "Trebuchet MS", system-ui, sans-serif;
+    --body: "Atkinson Hyperlegible", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html, body { min-height: 100%; }
+  body {
+    background: var(--bg); color: var(--fg); font: 16px/1.5 var(--body);
+    background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg-2); }
+  h1, h2, h3, .display { font-family: var(--display); font-weight: 700; line-height: 1.08; margin: 0; text-wrap: balance; }
+  h1 { font-size: clamp(2.2rem, 6vw, 3.6rem); }
+  h2 { font-size: clamp(1.6rem, 4vw, 2.2rem); }
+  h3 { font-size: 1.25rem; }
+  p { margin: 0; }
+  button { font: inherit; color: inherit; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  main.wrap { padding-block: 24px 64px; }
+
+  /* Chunky buttons */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;
+    font: 700 1.05rem var(--display); letter-spacing: .01em; padding: 12px 20px; border-radius: 12px;
+    border: 3px solid var(--ink); background: var(--blue); color: #fff; box-shadow: 0 5px 0 var(--ink);
+    transition: transform .08s, box-shadow .08s, filter .15s; text-decoration: none;
+  }
+  .btn:hover { filter: brightness(1.08); }
+  .btn:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
+  .btn:focus-visible, .chip:focus-visible, .opt:focus-visible, .codeline:focus-visible, .node:focus-visible, input:focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
+  .btn.yellow { background: var(--yellow); color: var(--ink); }
+  .btn.green { background: var(--green); color: var(--ink); }
+  .btn.ghost { background: var(--panel-2); }
+  .btn.small { font-size: .9rem; padding: 7px 12px; border-radius: 10px; box-shadow: 0 3px 0 var(--ink); }
+  .btn[disabled] { opacity: .5; cursor: not-allowed; }
+
+  .panel { background: var(--panel); border: 3px solid var(--ink); border-radius: 16px; box-shadow: 0 6px 0 var(--ink); padding: 18px; }
+  .label { font: 700 .75rem/1 var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .muted { color: var(--muted); }
+  .stack { display: flex; flex-direction: column; gap: 14px; }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+
+  /* HUD */
+  header.hud { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg-2); border-bottom: 3px solid var(--ink); }
+  .hud .wrap { display: flex; align-items: center; gap: 14px; padding-block: 10px; flex-wrap: wrap; }
+  .me { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .avatar { width: 40px; height: 40px; border-radius: 10px; border: 3px solid var(--ink); position: relative; flex: none; box-shadow: 0 3px 0 var(--ink); }
+  .avatar::before, .avatar::after { content: ""; position: absolute; top: 12px; width: 6px; height: 8px; background: var(--ink); border-radius: 2px; }
+  .avatar::before { left: 9px; } .avatar::after { right: 9px; }
+  .me-name { font: 700 1.05rem var(--display); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 14ch; }
+  .me-rank { font-size: .8rem; color: var(--yellow); font-family: var(--display); font-weight: 600; }
+  .xp { flex: 1 1 180px; min-width: 160px; display: flex; align-items: center; gap: 10px; }
+  .lvl { font: 700 .95rem var(--display); background: var(--yellow); color: var(--ink); border: 3px solid var(--ink); border-radius: 10px; padding: 2px 8px; white-space: nowrap; }
+  .bar { flex: 1; height: 18px; background: var(--edge); border: 3px solid var(--ink); border-radius: 10px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: repeating-linear-gradient(-45deg, var(--green), var(--green) 10px, #2cc06c 10px, #2cc06c 20px); transition: width .6s cubic-bezier(.2,.9,.3,1.2); }
+  .xpnum { font: 600 .85rem var(--mono); color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  nav.tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip { cursor: pointer; font: 700 .9rem var(--display); padding: 7px 12px; border-radius: 10px; border: 3px solid var(--ink); background: var(--panel); box-shadow: 0 3px 0 var(--ink); }
+  .chip[aria-current="page"], .chip[aria-pressed="true"] { background: var(--yellow); color: var(--ink); }
+
+  /* Welcome */
+  .welcome { display: grid; grid-template-columns: 1.1fr 1fr; gap: 28px; align-items: center; padding-block: 24px; }
+  .welcome > * { min-width: 0; }
+  .title-blocks { display: flex; gap: 6px; margin-bottom: 14px; }
+  .title-blocks span { width: 26px; height: 26px; border: 3px solid var(--ink); border-radius: 6px; box-shadow: 0 3px 0 var(--ink); }
+  .welcome h1 span { color: var(--yellow); }
+  input[type="text"] { width: 100%; font: 700 1.2rem var(--display); padding: 12px 14px; border-radius: 12px; border: 3px solid var(--ink); background: var(--bg-2); color: var(--fg); }
+  .swatches { display: flex; gap: 10px; flex-wrap: wrap; }
+  .swatch { width: 44px; height: 44px; border-radius: 10px; border: 3px solid var(--ink); cursor: pointer; box-shadow: 0 3px 0 var(--ink); }
+  .swatch[aria-pressed="true"] { outline: 3px solid #fff; outline-offset: 2px; }
+  .copilot-note { border: 3px dashed var(--yellow); border-radius: 14px; padding: 14px; font-size: .95rem; }
+
+  /* Map */
+  .map { position: relative; display: grid; grid-template-columns: 1fr 1fr; column-gap: 60px; row-gap: 14px; grid-auto-rows: minmax(52px, auto); margin-top: 20px; }
+  .map::before { content: ""; position: absolute; left: 50%; top: 30px; bottom: 30px; border-left: 6px dotted rgba(255,255,255,.18); transform: translateX(-3px); }
+  .node { position: relative; grid-row: var(--r) / span 2; cursor: pointer; text-align: left; display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: center;
+    background: var(--panel); border: 3px solid var(--ink); border-radius: 16px; box-shadow: 0 6px 0 var(--ink); padding: 14px; transition: transform .12s; }
+  .node:hover { transform: translateY(-3px); }
+  .node:nth-child(odd) { grid-column: 1; }
+  .node:nth-child(even) { grid-column: 2; }
+  .node .num { width: 58px; height: 58px; border-radius: 14px; border: 3px solid var(--ink); display: grid; place-items: center; font: 700 1.8rem var(--display); color: var(--ink); box-shadow: 0 4px 0 var(--ink); }
+  .node .meta { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+  .node .tag { font-size: .9rem; color: var(--muted); }
+  .node.locked { filter: grayscale(.85) brightness(.7); cursor: not-allowed; }
+  .node.locked:hover { transform: none; }
+  .status { display: inline-flex; align-items: center; gap: 6px; font: 700 .75rem var(--display); letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 8px; border: 2px solid var(--ink); width: fit-content; }
+  .status.done { background: var(--green); color: var(--ink); }
+  .status.play { background: var(--yellow); color: var(--ink); }
+  .status.lock { background: var(--edge); color: var(--muted); }
+  .stars { color: var(--yellow); letter-spacing: 2px; font-size: .85rem; }
+  .stars .off { color: rgba(255,255,255,.2); }
+
+  /* Mission */
+  .mhead { border-radius: 18px; border: 3px solid var(--ink); box-shadow: 0 6px 0 var(--ink); padding: 22px; color: var(--ink); display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: end; }
+  .mhead > * { min-width: 0; }
+  .mhead .label { color: rgba(11,21,40,.7); }
+  .mhead p { max-width: 60ch; font-size: 1.05rem; margin-top: 10px; }
+  .builds { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+  .builds li { background: var(--panel-2); border: 3px solid var(--ink); border-radius: 12px; padding: 10px 12px; font-weight: 700; font-size: .95rem; }
+  .stepper { display: flex; gap: 8px; flex-wrap: wrap; margin: 22px 0 16px; }
+  .stepper .chip { display: inline-flex; gap: 8px; align-items: center; }
+  .stepper .chip .ok { width: 18px; height: 18px; border-radius: 5px; border: 2px solid var(--ink); background: var(--edge); }
+  .stepper .chip .ok.on { background: var(--green); }
+  .lesson { font-size: 1.08rem; max-width: 64ch; }
+  .opt { display: block; width: 100%; text-align: left; cursor: pointer; padding: 12px 14px; border-radius: 12px; border: 3px solid var(--ink); background: var(--panel-2); box-shadow: 0 4px 0 var(--ink); font-weight: 700; }
+  .opt.right { background: var(--green); color: var(--ink); }
+  .opt.wrong { background: var(--red); animation: shake .35s; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+  .explain { font-weight: 700; color: var(--green); }
+  .check { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; padding: 10px 12px; border-radius: 12px; background: var(--panel-2); border: 3px solid var(--ink); }
+  .check input { appearance: none; flex: none; width: 26px; height: 26px; margin: 0; border: 3px solid var(--ink); border-radius: 7px; background: var(--edge); cursor: pointer; display: grid; place-items: center; }
+  .check input:checked { background: var(--green); }
+  .check input:checked::after { content: ""; width: 8px; height: 13px; border: solid var(--ink); border-width: 0 4px 4px 0; transform: rotate(45deg) translate(-1px, -1px); }
+  .check input:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+  .check span { flex: 1; min-width: 0; }
+  .prompt-box { position: relative; background: var(--bg-2); border: 3px solid var(--green); border-radius: 14px; padding: 16px; }
+  .prompt-box pre { margin: 0; white-space: pre-wrap; font: .92rem/1.55 var(--mono); color: #d9ffe9; }
+  .code { background: #0a1220; border: 3px solid var(--ink); border-radius: 14px; overflow: auto; max-height: 420px; }
+  .code pre { margin: 0; padding: 14px; font: .82rem/1.5 var(--mono); color: #d8e3ff; white-space: pre; }
+  details.rescue > summary { cursor: pointer; font: 700 1.05rem var(--display); list-style: none; }
+  details.rescue > summary::-webkit-details-marker { display: none; }
+  details.rescue > summary::before { content: "+ "; color: var(--yellow); }
+  details.rescue[open] > summary::before { content: "– "; }
+  .codeline { display: grid; grid-template-columns: 36px 1fr; width: 100%; text-align: left; cursor: pointer; border: 0; background: transparent; padding: 4px 8px; border-radius: 8px; font: .92rem/1.5 var(--mono); color: #d8e3ff; white-space: pre-wrap; }
+  .codeline:hover { background: rgba(255,255,255,.07); }
+  .codeline .ln { color: #5e7194; user-select: none; }
+  .codeline.right { background: rgba(54,214,122,.3); }
+  .codeline.wrong { background: rgba(255,79,79,.3); animation: shake .35s; }
+  .bugbox { background: #0a1220; border: 3px solid var(--ink); border-radius: 14px; padding: 8px; overflow-x: auto; }
+  .power { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+  .power .panel { display: flex; flex-direction: column; gap: 10px; }
+  .power .panel > *:last-child { margin-top: auto; }
+  .power code { display: block; font: .85rem/1.5 var(--mono); background: var(--bg-2); padding: 10px; border-radius: 10px; white-space: pre-wrap; color: #d9ffe9; }
+  .hold { position: relative; overflow: hidden; }
+  .hold .fill { position: absolute; inset: 0; width: 0; background: rgba(255,255,255,.35); pointer-events: none; }
+  .slot { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .slot div { background: var(--bg-2); border: 3px solid var(--ink); border-radius: 12px; padding: 12px; text-align: center; min-width: 0; }
+  .slot b { display: block; font: 700 1.15rem var(--display); color: var(--yellow); margin-top: 4px; overflow-wrap: anywhere; }
+
+  /* Vault */
+  .vault-top { display: grid; grid-template-columns: 1.2fr 1fr; gap: 18px; }
+  .vault-top > * { min-width: 0; }
+  .viewer { position: relative; aspect-ratio: 4 / 3; max-width: 100%; background: radial-gradient(circle at 50% 40%, #2a4a80, var(--bg-2)); border: 3px solid var(--ink); border-radius: 16px; overflow: hidden; box-shadow: 0 6px 0 var(--ink); }
+  .viewer canvas { width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; }
+  .viewer .hint { position: absolute; left: 12px; bottom: 10px; font-size: .8rem; color: var(--muted); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; margin-top: 14px; }
+  .tile { cursor: pointer; background: var(--panel); border: 3px solid var(--ink); border-radius: 12px; padding: 6px; display: flex; flex-direction: column; align-items: center; gap: 4px; box-shadow: 0 4px 0 var(--ink); min-width: 0; }
+  .tile img { width: 100%; aspect-ratio: 1; object-fit: contain; }
+  .tile span { font: 600 .82rem var(--display); text-align: center; overflow-wrap: anywhere; }
+  .tile[aria-pressed="true"] { background: var(--panel-2); outline: 3px solid var(--yellow); }
+  .pill { font: 700 .7rem var(--display); letter-spacing: .06em; text-transform: uppercase; padding: 2px 7px; border-radius: 6px; background: var(--green); color: var(--ink); border: 2px solid var(--ink); }
+
+  /* Badges + certificate */
+  .badges { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .badge { text-align: center; padding: 14px 10px; }
+  .badge .medal { width: 64px; height: 64px; margin: 0 auto 8px; border-radius: 50%; border: 4px solid var(--ink); display: grid; place-items: center; font: 700 1.5rem var(--display); color: var(--ink); box-shadow: 0 4px 0 var(--ink); }
+  .badge.off { opacity: .45; filter: grayscale(1); }
+  .cert { background: #fffdf5; color: var(--ink); border: 4px solid var(--ink); border-radius: 18px; padding: 32px 24px; text-align: center; display: flex; flex-direction: column; gap: 12px; align-items: center; box-shadow: 0 8px 0 var(--ink); }
+  .cert .name { font: 700 clamp(2rem, 6vw, 3rem) var(--display); border-bottom: 3px solid var(--ink); padding: 0 20px 4px; overflow-wrap: anywhere; }
+
+  /* Toasts + confetti */
+  .toast { position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 20; display: flex; flex-direction: column; gap: 8px; align-items: flex-end; pointer-events: none; }
+  .toast div { background: var(--yellow); color: var(--ink); font: 700 1.05rem var(--display); padding: 10px 16px; border: 3px solid var(--ink); border-radius: 12px; box-shadow: 0 4px 0 var(--ink); animation: pop .35s cubic-bezier(.2,.9,.3,1.4); }
+  @keyframes pop { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 15; width: 100%; height: 100%; }
+  .modal-bg { position: fixed; inset: 0; background: rgba(5,10,20,.7); z-index: 30; display: grid; place-items: center; padding: 16px; }
+  .modal { max-width: 420px; width: 100%; text-align: center; }
+
+  @media (max-width: 760px) {
+    .welcome, .vault-top { grid-template-columns: 1fr; }
+    .map::before { left: 34px; }
+    .map { grid-template-columns: 1fr; grid-auto-rows: auto; }
+    .node, .node:nth-child(odd), .node:nth-child(even) { grid-column: 1; grid-row: auto; }
+    .mhead { grid-template-columns: 1fr; }
+    .slot { grid-template-columns: 1fr; }
+    .xp { order: 3; flex-basis: 100%; }
+    header.hud { position: static; }
+    .hud .wrap { gap: 10px; }
+    nav.tabs { order: 4; flex-wrap: nowrap; overflow-x: auto; width: 100%; padding-bottom: 6px; }
+    nav.tabs .chip { flex: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before { animation: none !important; transition: none !important; } }
+</style>
+
+<header class="hud" id="hud" hidden>
+  <div class="wrap">
+    <div class="me"><div class="avatar" id="hud-avatar"></div><div><div class="me-name" id="hud-name"></div><div class="me-rank" id="hud-rank"></div></div></div>
+    <div class="xp"><span class="lvl" id="hud-lvl">LV 1</span><div class="bar"><i id="hud-bar" style="width:0%"></i></div><span class="xpnum" id="hud-xp">0 XP</span></div>
+    <nav class="tabs" aria-label="Main">
+      <button class="chip" data-go="map" type="button">Map</button>
+      <button class="chip" data-go="lab" type="button">Prompt Lab</button>
+      <button class="chip" data-go="vault" type="button">Vault</button>
+      <button class="chip" data-go="badges" type="button">Badges</button>
+      <button class="chip" data-go="grownups" type="button">Grown-ups</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" id="app"></main>
+<div class="toast" id="toast" aria-live="polite"></div>
+<canvas id="confetti"></canvas>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>/*INJECT:viewer*/</script>
+<script>/*INJECT:missions*/</script>
+<script>/*INJECT:data*/</script>
+<script>
+(function () {
+  "use strict";
+  var M = window.MISSIONS, LAB = window.PROMPT_LAB, RANKS = window.RANKS;
+  var COLORS = ["#3d8bff", "#ff4f4f", "#ffd23f", "#36d67a", "#ff8a2b", "#ff5fa8", "#b46bff", "#2fd3e0"];
+  var LEVELS = [0, 300, 800, 1500, 2300, 3200, 4200, 5200];
+  var SETUP = [
+    "Open Roblox Studio. Click New, then Baseplate.",
+    "Grown-up opens Claude (claude.ai) on their account. Paste the Mega Prompt below.",
+    "In Studio's Explorer, hover ServerScriptService, click +, choose Script. Delete the line inside.",
+    "Copy Claude's whole script into your Script. Press Play (F5)!",
+    "Something broken? Copy the red text from Output and send it to Claude with your script."
+  ];
+  var app = document.getElementById("app");
+
+  // ---------- state ----------
+  var KEY = "creator-quest-v1";
+  var state = { name: "", color: COLORS[0], done: {}, quiz: {}, steps: {}, boss: {}, power: {}, lab: {}, unlockAll: false, sound: true, dream: null };
+  try { var saved = JSON.parse(localStorage.getItem(KEY) || "null"); if (saved) for (var k in saved) state[k] = saved[k]; } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+
+  function count(o) { var n = 0; for (var k in o) if (o[k]) n++; return n; }
+  function xp() {
+    return count(state.quiz) * 50 + count(state.steps) * 20 + count(state.boss) * 100 + count(state.power) * 40 + count(state.done) * 250 + count(state.lab) * 30;
+  }
+  function level(x) { var l = 1; for (var i = 0; i < LEVELS.length; i++) if (x >= LEVELS[i]) l = i + 1; return l; }
+
+  // ---------- sound + fx ----------
+  var actx = null;
+  function beep(notes) {
+    if (!state.sound) return;
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      notes.forEach(function (n, i) {
+        var o = actx.createOscillator(), g = actx.createGain(), t = actx.currentTime + i * 0.09;
+        o.type = "square"; o.frequency.value = n;
+        g.gain.setValueAtTime(0.06, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
+        o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + 0.17);
+      });
+    } catch (e) {}
+  }
+  function toast(text) {
+    var t = document.createElement("div"); t.textContent = text;
+    document.getElementById("toast").appendChild(t);
+    setTimeout(function () { t.remove(); }, 2200);
+  }
+  var cv = document.getElementById("confetti"), cx = cv.getContext("2d"), bits = [], raf = 0;
+  function confetti() {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    cv.width = innerWidth; cv.height = innerHeight;
+    for (var i = 0; i < 140; i++) bits.push({ x: innerWidth / 2, y: innerHeight / 3, vx: (Math.random() - .5) * 14, vy: -Math.random() * 12 - 4, s: 6 + Math.random() * 8, c: COLORS[i % COLORS.length], r: Math.random() * 6, life: 120 });
+    if (!raf) tick();
+  }
+  function tick() {
+    cx.clearRect(0, 0, cv.width, cv.height);
+    bits = bits.filter(function (b) { return b.life-- > 0; });
+    bits.forEach(function (b) { b.vy += 0.35; b.x += b.vx; b.y += b.vy; b.r += 0.1; cx.save(); cx.translate(b.x, b.y); cx.rotate(b.r); cx.fillStyle = b.c; cx.fillRect(-b.s / 2, -b.s / 2, b.s, b.s); cx.restore(); });
+    raf = bits.length ? requestAnimationFrame(tick) : 0;
+    if (!raf) cx.clearRect(0, 0, cv.width, cv.height);
+  }
+  function award(bucket, key, label) {
+    if (state[bucket][key]) return false;
+    var before = level(xp());
+    state[bucket][key] = true; save();
+    var gained = { quiz: 50, steps: 20, boss: 100, power: 40, done: 250, lab: 30 }[bucket];
+    toast("+" + gained + " XP" + (label ? "  " + label : ""));
+    beep([660, 880]);
+    var after = level(xp());
+    if (after > before) { setTimeout(function () { confetti(); beep([523, 659, 784, 1046]); toast("LEVEL UP! You're a " + RANKS[after - 1]); }, 400); }
+    hud();
+    return true;
+  }
+  function copy(text, btn) {
+    function done() { var old = btn.textContent; btn.textContent = "Copied!"; setTimeout(function () { btn.textContent = old; }, 1500); }
+    try {
+      navigator.clipboard.writeText(text).then(done, function () { fallback(); });
+    } catch (e) { fallback(); }
+    function fallback() {
+      var ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); done(); } catch (e) { btn.textContent = "Select + copy it"; }
+      ta.remove();
+    }
+  }
+
+  // ---------- helpers ----------
+  function el(tag, attrs, kids) {
+    var n = document.createElement(tag);
+    if (attrs) for (var k in attrs) {
+      if (k === "text") n.textContent = attrs[k];
+      else if (k === "html") n.innerHTML = attrs[k];
+      else if (k.slice(0, 2) === "on") n.addEventListener(k.slice(2), attrs[k]);
+      else if (k === "style") n.style.cssText = attrs[k];
+      else n.setAttribute(k, attrs[k]);
+    }
+    (kids || []).forEach(function (c) { if (c) n.appendChild(typeof c === "string" ? document.createTextNode(c) : c); });
+    return n;
+  }
+  function stars(n) { var s = el("span", { class: "stars", "aria-label": n + " of 5 difficulty" }); for (var i = 1; i <= 5; i++) s.appendChild(el("span", { class: i <= n ? "" : "off", text: "■" })); return s; }
+  function unlocked(m) { return state.unlockAll || m.id === 1 || state.done[m.id - 1]; }
+  function go(view) { location.hash = view; }
+
+  function hud() {
+    var h = document.getElementById("hud");
+    h.hidden = !state.name;
+    if (!state.name) return;
+    var x = xp(), l = level(x), lo = LEVELS[l - 1], hi = LEVELS[l] || (lo + 1000);
+    document.getElementById("hud-avatar").style.background = state.color;
+    document.getElementById("hud-name").textContent = state.name;
+    document.getElementById("hud-rank").textContent = RANKS[l - 1];
+    document.getElementById("hud-lvl").textContent = "LV " + l;
+    document.getElementById("hud-bar").style.width = (l >= LEVELS.length ? 100 : Math.round(((x - lo) / (hi - lo)) * 100)) + "%";
+    document.getElementById("hud-xp").textContent = x + " XP";
+    var view = (location.hash || "#map").slice(1).split("-")[0];
+    document.querySelectorAll("[data-go]").forEach(function (b) {
+      if (b.getAttribute("data-go") === view) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
+    });
+  }
+  document.querySelectorAll("[data-go]").forEach(function (b) { b.addEventListener("click", function () { go(b.getAttribute("data-go")); }); });
+
+  // ---------- views ----------
+  function viewWelcome() {
+    var chosen = state.color;
+    var input = el("input", { type: "text", id: "creator-name", maxlength: "18", placeholder: "Your creator name", autocomplete: "off" });
+    var sw = el("div", { class: "swatches", role: "group", "aria-label": "Pick your color" });
+    COLORS.forEach(function (c) {
+      var b = el("button", { type: "button", class: "swatch", style: "background:" + c, "aria-label": "Color " + c, "aria-pressed": String(c === chosen), onclick: function () {
+        chosen = c; sw.querySelectorAll(".swatch").forEach(function (s) { s.setAttribute("aria-pressed", "false"); }); b.setAttribute("aria-pressed", "true"); beep([520]);
+      } });
+      sw.appendChild(b);
+    });
+    var start = el("button", { class: "btn yellow", type: "button", text: "Start my quest", onclick: function () {
+      var name = input.value.trim().slice(0, 18);
+      if (!name) { input.focus(); input.placeholder = "Type a name first!"; return; }
+      state.name = name; state.color = chosen; save(); beep([523, 659, 784]); confetti(); go("map"); render();
+    } });
+    app.replaceChildren(el("section", { class: "welcome" }, [
+      el("div", { class: "stack" }, [
+        el("div", { class: "title-blocks" }, COLORS.slice(0, 5).map(function (c) { return el("span", { style: "background:" + c }); })),
+        el("h1", { html: "Creator <span>Quest</span>" }),
+        el("p", { style: "font-size:1.2rem;max-width:34ch", text: "Stop playing other people's games. Build your own, with AI as your sidekick." }),
+        el("p", { class: "muted", text: "8 missions · obbies, tycoons, zombies, pets, minigames, bosses · 118 free 3D models" })
+      ]),
+      el("div", { class: "panel stack" }, [
+        el("label", { class: "label", for: "creator-name", text: "Your creator name" }), input,
+        el("span", { class: "label", text: "Your color" }), sw,
+        el("div", { class: "copilot-note", html: "<b>Grab your grown-up!</b> You'll use Claude on their account, with them next to you. They're your co-pilot." }),
+        start
+      ])
+    ]));
+  }
+
+  function viewMap() {
+    var map = el("div", { class: "map" });
+    M.forEach(function (m) {
+      var open = unlocked(m), done = state.done[m.id];
+      var st = done ? el("span", { class: "status done", text: "Complete" }) : open ? el("span", { class: "status play", text: "Play" }) : el("span", { class: "status lock", text: "Locked" });
+      map.appendChild(el("button", { type: "button", class: "node" + (open ? "" : " locked"), style: "--r:" + m.id, "aria-disabled": String(!open), onclick: function () {
+        if (open) go("mission-" + m.id); else { beep([200]); toast("Finish Mission " + (m.id - 1) + " first!"); }
+      } }, [
+        el("span", { class: "num", style: "background:" + m.color, text: done ? "★" : String(m.id) }),
+        el("span", { class: "meta" }, [el("h3", { text: m.title }), el("span", { class: "tag", text: m.tagline }), el("span", { class: "row", style: "gap:8px" }, [st, stars(m.stars), el("span", { class: "muted", style: "font-size:.85rem", text: m.time })])])
+      ]));
+    });
+    var doneCount = count(state.done);
+    app.replaceChildren(
+      el("div", { class: "row", style: "justify-content:space-between;align-items:flex-end" }, [
+        el("div", {}, [el("span", { class: "label", text: "World map" }), el("h2", { text: doneCount === 0 ? "Your quest starts here, " + state.name + "!" : doneCount + " of 8 missions complete" })]),
+        el("button", { class: "btn small ghost", type: "button", text: "How it works", onclick: function () { go("grownups"); } })
+      ]),
+      map
+    );
+  }
+
+  function viewMission(id) {
+    var m = M[id - 1];
+    if (!m) return go("map");
+    if (!unlocked(m)) { toast("That mission is still locked!"); return go("map"); }
+    var STEPS = m.bossBug ? ["AI Brain", "Build", "Boss Bug", "Power-ups", "Finish"] : ["AI Brain", "Build", "Power-ups", "Finish"];
+    var current = 0;
+    var body = el("div", { class: "stack" });
+    var stepper = el("div", { class: "stepper", role: "tablist" });
+
+    function stepDone(name) {
+      if (name === "AI Brain") return m.brain.quiz.every(function (_, i) { return state.quiz[m.id + "-" + i]; });
+      if (name === "Build") { var n = (m.megaPrompt ? SETUP.length : 0) + m.test.length; for (var i = 0; i < n; i++) if (!state.steps[m.id + "-" + i]) return false; return true; }
+      if (name === "Boss Bug") return !!state.boss[m.id];
+      if (name === "Power-ups") return m.powerups.some(function (_, i) { return state.power[m.id + "-" + i]; });
+      return !!state.done[m.id];
+    }
+    function drawStepper() {
+      stepper.replaceChildren.apply(stepper, STEPS.map(function (s, i) {
+        return el("button", { type: "button", class: "chip", role: "tab", "aria-selected": String(i === current), "aria-pressed": String(i === current), onclick: function () { current = i; draw(); } },
+          [el("span", { class: "ok" + (stepDone(s) ? " on" : "") }), (i + 1) + ". " + s]);
+      }));
+    }
+    function next() {
+      return current < STEPS.length - 1 ? el("button", { class: "btn yellow", type: "button", text: "Next: " + STEPS[current + 1] + " →", onclick: function () { current++; draw(); window.scrollTo({ top: stepper.offsetTop - 90, behavior: "smooth" }); } }) : null;
+    }
+    function checklist(items, offset) {
+      return el("div", { class: "stack", style: "gap:8px" }, items.map(function (t, i) {
+        var key = m.id + "-" + (offset + i);
+        var box = el("input", { type: "checkbox", id: "step-" + key });
+        box.checked = !!state.steps[key];
+        box.addEventListener("change", function () {
+          if (box.checked) award("steps", key); else { state.steps[key] = false; save(); hud(); }
+          drawStepper();
+        });
+        return el("label", { class: "check", for: "step-" + key }, [box, el("span", { text: t })]);
+      }));
+    }
+
+    function brain() {
+      var quiz = el("div", { class: "stack" });
+      m.brain.quiz.forEach(function (q, qi) {
+        var key = m.id + "-" + qi, card = el("div", { class: "panel stack" }, [el("span", { class: "label", text: "Question " + (qi + 1) }), el("h3", { text: q.q })]);
+        var exp = el("p", { class: "explain", text: q.explain });
+        exp.hidden = !state.quiz[key];
+        q.options.forEach(function (o, oi) {
+          var b = el("button", { type: "button", class: "opt" + (state.quiz[key] && oi === q.answer ? " right" : ""), text: o, onclick: function () {
+            if (oi === q.answer) { b.className = "opt right"; exp.hidden = false; award("quiz", key, "Brain power!"); drawStepper(); }
+            else { b.className = "opt"; void b.offsetWidth; b.className = "opt wrong"; beep([180, 140]); }
+          } });
+          card.appendChild(b);
+        });
+        card.appendChild(exp);
+        quiz.appendChild(card);
+      });
+      return [
+        el("div", { class: "panel stack", style: "border-color:var(--ink);background:var(--panel-2)" }, [el("span", { class: "label", text: "AI Brain unlock" }), el("h2", { text: m.brain.title })].concat(m.brain.text.map(function (t) { return el("p", { class: "lesson", text: t }); }))),
+        quiz, next()
+      ];
+    }
+
+    function build() {
+      var out = [];
+      if (m.megaPrompt) {
+        var cbtn = el("button", { class: "btn small green", type: "button", text: "Copy prompt" });
+        cbtn.addEventListener("click", function () { copy(m.megaPrompt, cbtn); });
+        var rescue = window.RESCUE[m.key] || "";
+        var rbtn = el("button", { class: "btn small", type: "button", text: "Copy rescue script" });
+        rbtn.addEventListener("click", function () { copy(rescue, rbtn); });
+        out.push(
+          el("div", { class: "stack" }, [el("span", { class: "label", text: "Setup" }), checklist(SETUP, 0)]),
+          el("div", { class: "stack" }, [
+            el("div", { class: "row", style: "justify-content:space-between" }, [el("div", {}, [el("span", { class: "label", text: "The Mega Prompt" }), el("h3", { text: "Send this to Claude" })]), cbtn]),
+            el("div", { class: "prompt-box" }, [el("pre", { text: m.megaPrompt })]),
+            el("p", { class: "muted", text: "Tip: change anything you want! Add your own ideas to the list before you send it. Claude may give a slightly different script each time, and that's normal." })
+          ]),
+          el("div", { class: "stack" }, [el("span", { class: "label", text: "Test it" }), checklist(m.test, SETUP.length)]),
+          el("details", { class: "rescue panel" }, [
+            el("summary", { text: "Stuck? Use the rescue script" }),
+            el("div", { class: "stack", style: "margin-top:12px" }, [
+              el("p", { class: "muted", text: "Claude's version broken and you can't fix it? This tested script builds the whole mission. Even pro developers use backups. Paste it into a Script in ServerScriptService." }),
+              rbtn, el("div", { class: "code" }, [el("pre", { text: rescue })])
+            ])
+          ])
+        );
+      } else {
+        out.push(dream(), el("div", { class: "stack" }, [el("span", { class: "label", text: "Ship it" }), checklist(m.test, 0)]));
+      }
+      out.push(next());
+      return out;
+    }
+
+    function dream() {
+      var D = window.DREAM;
+      var pick = state.dream || { genre: D.genre[0], theme: D.theme[1], twist: D.twist[0], idea: "" };
+      var slots = el("div", { class: "slot" });
+      var ta = el("textarea", { id: "dream-idea", rows: "3", style: "width:100%;font:1rem var(--body);padding:12px;border-radius:12px;border:3px solid var(--ink);background:var(--bg-2);color:var(--fg)", placeholder: "Add your own idea (optional): a character, a power, a secret..." });
+      ta.value = pick.idea || "";
+      var promptBox = el("pre", {});
+      function prompt() {
+        return "I'm designing my own Roblox game with my parent. It's a " + pick.genre + " game set in " + pick.theme + ", and the twist is: " + pick.twist + "." + (pick.idea ? " My extra idea: " + pick.idea + "." : "") +
+          "\nFirst, help me plan it: give it 3 possible names, describe the main game loop in 3 steps, and list the 5 most important pieces to build in order." +
+          "\nThen write ONE Script for ServerScriptService for piece #1 so I can test it right away. Put settings at the top and explain where to paste it. After I test it, I'll ask for the next piece.";
+      }
+      function drawSlots() {
+        slots.replaceChildren(
+          el("div", {}, [el("span", { class: "label", text: "Genre" }), el("b", { text: pick.genre })]),
+          el("div", {}, [el("span", { class: "label", text: "World" }), el("b", { text: pick.theme })]),
+          el("div", {}, [el("span", { class: "label", text: "Twist" }), el("b", { text: pick.twist })])
+        );
+        promptBox.textContent = prompt();
+      }
+      function spin() {
+        var n = 0, t = setInterval(function () {
+          pick.genre = D.genre[Math.floor(Math.random() * D.genre.length)];
+          pick.theme = D.theme[Math.floor(Math.random() * D.theme.length)];
+          pick.twist = D.twist[Math.floor(Math.random() * D.twist.length)];
+          drawSlots(); beep([300 + n * 40]);
+          if (++n > 10) { clearInterval(t); state.dream = pick; save(); beep([784, 1046]); }
+        }, 80);
+      }
+      ta.addEventListener("input", function () { pick.idea = ta.value.trim().slice(0, 200); state.dream = pick; save(); promptBox.textContent = prompt(); });
+      drawSlots();
+      var cbtn = el("button", { class: "btn small green", type: "button", text: "Copy prompt" });
+      cbtn.addEventListener("click", function () { copy(prompt(), cbtn); });
+      return el("div", { class: "panel stack" }, [
+        el("span", { class: "label", text: "Dream Game Designer" }),
+        el("h2", { text: "Spin up a game idea" }),
+        slots,
+        el("div", { class: "row" }, [el("button", { class: "btn yellow", type: "button", text: "Spin!", onclick: spin }), el("span", { class: "muted", text: "Spin until you love it. Or use your own idea." })]),
+        ta,
+        el("div", { class: "row", style: "justify-content:space-between" }, [el("span", { class: "label", text: "Your Dream Prompt" }), cbtn]),
+        el("div", { class: "prompt-box" }, [promptBox]),
+        el("p", { class: "muted", text: "Build piece by piece. Use the Creator Vault for trees, buildings, coins, pets and more: in Studio, right-click Workspace, choose Insert from File, and pick a Vault pack." })
+      ]);
+    }
+
+    function bossBug() {
+      var b = m.bossBug, box = el("div", { class: "bugbox", role: "group", "aria-label": "Code with a bug" });
+      var res = el("p", { class: "explain", text: "BUG SQUASHED! " + b.explain });
+      res.hidden = !state.boss[m.id];
+      b.code.forEach(function (line, i) {
+        var btn = el("button", { type: "button", class: "codeline" + (state.boss[m.id] && i === b.bug ? " right" : "") }, [el("span", { class: "ln", text: String(i + 1) }), el("span", { text: line.replace(/\t/g, "    ") })]);
+        btn.addEventListener("click", function () {
+          if (i === b.bug) { btn.className = "codeline right"; res.hidden = false; if (award("boss", m.id, "Bug squashed!")) confetti(); drawStepper(); }
+          else { btn.className = "codeline"; void btn.offsetWidth; btn.className = "codeline wrong"; beep([180, 140]); }
+        });
+        box.appendChild(btn);
+      });
+      return [el("div", { class: "panel stack" }, [el("span", { class: "label", text: "Boss Bug" }), el("h2", { text: "Find the bug!" }), el("p", { class: "lesson", text: b.intro }), el("p", { class: "muted", text: "Tap the line with the bug." }), box, res]), next()];
+    }
+
+    function powerups() {
+      return [el("div", { class: "stack" }, [el("span", { class: "label", text: "Power-ups" }), el("h2", { text: "Level up your game" }), el("p", { class: "muted", text: "Send any of these to Claude to add new features. Test each one before you move on!" })]),
+        el("div", { class: "power" }, m.powerups.map(function (p, i) {
+          var key = m.id + "-" + i, cbtn = el("button", { class: "btn small ghost", type: "button", text: "Copy" });
+          cbtn.addEventListener("click", function () { copy(p.prompt, cbtn); });
+          var did = el("button", { class: "btn small " + (state.power[key] ? "green" : "yellow"), type: "button", text: state.power[key] ? "Done!" : "I added it!" });
+          did.addEventListener("click", function () { if (award("power", key, p.name)) { did.className = "btn small green"; did.textContent = "Done!"; drawStepper(); } });
+          return el("div", { class: "panel" }, [el("h3", { text: p.name }), el("code", { text: p.prompt }), el("div", { class: "row" }, [cbtn, did])]);
+        })), next()];
+    }
+
+    function finish() {
+      var done = state.done[m.id];
+      var btn = el("button", { class: "btn green hold", type: "button", style: "font-size:1.2rem;padding:16px 26px" }, [el("span", { class: "fill" }), done ? "Mission complete!" : "Grown-up: hold to stamp"]);
+      var fill = btn.querySelector(".fill"), timer = null, t0 = 0;
+      function startHold(e) {
+        if (done) return; e.preventDefault(); t0 = Date.now();
+        timer = setInterval(function () {
+          var p = Math.min(1, (Date.now() - t0) / 1500); fill.style.width = (p * 100) + "%";
+          if (p >= 1) { stopHold(); complete(); }
+        }, 30);
+      }
+      function stopHold() { clearInterval(timer); timer = null; if (!state.done[m.id]) fill.style.width = "0"; }
+      function complete() {
+        award("done", m.id, m.badge + " badge!"); confetti(); beep([523, 659, 784, 1046, 1318]);
+        draw(); setTimeout(function () { openModal(m); }, 300);
+      }
+      btn.addEventListener("pointerdown", startHold); btn.addEventListener("pointerup", stopHold); btn.addEventListener("pointerleave", stopHold);
+      btn.addEventListener("keydown", function (e) { if ((e.key === " " || e.key === "Enter") && !timer) startHold(e); });
+      btn.addEventListener("keyup", stopHold);
+      return [el("div", { class: "panel stack", style: "text-align:center;align-items:center" }, [
+        el("span", { class: "label", text: "Co-pilot check" }),
+        el("h2", { text: done ? "You did it!" : "Show your grown-up what you built" }),
+        el("p", { class: "lesson", text: m.copilot }),
+        btn,
+        done && M[m.id] ? el("button", { class: "btn yellow", type: "button", text: "Next mission: " + M[m.id].title + " →", onclick: function () { go("mission-" + (m.id + 1)); } }) : null,
+        done && !M[m.id] ? el("button", { class: "btn yellow", type: "button", text: "See your certificate →", onclick: function () { go("badges"); } }) : null
+      ])];
+    }
+
+    function draw() {
+      drawStepper();
+      var s = STEPS[current];
+      var parts = s === "AI Brain" ? brain() : s === "Build" ? build() : s === "Boss Bug" ? bossBug() : s === "Power-ups" ? powerups() : finish();
+      body.replaceChildren.apply(body, parts.filter(Boolean));
+    }
+
+    app.replaceChildren(
+      el("button", { class: "btn small ghost", type: "button", text: "← Map", onclick: function () { go("map"); }, style: "margin-bottom:14px" }),
+      el("section", { class: "mhead", style: "background:" + m.color }, [
+        el("div", {}, [el("span", { class: "label", text: "Mission " + m.id + " · " + m.time }), el("h1", { text: m.title }), el("p", { text: m.story })]),
+        stars(m.stars)
+      ]),
+      el("div", { class: "stack", style: "margin-top:18px" }, [el("span", { class: "label", text: "You'll build" }), el("ul", { class: "builds" }, m.builds.map(function (b) { return el("li", { text: b }); }))]),
+      stepper, body
+    );
+    draw();
+  }
+
+  function openModal(m) {
+    var bg = el("div", { class: "modal-bg", role: "dialog", "aria-modal": "true", "aria-label": "Badge earned" });
+    bg.appendChild(el("div", { class: "panel modal stack", style: "align-items:center" }, [
+      el("span", { class: "label", text: "Badge unlocked" }),
+      el("div", { class: "badge" }, [el("div", { class: "medal", style: "background:" + m.color, text: "★" })]),
+      el("h2", { text: m.badge }),
+      el("p", { class: "muted", text: "Mission " + m.id + " complete. +250 XP" }),
+      el("button", { class: "btn yellow", type: "button", text: "Awesome!", onclick: function () { bg.remove(); } })
+    ]));
+    document.body.appendChild(bg);
+    bg.querySelector("button").focus();
+  }
+
+  function viewLab() {
+    var i = 0, wrap = el("div", { class: "stack" });
+    function draw() {
+      var r = LAB[i], key = String(i);
+      var why = el("p", { class: "explain", text: r.why }); why.hidden = !state.lab[key];
+      var card = el("div", { class: "panel stack" }, [el("span", { class: "label", text: "Round " + (i + 1) + " of " + LAB.length }), el("h2", { text: r.goal }), el("p", { class: "muted", text: "Which prompt should you send to Claude?" })]);
+      r.options.forEach(function (o, oi) {
+        var b = el("button", { type: "button", class: "opt" + (state.lab[key] && oi === r.answer ? " right" : ""), style: "font-family:var(--mono);font-weight:500", text: o, onclick: function () {
+          if (oi === r.answer) { b.className = "opt right"; why.hidden = false; award("lab", key, "Prompt pro!"); }
+          else { b.className = "opt"; void b.offsetWidth; b.className = "opt wrong"; beep([180, 140]); }
+        } });
+        card.appendChild(b);
+      });
+      card.appendChild(why);
+      card.appendChild(el("div", { class: "row" }, [
+        i > 0 ? el("button", { class: "btn small ghost", type: "button", text: "← Back", onclick: function () { i--; draw(); } }) : null,
+        i < LAB.length - 1 ? el("button", { class: "btn small yellow", type: "button", text: "Next round →", onclick: function () { i++; draw(); } }) : el("span", { class: "muted", text: count(state.lab) === LAB.length ? "Perfect score! You're a Prompt Wizard." : "Get every round right for the Prompt Wizard badge." })
+      ].filter(Boolean)));
+      wrap.replaceChildren(card);
+    }
+    app.replaceChildren(el("div", { class: "stack" }, [el("span", { class: "label", text: "Mini-game" }), el("h2", { text: "Prompt Lab" }), el("p", { class: "muted", text: "Pick the best prompt each round. Great prompts = great games." }), wrap]));
+    draw();
+  }
+
+  function viewVault() {
+    var CAT = window.VAULT || [];
+    var packs = ["All"]; CAT.forEach(function (m) { if (packs.indexOf(m.pack) < 0) packs.push(m.pack); });
+    var filter = "All", viewer = null, selected = 0;
+    var canvas = el("canvas", { "aria-label": "3D model preview" });
+    var info = el("div", { class: "stack" });
+    var grid = el("div", { class: "grid" });
+    var chips = el("div", { class: "row", role: "group", "aria-label": "Packs" });
+    var has3D = typeof THREE !== "undefined";
+    var thumbs = {};
+
+    function showInfo(idx) {
+      var m = CAT[idx]; selected = idx;
+      if (viewer) viewer.show(m);
+      info.replaceChildren(
+        el("span", { class: "label", text: m.pack + " pack" }), el("h2", { text: m.name }), el("p", { class: "lesson", text: m.desc }),
+        el("div", { class: "row" }, [m.scripted ? el("span", { class: "pill", text: "Works out of the box" }) : el("span", { class: "pill", style: "background:var(--panel-2);color:var(--fg)", text: "Decoration" }), m.tool ? el("span", { class: "pill", style: "background:var(--yellow)", text: "Tool: touch to pick up" }) : null].filter(Boolean)),
+        el("p", { class: "muted", text: "Find it in: Creator Vault - " + m.pack + ".rbxmx" })
+      );
+      grid.querySelectorAll(".tile").forEach(function (t) { t.setAttribute("aria-pressed", String(+t.getAttribute("data-i") === idx)); });
+    }
+    function drawGrid() {
+      chips.replaceChildren.apply(chips, packs.map(function (p) {
+        return el("button", { type: "button", class: "chip", "aria-pressed": String(p === filter), text: p, onclick: function () { filter = p; drawGrid(); } });
+      }));
+      grid.replaceChildren();
+      var queue = [];
+      CAT.forEach(function (m, i) {
+        if (filter !== "All" && m.pack !== filter) return;
+        var img = el("img", { alt: "", width: "120", height: "120" });
+        var tile = el("button", { type: "button", class: "tile", "data-i": String(i), "aria-pressed": String(i === selected), onclick: function () { showInfo(i); beep([600]); } }, [img, el("span", { text: m.name })]);
+        grid.appendChild(tile);
+        if (thumbs[i]) img.src = thumbs[i]; else queue.push([i, img]);
+      });
+      (function pump() {
+        if (!has3D || !queue.length) return;
+        var job = queue.shift();
+        try { thumbs[job[0]] = VaultViewer.thumbnail(CAT[job[0]], 160); job[1].src = thumbs[job[0]]; } catch (e) {}
+        setTimeout(pump, 0);
+      })();
+    }
+
+    app.replaceChildren(el("div", { class: "stack" }, [
+      el("span", { class: "label", text: "Bonus pack" }),
+      el("h2", { text: "Creator Vault · " + CAT.length + " models" }),
+      el("p", { class: "muted", style: "max-width:70ch", text: "Ready-made Roblox models for any game. The ones marked \"works out of the box\" have scripts inside: coins you can collect, checkpoints, jump pads, portals, pets that follow you, swords and more." }),
+      el("div", { class: "vault-top" }, [
+        el("div", { class: "viewer" }, [canvas, el("span", { class: "hint", text: has3D ? "Drag to spin" : "3D preview needs an internet connection" })]),
+        el("div", { class: "panel stack" }, [info, el("details", { class: "rescue", open: "" }, [el("summary", { text: "How to add models to your game" }), el("ol", { style: "margin:10px 0 0;padding-left:1.2em" }, [
+          el("li", { text: "In Roblox Studio, right-click Workspace in the Explorer." }),
+          el("li", { text: "Choose Insert from File." }),
+          el("li", { text: "Open the Creator Vault folder and pick a pack, like Creator Vault - Nature.rbxmx." }),
+          el("li", { text: "The whole pack appears in a row. Move what you want, delete the rest." }),
+          el("li", { text: "Recolor anything in Properties. Scripts are inside, so ask Claude to change them!" })
+        ])])])
+      ]),
+      chips, grid
+    ]));
+    if (has3D) { try { viewer = VaultViewer.mount(canvas); } catch (e) { viewer = null; } }
+    drawGrid();
+    if (CAT.length) showInfo(0);
+  }
+
+  function badgeList() {
+    var list = M.map(function (m) { return { name: m.badge, color: m.color, got: !!state.done[m.id], how: "Finish Mission " + m.id }; });
+    list.push({ name: "Bug Hunter", color: "#ff4f4f", got: count(state.boss) >= 7, how: "Squash all 7 Boss Bugs" });
+    list.push({ name: "Brainiac", color: "#2fd3e0", got: count(state.quiz) >= 16, how: "Ace every AI Brain quiz" });
+    list.push({ name: "Prompt Wizard", color: "#b46bff", got: count(state.lab) >= LAB.length, how: "Perfect score in Prompt Lab" });
+    list.push({ name: "Power Player", color: "#ffd23f", got: count(state.power) >= 10, how: "Add 10 power-ups" });
+    return list;
+  }
+
+  function viewBadges() {
+    var list = badgeList(), got = list.filter(function (b) { return b.got; }).length;
+    var x = xp(), l = level(x), finished = !!state.done[8];
+    app.replaceChildren(el("div", { class: "stack" }, [
+      el("span", { class: "label", text: "Trophy room" }),
+      el("h2", { text: got + " of " + list.length + " badges" }),
+      el("div", { class: "badges" }, list.map(function (b) {
+        return el("div", { class: "panel badge" + (b.got ? "" : " off") }, [el("div", { class: "medal", style: "background:" + b.color, text: b.got ? "★" : "?" }), el("h3", { text: b.name }), el("p", { class: "muted", style: "font-size:.85rem", text: b.how })]);
+      })),
+      el("span", { class: "label", style: "margin-top:20px", text: "Your certificate" }),
+      el("div", { class: "cert" }, [
+        el("div", { class: "title-blocks", style: "justify-content:center" }, COLORS.slice(0, 5).map(function (c) { return el("span", { style: "background:" + c }); })),
+        el("span", { class: "label", style: "color:#5b6275", text: finished ? "Certificate of completion" : "Certificate (unlocks after Mission 8)" }),
+        el("div", { class: "name", text: state.name }),
+        el("p", { style: "font-size:1.1rem;max-width:40ch", text: "designed, built, tested and published Roblox games with AI, and knows how to use AI smartly and safely." }),
+        el("p", { style: "font-family:var(--display);font-weight:700;font-size:1.2rem", text: "Rank: " + RANKS[l - 1] + " · " + x + " XP · " + count(state.done) + "/8 missions" }),
+        el("p", { style: "color:#5b6275;font-size:.9rem", text: finished ? "Ask your grown-up to screenshot or print this and stick it on the fridge!" : "Finish all 8 missions to complete it." })
+      ])
+    ]));
+  }
+
+  function viewGrownups() {
+    var confirmBox = el("div", { class: "row" });
+    function resetAsk() {
+      confirmBox.replaceChildren(el("span", { text: "Erase all progress on this device?" }),
+        el("button", { class: "btn small", style: "background:var(--red)", type: "button", text: "Yes, erase", onclick: function () { try { localStorage.removeItem(KEY); } catch (e) {} location.hash = ""; location.reload(); } }),
+        el("button", { class: "btn small ghost", type: "button", text: "Cancel", onclick: function () { confirmBox.replaceChildren(resetBtn); } }));
+    }
+    var resetBtn = el("button", { class: "btn small ghost", type: "button", text: "Reset progress", onclick: resetAsk });
+    confirmBox.appendChild(resetBtn);
+    var unlock = el("button", { class: "btn small " + (state.unlockAll ? "green" : "ghost"), type: "button", text: state.unlockAll ? "All missions unlocked" : "Unlock all missions", onclick: function () { state.unlockAll = !state.unlockAll; save(); viewGrownups(); } });
+    var sound = el("button", { class: "btn small ghost", type: "button", text: state.sound ? "Sound: on" : "Sound: off", onclick: function () { state.sound = !state.sound; save(); viewGrownups(); } });
+    app.replaceChildren(el("div", { class: "stack", style: "max-width:760px" }, [
+      el("span", { class: "label", text: "For grown-ups" }),
+      el("h2", { text: "You're the co-pilot" }),
+      el("div", { class: "panel stack" }, [
+        el("h3", { text: "Why you need to be there" }),
+        el("p", { text: "Claude's terms require users to be 18 or older. Creator Quest is built for you and your kid together: Claude runs on your account, on your screen. Your kid picks what to build, edits the prompts and does the testing. You paste prompts into Claude and stamp each mission when it's done." })
+      ]),
+      el("div", { class: "panel stack" }, [
+        el("h3", { text: "What you need" }),
+        el("ul", { style: "margin:0;padding-left:1.2em" }, [
+          el("li", { text: "A Windows PC or Mac. Roblox Studio doesn't run on phones, tablets or Chromebooks." }),
+          el("li", { text: "Roblox Studio, free from create.roblox.com, and a Roblox account for your kid (turn on Parental Controls for under-13s)." }),
+          el("li", { text: "A Claude account for you at claude.ai. The free plan works; bigger missions go smoother on a paid plan because the scripts are long." })
+        ])
+      ]),
+      el("div", { class: "panel stack" }, [
+        el("h3", { text: "How each mission works" }),
+        el("p", { text: "AI Brain: a short lesson on how AI works, with a quiz. Build: one Mega Prompt makes Claude write a whole game system; a tested rescue script is included if Claude's version breaks. Boss Bug: find the bug in real code. Power-ups: prompts that add features. Finish: you hold the stamp button to complete it." })
+      ]),
+      el("div", { class: "panel stack" }, [el("h3", { text: "Settings" }), el("div", { class: "row" }, [unlock, sound]), confirmBox,
+        el("p", { class: "muted", style: "font-size:.9rem", text: "Progress is saved in this browser on this device." })]),
+      el("p", { class: "muted", style: "font-size:.85rem", text: "Creator Quest is an independent course. It is not made, sponsored or endorsed by Roblox Corporation or Anthropic. Roblox and Roblox Studio are trademarks of Roblox Corporation. Claude is a product of Anthropic." })
+    ]));
+  }
+
+  function render() {
+    hud();
+    if (!state.name) return viewWelcome();
+    var h = (location.hash || "#map").slice(1);
+    if (h.indexOf("mission-") === 0) viewMission(parseInt(h.slice(8), 10));
+    else if (h === "lab") viewLab();
+    else if (h === "vault") viewVault();
+    else if (h === "badges") viewBadges();
+    else if (h === "grownups") viewGrownups();
+    else viewMap();
+    hud();
+  }
+  window.addEventListener("hashchange", function () { render(); window.scrollTo(0, 0); });
+  render();
+})();
+</script>

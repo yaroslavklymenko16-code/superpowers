@@ -1,51 +1,61 @@
 # Creator Mode: launch plan
 
-**Product:** Creator Mode, a $29 printable course (13-page PDF) where a parent and kid (ages 9–14) build a Roblox game together using Claude, learning one AI idea per mission.
-**Buyer:** parents of kids who spend a lot of time on Roblox.
+**Product:** Creator Mode, a $29 download for kids 9–14 (with a grown-up co-pilot).
+**Buyer:** parents of kids who spend a lot of time on Roblox. **User:** the kid.
 **Hook:** stop playing Roblox, start building it. Screen time that produces something, plus AI skills.
 
-## What's built (this folder)
+## What's in the download (`dist/Creator-Mode.zip`)
 
-| File | What it is |
+| Item | What it is |
 | --- | --- |
-| `course/Creator-Mode-Workbook.pdf` | **The product.** Upload this to your store. |
-| `course/workbook.html` | Source for the PDF (edit, then re-export). |
-| `site/creator-mode-site.html` | Sales page, ready for any static host. |
-| `site/index.html` | Same page, as published to the Claude artifact preview. |
-| `ads/ads.md` | Ad copy for Meta, TikTok, Google, with targeting and budgets. |
+| **Creator Quest.html** | The kid-facing game. Opens in any browser, works offline (3D previews need internet). World map, 8 missions, XP + 8 ranks, 12 badges, AI Brain quizzes, Boss Bug challenges, Prompt Lab mini-game, Dream Game Designer, Vault browser, certificate. Progress saves in the browser. |
+| **Creator Vault/** | 118 Roblox models in 10 packs (.rbxmx, Insert from File). 46 have working scripts: checkpoints, jump pads, moving platforms, coins, gems, portals, follow-you pets, swords, coils, zombie spawner, talking NPC, mini tycoon. |
+| **Rescue Scripts/** | A tested, single-script build of each of Missions 1–7. |
+| **Parent Guide.pdf** | 4 pages: co-pilot rule, setup, mission list, troubleshooting, safety, Creator Hours chart. |
 
-Course outline: setup → rainbow block (scripts) → lava (prompting) → coins (debugging AI mistakes) → moving platforms (iteration) → speed pads (how AI learns) → secret door (AI safety) → own obby + publish (you're the creator). Plus parent guide, prompt cheat sheet, Creator Hours chart and certificate.
+### The missions (each builds a whole game system from one "Mega Prompt")
+1. Lava Tower: 25-stage spiral obby (elevators, spinning lasers, vanishing blocks, checkpoints, win pad). *AI = prediction.*
+2. Coin Rush: coins, Gold Rain event, shop with Speed Boots/Moon Jump/Giant Mode, saving. *Prompting.*
+3. Tycoon Factory: claim, droppers, conveyor, collector, 7 upgrades, Golden Statue. *Break it down.*
+4. Zombie Night: swords, zombie waves, giant zombies. *AI makes mistakes.*
+5. Pet Hatchery: eggs, 5 rarities, 8 pet types that follow you. *Chance and patterns.*
+6. Round Arena: lobby → countdown → Falling Tiles / Rising Lava → winner. *Online safety.*
+7. Boss Battle: giant Lava King, health bar, 3 attack phases. *Iteration.*
+8. Dream Game: design, build with the Vault, playtest, publish. *You're the creator.*
 
-## Two things built into the design on purpose
+## Built in on purpose
 
-1. **Parent co-pilot model.** Claude's consumer terms require users to be 18+. The course runs on the parent's Claude account with the parent present. This is also the selling point for parents.
-2. **Independent course.** No Roblox or Anthropic logos or implied endorsement; a disclaimer is on the cover, the page footer and the ad rules.
+- **Parent co-pilot model.** Claude requires users to be 18+. Claude runs on the parent's account; the parent "stamps" each mission.
+- **Independent course.** No Roblox/Anthropic logos or implied endorsement. Disclaimers in the app, guide, page and ads.
+- **Never stuck.** Every mission has a rescue script, so a bad AI answer can't end the session.
 
-## Launch today: checklist (about 2–3 hours of your time)
+## Before launch: test in Roblox Studio (1–2 hours, required)
 
-1. **Store, 20 min.** Create a Gumroad (or Lemon Squeezy / Stripe Payment Link) product:
-   - Name: Creator Mode: Build a Roblox Game with AI (Parent + Kid Course)
-   - Price: $29. Upload `Creator-Mode-Workbook.pdf`.
-   - Description: paste sections from the sales page.
-   - Refund policy: the page promises 30 days. Change the FAQ if you want something different.
-2. **Sales page, 15 min.**
-   - Fastest: send ads straight to the Gumroad product page and skip this step.
-   - Better: open `site/creator-mode-site.html`, set `CHECKOUT_URL` near the bottom to your store link, then drag the file (renamed `index.html`) into Netlify Drop (app.netlify.com/drop) or Cloudflare Pages. You get a public URL in a minute.
-3. **Tracking, 15 min.** Create a Meta Pixel and add it to the store (Gumroad supports it in Settings → Advanced).
-4. **Ad creatives, 30 min.** Use the Canva designs (square + story) and adjust. Best performer is usually a real 20-second phone video of your kid building (script in `ads/ads.md`).
-5. **Launch ads, 30 min.** Meta Ads Manager: one Sales campaign, $20/day, Ads A–D from `ads/ads.md`. Optional: TikTok $20/day, Google Search $10/day.
-   - Ads go through review, usually a few hours, sometimes up to a day.
-6. **Free push, 30 min.** Post the video to your own Reels/TikTok and text the link to 10 parent friends.
+The scripts are syntax-checked and the app is click-tested, but nothing has been run inside Roblox Studio yet.
+1. For each rescue script: new Baseplate → Script in ServerScriptService → paste → Play. Note anything broken.
+2. Insert each Vault pack (right-click Workspace → Insert from File) and press Play. Try a checkpoint, jump pad, coin, pet, sword, portal.
+3. Send any errors back here and they'll get fixed.
 
-## Week 1 after launch
+## Launch checklist
 
-- Check ads daily. After 3–4 days, kill losers and move budget to the winner (rules in `ads/ads.md`).
-- Run through Mission 1–2 with a real kid. Fix anything confusing in the workbook.
-- Collect real testimonials and screenshots of kids' games (with permission) and add them to the page and ads.
-- Target numbers: cost per sale under $15 to stay profitable at $29 after fees.
+1. **Store (20 min).** Gumroad / Lemon Squeezy product, $29, upload `dist/Creator-Mode.zip`. Product name: *Creator Mode: Build Roblox Games with AI (Ages 9–14)*.
+2. **Sales page (15 min).** Set `CHECKOUT_URL` at the bottom of `site/creator-mode-site.html`, rename to `index.html`, drop into Netlify Drop or Cloudflare Pages. Or send ads straight to the Gumroad page.
+3. **Pixel (15 min).** Meta Pixel on the store.
+4. **Creatives (30 min).** Screenshots in `build/img/`, the Canva designs, and best of all a 20-second phone video of a kid playing Mission 1 (script in `ads/ads.md`).
+5. **Ads (30 min).** Meta Sales campaign, $20/day, Ads A–E. Review takes a few hours.
+6. **Free push.** Post the video on Reels/TikTok; text 10 parent friends.
+
+## Rebuilding after edits
+
+```
+python3 build/vault.py        # models -> vault/*.rbxmx + catalog
+python3 build/build_app.py    # app + zip -> dist/
+python3 build/build_site.py   # sales page -> site/
+```
+Mission text lives in `app/missions.js`, rescue scripts in `missions/*.luau`, models in `build/vault.py`.
 
 ## Later
 
-- $49 "Creator Mode Plus": video walkthroughs of each mission.
-- Mission pack 2: tycoon game, round timers, shops.
-- Live weekend workshops on Zoom for parent + kid pairs.
+- Video walkthroughs per mission ($49 tier).
+- Mission Pack 2: racing, tower defense, horror escape.
+- Weekend live workshops for parent + kid pairs.

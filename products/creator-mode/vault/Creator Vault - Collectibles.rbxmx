@@ -1,0 +1,275 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4"><Item class="Folder" referent="RBX000521"><Properties><string name="Name">Creator Vault - Collectibles</string></Properties><Item class="Model" referent="RBX000486"><Properties><string name="Name">Coin</string></Properties><Item class="Part" referent="RBX000485"><Properties><string name="Name">Coin</string><bool name="Anchored">true</bool><CoordinateFrame name="CFrame"><X>1.5</X><Y>3</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame><Vector3 name="size"><X>0.4</X><Y>3</Y><Z>3</Z></Vector3><Color3uint8 name="Color3uint8">4294954280</Color3uint8><token name="Material">288</token><bool name="CanCollide">false</bool><float name="Transparency">0</float><token name="TopSurface">0</token><token name="BottomSurface">0</token><token name="shape">2</token></Properties><Item class="Script" referent="RBX000484"><Properties><string name="Name">Script</string><bool name="Disabled">false</bool><ProtectedString name="Source"><![CDATA[local function stat(player, name)
+	local stats = player:FindFirstChild("leaderstats")
+	if not stats then
+		stats = Instance.new("Folder")
+		stats.Name = "leaderstats"
+		stats.Parent = player
+	end
+	local value = stats:FindFirstChild(name)
+	if not value then
+		value = Instance.new("IntValue")
+		value.Name = name
+		value.Parent = stats
+	end
+	return value
+end
+
+-- COLLECTIBLE: spins, gives 1 Coins, comes back after 8 seconds.
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local VALUE = 1
+local RESPAWN = 8
+local item = script.Parent
+local home = item.CFrame
+local angle = 0
+local ready = true
+RunService.Heartbeat:Connect(function(dt)
+	angle += dt * 2
+	item.CFrame = home * CFrame.Angles(0, angle, 0)
+end)
+item.Touched:Connect(function(hit)
+	local player = Players:GetPlayerFromCharacter(hit.Parent)
+	if player and ready then
+		ready = false
+		stat(player, "Coins").Value += VALUE
+		item.Transparency = 1
+		task.wait(RESPAWN)
+		item.Transparency = 0
+		ready = true
+	end
+end)
+]]></ProtectedString></Properties></Item></Item></Item><Item class="Model" referent="RBX000489"><Properties><string name="Name">Blue Gem</string></Properties><Item class="Part" referent="RBX000488"><Properties><string name="Name">Gem</string><bool name="Anchored">true</bool><CoordinateFrame name="CFrame"><X>9.8</X><Y>3</Y><Z>0</Z><R00>0.7071</R00><R01>-0.7071</R01><R02>0</R02><R10>0.5</R10><R11>0.5</R11><R12>-0.7071</R12><R20>0.5</R20><R21>0.5</R21><R22>0.7071</R22></CoordinateFrame><Vector3 name="size"><X>1.6</X><Y>1.6</Y><Z>1.6</Z></Vector3><Color3uint8 name="Color3uint8">4280923894</Color3uint8><token name="Material">1568</token><bool name="CanCollide">false</bool><float name="Transparency">0</float><token name="TopSurface">0</token><token name="BottomSurface">0</token><token name="shape">1</token></Properties><Item class="Script" referent="RBX000487"><Properties><string name="Name">Script</string><bool name="Disabled">false</bool><ProtectedString name="Source"><![CDATA[local function stat(player, name)
+	local stats = player:FindFirstChild("leaderstats")
+	if not stats then
+		stats = Instance.new("Folder")
+		stats.Name = "leaderstats"
+		stats.Parent = player
+	end
+	local value = stats:FindFirstChild(name)
+	if not value then
+		value = Instance.new("IntValue")
+		value.Name = name
+		value.Parent = stats
+	end
+	return value
+end
+
+-- COLLECTIBLE: spins, gives 5 Coins, comes back after 15 seconds.
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local VALUE = 5
+local RESPAWN = 15
+local item = script.Parent
+local home = item.CFrame
+local angle = 0
+local ready = true
+RunService.Heartbeat:Connect(function(dt)
+	angle += dt * 2
+	item.CFrame = home * CFrame.Angles(0, angle, 0)
+end)
+item.Touched:Connect(function(hit)
+	local player = Players:GetPlayerFromCharacter(hit.Parent)
+	if player and ready then
+		ready = false
+		stat(player, "Coins").Value += VALUE
+		item.Transparency = 1
+		task.wait(RESPAWN)
+		item.Transparency = 0
+		ready = true
+	end
+end)
+]]></ProtectedString></Properties></Item></Item></Item><Item class="Model" referent="RBX000492"><Properties><string name="Name">Red Gem</string></Properties><Item class="Part" referent="RBX000491"><Properties><string name="Name">Gem</string><bool name="Anchored">true</bool><CoordinateFrame name="CFrame"><X>17.5</X><Y>3</Y><Z>0</Z><R00>0.7071</R00><R01>-0.7071</R01><R02>0</R02><R10>0.5</R10><R11>0.5</R11><R12>-0.7071</R12><R20>0.5</R20><R21>0.5</R21><R22>0.7071</R22></CoordinateFrame><Vector3 name="size"><X>1.8</X><Y>1.8</Y><Z>1.8</Z></Vector3><Color3uint8 name="Color3uint8">4294907716</Color3uint8><token name="Material">1568</token><bool name="CanCollide">false</bool><float name="Transparency">0</float><token name="TopSurface">0</token><token name="BottomSurface">0</token><token name="shape">1</token></Properties><Item class="Script" referent="RBX000490"><Properties><string name="Name">Script</string><bool name="Disabled">false</bool><ProtectedString name="Source"><![CDATA[local function stat(player, name)
+	local stats = player:FindFirstChild("leaderstats")
+	if not stats then
+		stats = Instance.new("Folder")
+		stats.Name = "leaderstats"
+		stats.Parent = player
+	end
+	local value = stats:FindFirstChild(name)
+	if not value then
+		value = Instance.new("IntValue")
+		value.Name = name
+		value.Parent = stats
+	end
+	return value
+end
+
+-- COLLECTIBLE: spins, gives 10 Coins, comes back after 20 seconds.
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local VALUE = 10
+local RESPAWN = 20
+local item = script.Parent
+local home = item.CFrame
+local angle = 0
+local ready = true
+RunService.Heartbeat:Connect(function(dt)
+	angle += dt * 2
+	item.CFrame = home * CFrame.Angles(0, angle, 0)
+end)
+item.Touched:Connect(function(hit)
+	local player = Players:GetPlayerFromCharacter(hit.Parent)
+	if player and ready then
+		ready = false
+		stat(player, "Coins").Value += VALUE
+		item.Transparency = 1
+		task.wait(RESPAWN)
+		item.Transparency = 0
+		ready = true
+	end
+end)
+]]></ProtectedString></Properties></Item></Item></Item><Item class="Model" referent="RBX000496"><Properties><string name="Name">Green Gem</string></Properties><Item class="Part" referent="RBX000495"><Properties><string name="Name">Gem</string><bool name="Anchored">true</bool><CoordinateFrame name="CFrame"><X>25.4</X><Y>3</Y><Z>0</Z><R00>0.7071</R00><R01>-0.7071</R01><R02>0</R02><R10>0.5</R10><R11>0.5</R11><R12>-0.7071</R12><R20>0.5</R20><R21>0.5</R21><R22>0.7071</R22></CoordinateFrame><Vector3 name="size"><X>2</X><Y>2</Y><Z>2</Z></Vector3><Color3uint8 name="Color3uint8">4278249078</Color3uint8><token name="Material">1568</token><bool name="CanCollide">false</bool><float name="Transparency">0</float><token name="TopSurface">0</token><token name="BottomSurface">0</token><token name="shape">1</token></Properties><Item class="Sparkles" referent="RBX000493"><Properties><string name="Name">Sparkles</string></Properties></Item><Item class="Script" referent="RBX000494"><Properties><string name="Name">Script</string><bool name="Disabled">false</bool><ProtectedString name="Source"><![CDATA[local function stat(player, name)
+	local stats = player:FindFirstChild("leaderstats")
+	if not stats then
+		stats = Instance.new("Folder")
+		stats.Name = "leaderstats"
+		stats.Parent = player
+	end
+	local value = stats:FindFirstChild(name)
+	if not value then
+		value = Instance.new("IntValue")
+		value.Name = name
+		value.Parent = stats
+	end
+	return value
+end
+
+-- COLLECTIBLE: spins, gives 25 Coins, comes back after 30 seconds.
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local VALUE = 25
+local RESPAWN = 30
+local item = script.Parent
+local home = item.CFrame
+local angle = 0
+local ready = true
+RunService.Heartbeat:Connect(function(dt)
+	angle += dt * 2
+	item.CFrame = home * CFrame.Angles(0, angle, 0)
+end)
+item.Touched:Connect(function(hit)
+	local player = Players:GetPlayerFromCharacter(hit.Parent)
+	if player and ready then
+		ready = false
+		stat(player, "Coins").Value += VALUE
+		item.Transparency = 1
+		task.wait(RESPAWN)
+		item.Transparency = 0
+		ready = true
+	end
+end)
+]]></ProtectedString></Properties></Item></Item></Item><Item class="Model" referent="RBX000501"><Properties><string name="Name">Heart</string></Properties><Item class="Part" referent="RBX000498"><Properties><string name="Name">Heart</string><bool name="Anchored">true</bool><CoordinateFrame name="CFrame"><X>33.2</X><Y>3.2</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame><Vector3 name="size"><X>1.6</X><Y>1.6</Y><Z>1.6</Z></Vector3><Color3uint8 name="Color3uint8">4294921581</Color3uint8><token name="Material">288</token><bool name="CanCollide">false</bool><float name="Transparency">0</float><token name="TopSurface">0</token><token name="BottomSurface">0</token><token name="shape">0</token></Properties><Item class="Script" referent="RBX000497"><Properties><string name="Name">Script</string><bool name="Disabled">false</bool><ProtectedString name="Source"><![CDATA[-- HEART: heals you.
+local HEAL = 50
+local heart = script.Parent
+local ready = true
+heart.Touched:Connect(function(hit)
+	local humanoid = hit.Parent and hit.Parent:FindFirstChildOfClass("Humanoid")
+	if humanoid and ready and humanoid.Health < humanoid.MaxHealth then
+		ready = false
+		humanoid.Health = math.min(humanoid.MaxHealth, humanoid.Health + HEAL)
+		heart.Transparency = 1
+		task.wait(10)
+		heart.Transparency = 0
+		ready = true
+	end
+end)
+]]></ProtectedString></Properties></Item></Item><Item class="Part" referent="RBX000499"><Properties><string name="Name">HeartR</string><bool name="Anchored">true</bool><CoordinateFrame name="CFrame"><X>34.2</X><Y>3.2</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame><Vector3 name="size"><X>1.6</X><Y>1.6</Y><Z>1.6</Z></Vector3><Color3uint8 name="Color3uint8">4294921581</Color3uint8><token name="Material">288</token><bool name="CanCollide">false</bool><float name="Transparency">0</float><token name="TopSurface">0</token><token name="BottomSurface">0</token><token name="shape">0</token></Properties></Item><Item class="Part" referent="RBX000500"><Properties><string name="Name">HeartTip</string><bool name="Anchored">true</bool><CoordinateFrame name="CFrame"><X>33.7</X><Y>2.5</Y><Z>0</Z><R00>0.7071</R00><R01>-0.7071</R01><R02>0</R02><R10>0.7071</R10><R11>0.7071</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame><Vector3 name="size"><X>1.5</X><Y>1.5</Y><Z>1.2</Z></Vector3><Color3uint8 name="Color3uint8">4294921581</Color3uint8><token name="Material">288</token><bool name="CanCollide">false</bool><float name="Transparency">0</float><token name="TopSurface">0</token><token name="BottomSurface">0</token><token name="shape">1</token></Properties></Item></Item><Item class="Model" referent="RBX000505"><Properties><string name="Name">Power Star</string></Properties><Item class="Part" referent="RBX000503"><Properties><string name="Name">Star</string><bool name="Anchored">true</bool><CoordinateFrame name="CFrame"><X>42.2</X><Y>3</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame><Vector3 name="size"><X>2.4</X><Y>2.4</Y><Z>0.6</Z></Vector3><Color3uint8 name="Color3uint8">4294960640</Color3uint8><token name="Material">288</token><bool name="CanCollide">false</bool><float name="Transparency">0</float><token name="TopSurface">0</token><token name="BottomSurface">0</token><token name="shape">1</token></Properties><Item class="Script" referent="RBX000502"><Properties><string name="Name">Script</string><bool name="Disabled">false</bool><ProtectedString name="Source"><![CDATA[-- POWER STAR: super speed + jump for 8 seconds.
+local star = script.Parent
+local ready = true
+star.Touched:Connect(function(hit)
+	local humanoid = hit.Parent and hit.Parent:FindFirstChildOfClass("Humanoid")
+	if humanoid and ready then
+		ready = false
+		star.Transparency = 1
+		humanoid.WalkSpeed = 36
+		humanoid.UseJumpPower = true
+		humanoid.JumpPower = 90
+		task.wait(8)
+		humanoid.WalkSpeed = 16
+		humanoid.JumpPower = 50
+		task.wait(7)
+		star.Transparency = 0
+		ready = true
+	end
+end)
+]]></ProtectedString></Properties></Item></Item><Item class="Part" referent="RBX000504"><Properties><string name="Name">StarB</string><bool name="Anchored">true</bool><CoordinateFrame name="CFrame"><X>42.2</X><Y>3</Y><Z>0</Z><R00>0.7071</R00><R01>-0.7071</R01><R02>0</R02><R10>0.7071</R10><R11>0.7071</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame><Vector3 name="size"><X>2.4</X><Y>2.4</Y><Z>0.6</Z></Vector3><Color3uint8 name="Color3uint8">4294960640</Color3uint8><token name="Material">288</token><bool name="CanCollide">false</bool><float name="Transparency">0</float><token name="TopSurface">0</token><token name="BottomSurface">0</token><token name="shape">1</token></Properties></Item></Item><Item class="Model" referent="RBX000510"><Properties><string name="Name">Key</string></Properties><Item class="Part" referent="RBX000507"><Properties><string name="Name">Key</string><bool name="Anchored">true</bool><CoordinateFrame name="CFrame"><X>50</X><Y>3</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame><Vector3 name="size"><X>0.4</X><Y>2.4</Y><Z>0.4</Z></Vector3><Color3uint8 name="Color3uint8">4294947584</Color3uint8><token name="Material">1072</token><bool name="CanCollide">false</bool><float name="Transparency">0</float><token name="TopSurface">0</token><token name="BottomSurface">0</token><token name="shape">1</token></Properties><Item class="Script" referent="RBX000506"><Properties><string name="Name">Script</string><bool name="Disabled">false</bool><ProtectedString name="Source"><![CDATA[-- KEY: pick it up to open any Key Door.
+local Players = game:GetService("Players")
+local key = script.Parent
+local ready = true
+key.Touched:Connect(function(hit)
+	local player = Players:GetPlayerFromCharacter(hit.Parent)
+	if player and ready and not player:GetAttribute("HasKey") then
+		ready = false
+		player:SetAttribute("HasKey", true)
+		key.Transparency = 1
+		task.wait(10)
+		key.Transparency = 0
+		ready = true
+	end
+end)
+]]></ProtectedString></Properties></Item></Item><Item class="Part" referent="RBX000508"><Properties><string name="Name">Ring</string><bool name="Anchored">true</bool><CoordinateFrame name="CFrame"><X>50</X><Y>4.4</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame><Vector3 name="size"><X>0.4</X><Y>1.2</Y><Z>1.2</Z></Vector3><Color3uint8 name="Color3uint8">4294947584</Color3uint8><token name="Material">1072</token><bool name="CanCollide">false</bool><float name="Transparency">0</float><token name="TopSurface">0</token><token name="BottomSurface">0</token><token name="shape">2</token></Properties></Item><Item class="Part" referent="RBX000509"><Properties><string name="Name">Tooth</string><bool name="Anchored">true</bool><CoordinateFrame name="CFrame"><X>50</X><Y>2.1</Y><Z>0.4</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame><Vector3 name="size"><X>0.4</X><Y>0.4</Y><Z>0.8</Z></Vector3><Color3uint8 name="Color3uint8">4294947584</Color3uint8><token name="Material">1072</token><bool name="CanCollide">false</bool><float name="Transparency">0</float><token name="TopSurface">0</token><token name="BottomSurface">0</token><token name="shape">1</token></Properties></Item></Item><Item class="Model" referent="RBX000515"><Properties><string name="Name">Trophy</string></Properties><Item class="Part" referent="RBX000511"><Properties><string name="Name">Base</string><bool name="Anchored">true</bool><CoordinateFrame name="CFrame"><X>57.6</X><Y>0.4</Y><Z>0</Z><R00>0</R00><R01>-1</R01><R02>0</R02><R10>1</R10><R11>0</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame><Vector3 name="size"><X>0.8</X><Y>2</Y><Z>2</Z></Vector3><Color3uint8 name="Color3uint8">4284301367</Color3uint8><token name="Material">512</token><bool name="CanCollide">true</bool><float name="Transparency">0</float><token name="TopSurface">0</token><token name="BottomSurface">0</token><token name="shape">2</token></Properties></Item><Item class="Part" referent="RBX000512"><Properties><string name="Name">Stem</string><bool name="Anchored">true</bool><CoordinateFrame name="CFrame"><X>57.6</X><Y>1.5</Y><Z>0</Z><R00>0</R00><R01>-1</R01><R02>0</R02><R10>1</R10><R11>0</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame><Vector3 name="size"><X>1.4</X><Y>0.5</Y><Z>0.5</Z></Vector3><Color3uint8 name="Color3uint8">4294951175</Color3uint8><token name="Material">1072</token><bool name="CanCollide">true</bool><float name="Transparency">0</float><token name="TopSurface">0</token><token name="BottomSurface">0</token><token name="shape">2</token></Properties></Item><Item class="Part" referent="RBX000514"><Properties><string name="Name">Cup</string><bool name="Anchored">true</bool><CoordinateFrame name="CFrame"><X>57.6</X><Y>3</Y><Z>0</Z><R00>0</R00><R01>-1</R01><R02>0</R02><R10>1</R10><R11>0</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame><Vector3 name="size"><X>1.6</X><Y>1.8</Y><Z>1.8</Z></Vector3><Color3uint8 name="Color3uint8">4294951175</Color3uint8><token name="Material">1072</token><bool name="CanCollide">true</bool><float name="Transparency">0</float><token name="TopSurface">0</token><token name="BottomSurface">0</token><token name="shape">2</token></Properties><Item class="Script" referent="RBX000513"><Properties><string name="Name">Script</string><bool name="Disabled">false</bool><ProtectedString name="Source"><![CDATA[local function stat(player, name)
+	local stats = player:FindFirstChild("leaderstats")
+	if not stats then
+		stats = Instance.new("Folder")
+		stats.Name = "leaderstats"
+		stats.Parent = player
+	end
+	local value = stats:FindFirstChild(name)
+	if not value then
+		value = Instance.new("IntValue")
+		value.Name = name
+		value.Parent = stats
+	end
+	return value
+end
+
+-- TROPHY: grab it for a Trophy point (once per life).
+local Players = game:GetService("Players")
+local trophy = script.Parent
+local got = {}
+trophy.Touched:Connect(function(hit)
+	local player = Players:GetPlayerFromCharacter(hit.Parent)
+	local character = hit.Parent
+	if player and not got[character] then
+		got[character] = true
+		stat(player, "Trophies").Value += 1
+		local fx = Instance.new("Sparkles")
+		fx.Parent = trophy
+		game:GetService("Debris"):AddItem(fx, 3)
+	end
+end)
+]]></ProtectedString></Properties></Item></Item></Item><Item class="Model" referent="RBX000520"><Properties><string name="Name">Treasure Chest</string></Properties><Item class="Part" referent="RBX000516"><Properties><string name="Name">Box</string><bool name="Anchored">true</bool><CoordinateFrame name="CFrame"><X>66.6</X><Y>1</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame><Vector3 name="size"><X>4</X><Y>2</Y><Z>2.6</Z></Vector3><Color3uint8 name="Color3uint8">4287455034</Color3uint8><token name="Material">528</token><bool name="CanCollide">true</bool><float name="Transparency">0</float><token name="TopSurface">0</token><token name="BottomSurface">0</token><token name="shape">1</token></Properties></Item><Item class="Part" referent="RBX000518"><Properties><string name="Name">Lid</string><bool name="Anchored">true</bool><CoordinateFrame name="CFrame"><X>66.6</X><Y>2.45</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame><Vector3 name="size"><X>4</X><Y>0.9</Y><Z>2.6</Z></Vector3><Color3uint8 name="Color3uint8">4288770122</Color3uint8><token name="Material">528</token><bool name="CanCollide">true</bool><float name="Transparency">0</float><token name="TopSurface">0</token><token name="BottomSurface">0</token><token name="shape">1</token></Properties><Item class="Script" referent="RBX000517"><Properties><string name="Name">Script</string><bool name="Disabled">false</bool><ProtectedString name="Source"><![CDATA[local function stat(player, name)
+	local stats = player:FindFirstChild("leaderstats")
+	if not stats then
+		stats = Instance.new("Folder")
+		stats.Name = "leaderstats"
+		stats.Parent = player
+	end
+	local value = stats:FindFirstChild(name)
+	if not value then
+		value = Instance.new("IntValue")
+		value.Name = name
+		value.Parent = stats
+	end
+	return value
+end
+
+-- TREASURE CHEST: press E to open. 25 coins, once per player.
+local Players = game:GetService("Players")
+local lid = script.Parent
+local prompt = Instance.new("ProximityPrompt")
+prompt.ActionText = "Open"
+prompt.ObjectText = "Treasure Chest"
+prompt.Parent = lid
+local opened = {}
+prompt.Triggered:Connect(function(player)
+	if opened[player] then
+		return
+	end
+	opened[player] = true
+	stat(player, "Coins").Value += 25
+	local fx = Instance.new("Sparkles")
+	fx.Parent = lid
+	game:GetService("Debris"):AddItem(fx, 3)
+end)
+]]></ProtectedString></Properties></Item></Item><Item class="Part" referent="RBX000519"><Properties><string name="Name">Lock</string><bool name="Anchored">true</bool><CoordinateFrame name="CFrame"><X>66.6</X><Y>2</Y><Z>-1.35</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame><Vector3 name="size"><X>0.6</X><Y>0.8</Y><Z>0.2</Z></Vector3><Color3uint8 name="Color3uint8">4294951175</Color3uint8><token name="Material">1072</token><bool name="CanCollide">true</bool><float name="Transparency">0</float><token name="TopSurface">0</token><token name="BottomSurface">0</token><token name="shape">1</token></Properties></Item></Item></Item></roblox>

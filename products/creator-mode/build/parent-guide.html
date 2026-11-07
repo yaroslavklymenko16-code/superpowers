@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Creator Quest Parent Guide</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+  :root { --ink: #13213a; --muted: #56627a; --paper: #fbfaf6; --line: #dfe3ec; --blue: #3d8bff; --red: #ff4f4f; --yellow: #ffd23f; --green: #36d67a; --orange: #ff8a2b; --pink: #ff5fa8; --purple: #b46bff;
+    --display: "Fredoka", system-ui, sans-serif; --body: "Atkinson Hyperlegible", system-ui, sans-serif; --mono: "JetBrains Mono", monospace; }
+  @page { size: Letter; margin: 0.5in 0.6in; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 10.5pt/1.45 var(--body); }
+  h1, h2, h3 { font-family: var(--display); margin: 0; line-height: 1.1; }
+  h1 { font-size: 46pt; } h2 { font-size: 22pt; } h3 { font-size: 12.5pt; }
+  p { margin: 0; }
+  .page { page-break-after: always; display: flex; flex-direction: column; gap: 12px; }
+  .page:last-child { page-break-after: auto; }
+  .label { font: 700 8.5pt var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .cover { min-height: 9.8in; justify-content: space-between; background: var(--ink); color: #f3f7ff; padding: 40px; border-radius: 14px; }
+  .blocks { display: flex; gap: 8px; } .blocks span { width: 34px; height: 34px; border-radius: 7px; border: 3px solid #0b1528; }
+  .cover h1 span { color: var(--yellow); }
+  .cover .label { color: #a9b9d6; }
+  .box { border: 2.5px solid var(--ink); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; break-inside: avoid; }
+  .box.warn { background: #fff6d6; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  ul, ol { margin: 0; padding-left: 1.25em; display: flex; flex-direction: column; gap: 3px; }
+  table { width: 100%; border-collapse: collapse; font-size: 10pt; }
+  th, td { border: 1.5px solid var(--ink); padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { font-family: var(--display); background: #eef1f7; }
+  .dot { display: inline-block; width: 12px; height: 12px; border-radius: 3px; border: 1.5px solid var(--ink); vertical-align: -1px; margin-right: 6px; }
+  code { font: 9pt var(--mono); background: #eef1f7; padding: 1px 4px; border-radius: 4px; }
+  .small { font-size: 9pt; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<section class="page cover">
+  <div class="blocks"><span style="background:var(--blue)"></span><span style="background:var(--red)"></span><span style="background:var(--yellow)"></span><span style="background:var(--green)"></span><span style="background:var(--pink)"></span></div>
+  <div style="display:flex;flex-direction:column;gap:14px">
+    <div class="label">Creator Mode · Parent guide</div>
+    <h1>Creator <span>Quest</span></h1>
+    <p style="font-size:15pt;max-width:32ch">Everything you need to know to be your kid's co-pilot. Read this in 10 minutes, then let them take the wheel.</p>
+  </div>
+  <p class="small" style="color:#a9b9d6">Creator Mode is an independent course. It is not made, sponsored or endorsed by Roblox Corporation or Anthropic. Roblox and Roblox Studio are trademarks of Roblox Corporation. Claude is a product of Anthropic.</p>
+</section>
+
+<section class="page">
+  <div class="label">Start here</div>
+  <h2>What's in the download</h2>
+  <table>
+    <tr><th>File</th><th>What it is</th></tr>
+    <tr><td><b>Creator Quest.html</b></td><td>The game your kid plays through. Double-click to open it in Chrome, Edge or Safari. XP, levels, badges, 8 missions, a prompt mini-game and the 3D Vault browser. Progress saves in that browser.</td></tr>
+    <tr><td><b>Creator Vault</b> folder</td><td>118 ready-made Roblox models in 10 packs (.rbxmx files). 46 of them have scripts inside and work as soon as you press Play: coins, checkpoints, jump pads, portals, pets, swords.</td></tr>
+    <tr><td><b>Rescue Scripts</b> folder</td><td>A tested script for each of Missions 1–7. If Claude's version breaks and you can't fix it, paste the rescue script and keep going.</td></tr>
+    <tr><td><b>Parent Guide.pdf</b></td><td>This guide.</td></tr>
+  </table>
+
+  <div class="box warn">
+    <h3>The co-pilot rule</h3>
+    <p>Claude's terms require users to be 18 or older. So Creator Quest is built for <b>you and your kid together</b>: Claude runs on your account, on your screen, with you in the room. Your kid reads the mission, edits the prompt, does the building in Roblox Studio and the testing. You paste prompts into Claude and copy the answers back. At the end of each mission, you hold the "stamp" button to complete it.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="box">
+      <h3>What you need</h3>
+      <ul>
+        <li>A Windows PC or Mac. Roblox Studio doesn't run on phones, tablets or Chromebooks.</li>
+        <li>Roblox Studio, free from <b>create.roblox.com</b>.</li>
+        <li>A Roblox account for your kid. Turn on Parental Controls for under-13s.</li>
+        <li>A Claude account for you at <b>claude.ai</b>.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>Free or paid Claude?</h3>
+      <p>The free plan works for getting started. The Mega Prompts ask Claude for long scripts (150–300 lines), so on the free plan you may hit the daily message limit after a mission or two. A paid plan makes longer sessions smoother. Either way, the rescue scripts mean you're never stuck.</p>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3>Each mission has 5 stages</h3>
+    <table>
+      <tr><td style="width:24%"><b>1. AI Brain</b></td><td>A short lesson about how AI works, plus a 2-question quiz. Read it together.</td></tr>
+      <tr><td><b>2. Build</b></td><td>Setup checklist, the <b>Mega Prompt</b> (one prompt that makes Claude write a whole game system), and a "test it" checklist.</td></tr>
+      <tr><td><b>3. Boss Bug</b></td><td>A short piece of real code with one bug. Your kid taps the broken line.</td></tr>
+      <tr><td><b>4. Power-ups</b></td><td>Extra prompts that add features. Kids pick what sounds fun.</td></tr>
+      <tr><td><b>5. Finish</b></td><td>A conversation question for you, then you hold the stamp button.</td></tr>
+    </table>
+  </div>
+</section>
+
+<section class="page">
+  <div class="label">The missions</div>
+  <h2>From first obby to published game</h2>
+  <table>
+    <tr><th>#</th><th>Mission</th><th>What your kid builds</th><th>AI lesson</th></tr>
+    <tr><td><span class="dot" style="background:var(--red)"></span>1</td><td><b>Lava Tower</b><br><span class="small">45 min</span></td><td>A 25-stage spiral obby over a lava lake with elevators, spinning lasers, vanishing blocks, checkpoints and a win pad</td><td>What AI is: a prediction machine</td></tr>
+    <tr><td><span class="dot" style="background:var(--yellow)"></span>2</td><td><b>Coin Rush</b><br><span class="small">50 min</span></td><td>Spinning coins, Gold Rain events, a shop with Speed Boots, Moon Jump and Giant Mode, and saving</td><td>Prompting: what, where, how</td></tr>
+    <tr><td><span class="dot" style="background:var(--green)"></span>3</td><td><b>Tycoon Factory</b><br><span class="small">60 min</span></td><td>A full tycoon: claim pad, droppers, conveyor, collector, 7 upgrades and a Golden Statue</td><td>Breaking big jobs into steps</td></tr>
+    <tr><td><span class="dot" style="background:#7cc642"></span>4</td><td><b>Zombie Night</b><br><span class="small">60 min</span></td><td>A night-time graveyard, swords, zombie waves, giant zombies every 5th wave</td><td>AI makes mistakes: always test</td></tr>
+    <tr><td><span class="dot" style="background:var(--pink)"></span>5</td><td><b>Pet Hatchery</b><br><span class="small">55 min</span></td><td>Gems, a mystery egg, 5 rarities, 8 pet types that follow you and boost gems</td><td>Chance and patterns in AI</td></tr>
+    <tr><td><span class="dot" style="background:var(--blue)"></span>6</td><td><b>Round Arena</b><br><span class="small">60 min</span></td><td>A lobby + countdown + round loop with Falling Tiles and Rising Lava modes and an on-screen timer</td><td>Staying safe online</td></tr>
+    <tr><td><span class="dot" style="background:var(--orange)"></span>7</td><td><b>Boss Battle</b><br><span class="small">60 min</span></td><td>A giant boss with a health bar, ground slams, meteor rain and rage mode</td><td>Iterating with feedback</td></tr>
+    <tr><td><span class="dot" style="background:var(--purple)"></span>8</td><td><b>Dream Game</b><br><span class="small">2+ hours</span></td><td>Their own game, designed with the Dream Game Designer, built with the Vault, playtested and published</td><td>You're the creator: originality and honesty</td></tr>
+  </table>
+  <p class="small">Each mission starts in a fresh Baseplate place. Mission 8 is where everything gets combined.</p>
+
+  <div class="box">
+    <h3>Conversation starters (one per mission)</h3>
+    <ol>
+      <li>How is Claude different from a friend?</li>
+      <li>What made your second prompt better than your first?</li>
+      <li>What's a big job at home we could break into small steps?</li>
+      <li>When could AI be wrong about something besides code?</li>
+      <li>Why might a game make Mythic pets so rare?</li>
+      <li>What would you do if someone online made you feel uncomfortable?</li>
+      <li>What's something you got better at by practicing?</li>
+      <li>Who should get credit when you build something with AI?</li>
+    </ol>
+  </div>
+</section>
+
+<section class="page">
+  <div class="label">When things go wrong</div>
+  <h2>Troubleshooting</h2>
+  <table>
+    <tr><th style="width:36%">Problem</th><th>Fix</th></tr>
+    <tr><td>Nothing happens when we press Play</td><td>Check the script is inside <b>ServerScriptService</b> (not Workspace) and that it's a <b>Script</b>, not a LocalScript. Open View › Output and look for red text.</td></tr>
+    <tr><td>Red error in Output</td><td>Copy the whole red line plus the script and send both to Claude: "Here's my error: ... Here's my script: ... What's wrong?"</td></tr>
+    <tr><td>Claude's answer got cut off</td><td>Type "continue". Or ask "Give me the full script again in one piece."</td></tr>
+    <tr><td>We've tried three fixes and it's still broken</td><td>Use the rescue script from the Build stage (or the Rescue Scripts folder). Then ask Claude to add your changes on top of it.</td></tr>
+    <tr><td>Coins don't save (Mission 2)</td><td>Saving needs a published game. File › Publish to Roblox, then Home › Game Settings › Security › turn on "Enable Studio Access to API Services".</td></tr>
+    <tr><td>Two scripts are fighting</td><td>Each mission should be its own place. Start a new Baseplate for each one.</td></tr>
+    <tr><td>Insert from File doesn't show the Vault files</td><td>Unzip the download first. Then right-click Workspace › Insert from File and browse to the Creator Vault folder.</td></tr>
+    <tr><td>Creator Quest progress disappeared</td><td>Progress is saved in the browser you used. Use the same browser on the same computer, and don't use a private window.</td></tr>
+  </table>
+
+  <div class="grid2">
+    <div class="box">
+      <h3>Online safety</h3>
+      <ul>
+        <li>Publish games as Private or Friends only at first (Game Settings on create.roblox.com).</li>
+        <li>Keep Roblox Parental Controls on for under-13s.</li>
+        <li>Mission 6 teaches never to share full name, school, address or passwords with AI or in game chat.</li>
+        <li>Claude stays on your account. Your kid doesn't need their own.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>The Creator Hours deal (optional)</h3>
+      <p>Want to shift screen time from playing to making? Agree on a ratio together, like "an hour of building earns thirty minutes of playing." Track it below.</p>
+      <p style="margin-top:6px">1 hour building = ______ minutes playing</p>
+    </div>
+  </div>
+  <table>
+    <tr><th>Date</th><th>What we built</th><th>Minutes</th><th>Initials</th></tr>
+    <tr><td style="height:26px"></td><td></td><td></td><td></td></tr>
+    <tr><td style="height:26px"></td><td></td><td></td><td></td></tr>
+    <tr><td style="height:26px"></td><td></td><td></td><td></td></tr>
+    <tr><td style="height:26px"></td><td></td><td></td><td></td></tr>
+  </table>
+</section>
+
+</body>
+</html>
