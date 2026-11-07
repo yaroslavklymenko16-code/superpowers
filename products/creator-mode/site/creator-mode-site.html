@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}code{font-family:var(--mono)}</style>
+</head>
+<body>
+<title>Creator Mode</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="A 7-mission parent + kid course: build a real Roblox game with Claude and learn how AI works.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+  /* Layout: studio baseplate grid behind a single column; hero flips PLAY -> CREATE. */
+  :root {
+    --bg: #f6f7fb; --surface: #ffffff; --fg: #1b2030; --muted: #586079; --line: #dfe3ee; --grid: #e8ebf3;
+    --blue: #2f6bff; --lava: #ff5a36; --sun: #ffc83d; --leaf: #1f9d6b; --on-accent: #ffffff;
+    --display: "Bricolage Grotesque", system-ui, sans-serif;
+    --body: "Atkinson Hyperlegible", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --bg: #12151f; --surface: #1b2030; --fg: #eef1f8; --muted: #a3abc2; --line: #2c3347; --grid: #1a1f2d;
+    --blue: #6b94ff; --lava: #ff7a5c; --sun: #ffd25e; --leaf: #3cc48f; --on-accent: #0f1220; color-scheme: dark; } }
+  :root[data-theme="dark"] {
+    --bg: #12151f; --surface: #1b2030; --fg: #eef1f8; --muted: #a3abc2; --line: #2c3347; --grid: #1a1f2d;
+    --blue: #6b94ff; --lava: #ff7a5c; --sun: #ffd25e; --leaf: #3cc48f; --on-accent: #0f1220; color-scheme: dark; }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--fg); font: 17px/1.55 var(--body);
+    background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  h1, h2, h3 { font-family: var(--display); line-height: 1.05; text-wrap: balance; margin: 0; }
+  h1 { font-size: clamp(2.6rem, 7vw, 5rem); font-weight: 800; letter-spacing: -0.03em; }
+  h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; letter-spacing: -0.02em; }
+  h3 { font-size: 1.2rem; font-weight: 600; }
+  p { margin: 0; }
+  .label { font: 500 0.75rem/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  section { padding-block: 64px; }
+  a { color: var(--blue); }
+
+  header .wrap { display: flex; align-items: center; justify-content: space-between; padding-block: 18px; gap: 12px; }
+  .logo { display: flex; align-items: center; gap: 10px; font: 800 1.15rem var(--display); }
+  .studs { display: flex; gap: 3px; }
+  .studs i { width: 12px; height: 12px; border-radius: 2px; display: block; }
+
+  .btn { display: inline-flex; align-items: center; gap: 10px; background: var(--blue); color: var(--on-accent); font: 700 1.05rem var(--body);
+    padding: 14px 24px; border-radius: 6px; text-decoration: none; border: 2px solid var(--fg); box-shadow: 4px 4px 0 var(--fg); transition: transform .12s, box-shadow .12s; }
+  .btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--fg); }
+  .btn:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
+  .btn.small { padding: 9px 16px; font-size: 0.95rem; box-shadow: 3px 3px 0 var(--fg); }
+
+  .hero { padding-block: 40px 72px; }
+  .hero-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 48px; align-items: center; }
+  .hero-grid > * { min-width: 0; }
+  .hero .lede { font-size: 1.2rem; color: var(--muted); max-width: 36ch; margin-top: 20px; }
+  .hero .cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; margin-top: 28px; }
+  .price { font: 800 1.6rem var(--display); }
+  .price small { font: 400 0.9rem var(--body); color: var(--muted); display: block; }
+
+  /* Mode switch demo */
+  .studio { background: var(--surface); border: 2px solid var(--fg); border-radius: 8px; box-shadow: 8px 8px 0 var(--fg); overflow: hidden; }
+  .studio-bar { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 2px solid var(--fg); gap: 10px; }
+  .toggle { display: flex; border: 2px solid var(--fg); border-radius: 999px; overflow: hidden; }
+  .toggle button { font: 500 0.75rem var(--mono); letter-spacing: .08em; padding: 6px 12px; border: 0; background: transparent; color: var(--fg); cursor: pointer; }
+  .toggle button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+  .toggle button:focus-visible { outline: 3px solid var(--sun); outline-offset: -3px; }
+  .studio-body { padding: 16px; display: flex; flex-direction: column; gap: 10px; min-height: 290px; }
+  .chat { font-size: 0.92rem; padding: 10px 12px; border-radius: 6px; border: 1.5px solid var(--line); max-width: 92%; }
+  .chat.kid { align-self: flex-end; background: color-mix(in srgb, var(--blue) 12%, var(--surface)); border-color: color-mix(in srgb, var(--blue) 40%, var(--line)); }
+  .chat.ai { background: color-mix(in srgb, var(--leaf) 10%, var(--surface)); border-color: color-mix(in srgb, var(--leaf) 40%, var(--line)); }
+  .chat .who { font: 500 0.68rem var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 3px; }
+  pre { margin: 0; font: 0.8rem/1.45 var(--mono); background: #1b2030; color: #e9ecf5; padding: 10px 12px; border-radius: 6px; overflow-x: auto; }
+  .play-view { display: grid; place-items: center; gap: 10px; text-align: center; color: var(--muted); padding-block: 30px; }
+  .play-view .big { font: 800 3rem var(--display); color: var(--fg); font-variant-numeric: tabular-nums; }
+
+  /* Problem band */
+  .band { background: var(--fg); color: var(--bg); }
+  .band .wrap { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; align-items: start; }
+  .band .wrap > * { min-width: 0; }
+  .band p { color: color-mix(in srgb, var(--bg) 82%, var(--fg)); font-size: 1.1rem; max-width: 52ch; }
+  .band p + p { margin-top: 14px; }
+
+  /* Missions */
+  .missions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 32px; }
+  .m { background: var(--surface); border: 2px solid var(--fg); border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .m .n { font: 800 2rem/1 var(--display); color: var(--blue); }
+  .m .build { font-weight: 700; }
+  .m .idea { font-size: 0.88rem; color: var(--muted); }
+  .m .idea b { color: var(--leaf); font-weight: 700; }
+  .m.final { background: color-mix(in srgb, var(--sun) 35%, var(--surface)); }
+
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .two > * { min-width: 0; }
+  ul.check { list-style: none; padding: 0; margin: 18px 0 0; display: flex; flex-direction: column; gap: 10px; }
+  ul.check li { padding-left: 30px; position: relative; }
+  ul.check li::before { content: ""; position: absolute; left: 0; top: 5px; width: 16px; height: 16px; border-radius: 3px; background: var(--leaf); border: 2px solid var(--fg); }
+
+  .copilot { background: var(--surface); border: 2px dashed var(--muted); border-radius: 8px; padding: 24px; display: flex; flex-direction: column; gap: 10px; }
+
+  details { background: var(--surface); border: 2px solid var(--line); border-radius: 6px; padding: 14px 18px; }
+  details + details { margin-top: 10px; }
+  summary { font-weight: 700; cursor: pointer; }
+  summary:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
+  details p { margin-top: 10px; color: var(--muted); max-width: 70ch; }
+
+  .final-cta { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  footer { padding-block: 32px; font-size: 0.82rem; color: var(--muted); border-top: 1px solid var(--line); background: var(--bg); }
+  footer p { max-width: 80ch; }
+
+  @media (max-width: 860px) {
+    .hero-grid, .band .wrap, .two { grid-template-columns: 1fr; gap: 32px; }
+    .missions { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 460px) { .missions { grid-template-columns: 1fr; } section { padding-block: 48px; } }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<header>
+  <div class="wrap">
+    <div class="logo"><span class="studs"><i style="background:var(--blue)"></i><i style="background:var(--lava)"></i><i style="background:var(--sun)"></i><i style="background:var(--leaf)"></i></span>Creator Mode</div>
+    <a class="btn small buy" href="#buy">Get the course</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="label">For parents of Roblox-obsessed kids · ages 9–14</p>
+        <h1 style="margin-top:14px">Stop playing<br>Roblox.<br>Start <span style="color:var(--blue)">building</span> it.</h1>
+        <p class="lede">A 7-mission course where you and your kid build a real Roblox game together, using Claude as a coding helper, and learn how AI actually works along the way.</p>
+        <div class="cta-row">
+          <a class="btn buy" href="#buy">Get Creator Mode</a>
+          <div class="price">$29 <small>One-time. Instant PDF download.</small></div>
+        </div>
+      </div>
+
+      <div class="studio" aria-label="Example of a Creator Mode session">
+        <div class="studio-bar">
+          <span class="label">Saturday, 10:14 am</span>
+          <div class="toggle" role="group" aria-label="Switch mode">
+            <button type="button" id="mode-play" aria-pressed="false">PLAY</button>
+            <button type="button" id="mode-create" aria-pressed="true">CREATE</button>
+          </div>
+        </div>
+        <div class="studio-body" id="view-create">
+          <div class="chat kid"><span class="who">Your kid types</span>Write a Roblox script that goes inside a Part. When a player touches it, they respawn. Explain each line.</div>
+          <div class="chat ai"><span class="who">Claude</span>Here's a lava block! <code>Touched</code> runs when something bumps the part…</div>
+<pre>lava.Touched:Connect(function(hit)
+  local h = hit.Parent:FindFirstChildOfClass("Humanoid")
+  if h then h.Health = 0 end
+end)</pre>
+          <div class="chat kid"><span class="who">Your kid</span>It works!! Can we make it only take 20 health?</div>
+        </div>
+        <div class="studio-body play-view" id="view-play" hidden>
+          <div class="big" id="hours">4h 12m</div>
+          <p>playing someone else's game today.</p>
+          <p style="font-size:.85rem">Fun. But nothing to show for it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <h2>The hours are already there. Point them somewhere.</h2>
+      <div>
+        <p>Your kid can spend a whole afternoon in Roblox. You've tried timers, deals and taking the tablet away. The pull is strong because Roblox games are designed to keep kids playing.</p>
+        <p>Creator Mode uses that same obsession differently. Every game they love was made by someone in Roblox Studio, a free tool anyone can download. With an AI helper beside them, a 10-year-old can build working game pieces in their first hour: lava floors, coins, moving platforms, secret doors.</p>
+        <p>And because they're working with AI, they learn the thing every kid will need next: how AI works, where it goes wrong, and how to stay in charge of it.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="label">What's inside</p>
+      <h2 style="margin-top:10px">7 missions. One finished game.</h2>
+      <p style="color:var(--muted);margin-top:10px;max-width:60ch">Each mission takes about 45 minutes. Kids build one part of a game, and learn one big idea about AI.</p>
+      <div class="missions">
+        <div class="m"><span class="n">1</span><span class="build">The rainbow block</span><span class="idea"><b>AI idea:</b> instructions in, results out</span></div>
+        <div class="m"><span class="n">2</span><span class="build">The floor is lava</span><span class="idea"><b>AI idea:</b> why clear prompts get better answers</span></div>
+        <div class="m"><span class="n">3</span><span class="build">Coin collector</span><span class="idea"><b>AI idea:</b> AI makes mistakes. Your kid finds and fixes them.</span></div>
+        <div class="m"><span class="n">4</span><span class="build">Moving platforms</span><span class="idea"><b>AI idea:</b> build, test, improve, repeat</span></div>
+        <div class="m"><span class="n">5</span><span class="build">Speed pads</span><span class="idea"><b>AI idea:</b> how AI learned from patterns</span></div>
+        <div class="m"><span class="n">6</span><span class="build">The secret door</span><span class="idea"><b>AI idea:</b> staying safe and private with AI</span></div>
+        <div class="m"><span class="n">7</span><span class="build">Your own obby</span><span class="idea"><b>AI idea:</b> you're the creator, AI is the tool</span></div>
+        <div class="m final"><span class="n">+</span><span class="build">Extras</span><span class="idea">Parent guide, prompt cheat sheet, Creator Hours screen-time chart, completion certificate</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap two">
+      <div>
+        <h2>What your kid walks away with</h2>
+        <ul class="check">
+          <li>A real game they designed, published on Roblox for friends and family</li>
+          <li>Real code in Luau, the language Roblox games are written in</li>
+          <li>How AI predicts words, and why it can be confidently wrong</li>
+          <li>How to write clear instructions, test results and fix bugs</li>
+          <li>Rules for using AI safely: privacy, fact-checking, and remembering AI isn't a friend</li>
+        </ul>
+      </div>
+      <div class="copilot">
+        <p class="label">Built for doing together</p>
+        <h3>You're the co-pilot</h3>
+        <p>Claude's terms require users to be 18+, so Creator Mode runs on your Claude account, on your screen, with you beside your kid. They decide what to build and what to ask. You read the AI ideas out loud and sign off on each mission.</p>
+        <p style="color:var(--muted)">The goal: an hour where the screen is something you do together.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap" style="max-width:780px">
+      <h2 style="margin-bottom:22px">Questions parents ask</h2>
+      <details><summary>Does my kid need to know how to code?</summary><p>No. Mission 1 starts from opening Roblox Studio for the first time. If they can type and follow steps, they're ready. Best for ages 9–14.</p></details>
+      <details><summary>What do we need?</summary><p>A Windows PC or Mac (Roblox Studio doesn't run on phones, tablets or Chromebooks), the free Roblox Studio app, a Roblox account for your kid, and a Claude account for you. Claude's free plan is enough to get started.</p></details>
+      <details><summary>Isn't this just more screen time?</summary><p>It's screen time where they make something. The included Creator Hours chart helps you set a deal, like "an hour of building earns thirty minutes of playing," so time spent creating counts differently from time spent playing.</p></details>
+      <details><summary>Is the AI safe for kids?</summary><p>Your kid uses Claude with you, on your account. Mission 6 teaches the safety rules directly: never share personal info, check what AI says, and remember AI is a tool. You stay in the room for every session.</p></details>
+      <details><summary>What format is it?</summary><p>A 13-page printable PDF workbook with every script, every prompt, a parent guide and a certificate. Download it instantly after purchase.</p></details>
+      <details><summary>What if it's not a fit?</summary><p>Email us within 30 days for a full refund.</p></details>
+    </div>
+  </section>
+
+  <section id="buy">
+    <div class="wrap final-cta">
+      <span class="studs" style="gap:6px"><i style="background:var(--blue);width:22px;height:22px"></i><i style="background:var(--lava);width:22px;height:22px"></i><i style="background:var(--sun);width:22px;height:22px"></i><i style="background:var(--leaf);width:22px;height:22px"></i></span>
+      <h2>This weekend, build a game together.</h2>
+      <p style="color:var(--muted);max-width:46ch">7 missions, parent guide, prompt cheat sheet, screen-time chart and certificate. One price, yours to keep.</p>
+      <a class="btn buy" id="checkout" href="https://gumroad.com/">Get Creator Mode for $29</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Creator Mode is an independent course. It is not made, sponsored or endorsed by Roblox Corporation or Anthropic. Roblox and Roblox Studio are trademarks of Roblox Corporation. Claude is a product of Anthropic. Claude requires users to be 18 or older; this course is designed for a parent and child to use together.</p>
+  </div>
+</footer>
+
+<script>
+  // Set this to your Gumroad / Stripe / Lemon Squeezy product link.
+  const CHECKOUT_URL = "https://gumroad.com/";
+  document.getElementById("checkout").href = CHECKOUT_URL;
+
+  const playBtn = document.getElementById("mode-play");
+  const createBtn = document.getElementById("mode-create");
+  const viewPlay = document.getElementById("view-play");
+  const viewCreate = document.getElementById("view-create");
+  function setMode(mode) {
+    const creating = mode === "create";
+    createBtn.setAttribute("aria-pressed", String(creating));
+    playBtn.setAttribute("aria-pressed", String(!creating));
+    viewCreate.hidden = !creating;
+    viewPlay.hidden = creating;
+  }
+  playBtn.addEventListener("click", () => setMode("play"));
+  createBtn.addEventListener("click", () => setMode("create"));
+</script>
+
+</body>
+</html>
