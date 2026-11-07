@@ -368,6 +368,76 @@ def write_pack(pack, models):
         fh.write(xml)
     return path
 
+
+# ---------- Luau builders (so Claude can add any model through the Studio connector) ----------
+ENUM_SHAPE = {"ball": "Ball", "block": "Block", "cyl": "Cylinder"}
+
+def lnum(v):
+    v = round(v, 4)
+    return str(int(v)) if v == int(v) else repr(v)
+
+def luau_builder(m):
+    is_tool = m["kind"] == "Tool"
+    L = ["-- Creator Vault: " + m["name"],
+         "local base = CFrame.new(0, %s, -20)" % ("3" if is_tool else "0"),
+         'local model = Instance.new("%s")' % ("Tool" if is_tool else "Model"),
+         'model.Name = "%s"' % m["name"],
+         "local function add(class, name, size, cf, rgb, material, extra)",
+         "\tlocal p = Instance.new(class)",
+         "\tp.Name = name",
+         "\tp.Anchored = %s" % ("false" if is_tool else "true"),
+         "\tp.Size = size",
+         "\tp.CFrame = base * cf",
+         "\tp.Color = Color3.fromRGB(rgb[1], rgb[2], rgb[3])",
+         "\tp.Material = Enum.Material[material]",
+         "\tp.TopSurface = Enum.SurfaceType.Smooth",
+         "\tp.BottomSurface = Enum.SurfaceType.Smooth",
+         "\tfor k, v in pairs(extra or {}) do p[k] = v end",
+         "\tp.Parent = model",
+         "\treturn p",
+         "end",
+         "local function addScript(parent, source)",
+         '\tlocal s = Instance.new("Script")',
+         "\ts.Source = source",
+         "\ts.Parent = parent",
+         "end"]
+    for i, p in enumerate(m["parts"]):
+        R = rot_matrix(*p["rot"])
+        x, y, z = p["pos"]
+        if p["rot"] == (0, 0, 0):
+            cf = "CFrame.new(%s, %s, %s)" % (lnum(x), lnum(y), lnum(z))
+        else:
+            cf = "CFrame.new(%s)" % ", ".join(lnum(v) for v in [x, y, z] + [R[a][b] for a in range(3) for b in range(3)])
+        r, g, b = hexrgb(p["color"])
+        extra = []
+        if p.get("cls", "Part") == "Part" and p["shape"] != "block":
+            extra.append("Shape = Enum.PartType.%s" % ENUM_SHAPE[p["shape"]])
+        if p.get("cancollide") is False:
+            extra.append("CanCollide = false")
+        if p.get("transparency"):
+            extra.append("Transparency = %s" % lnum(float(p["transparency"])))
+        line = 'local p%d = add("%s", "%s", Vector3.new(%s), %s, {%d, %d, %d}, "%s"%s)' % (
+            i, p.get("cls", "Part"), p["name"], ", ".join(lnum(v) for v in p["size"]), cf, r, g, b, p["mat"],
+            (", {" + ", ".join(extra) + "}") if extra else "")
+        L.append(line)
+        if p.get("light"):
+            lr, lg, lb = hexrgb(p["light"])
+            L.append('do local l = Instance.new("PointLight") l.Color = Color3.fromRGB(%d, %d, %d) l.Brightness = 2 l.Range = 16 l.Parent = p%d end' % (lr, lg, lb, i))
+        if p.get("fire"):
+            L.append('Instance.new("Fire").Parent = p%d' % i)
+        if p.get("sparkles"):
+            L.append('Instance.new("Sparkles").Parent = p%d' % i)
+        if p.get("script"):
+            src = S[p["script"]]
+            assert "]==]" not in src
+            L.append("addScript(p%d, [==[\n%s]==])" % (i, src))
+    if m["script"]:
+        assert "]==]" not in S[m["script"]]
+        L.append("addScript(model, [==[\n%s]==])" % S[m["script"]])
+    L.append("model.Parent = workspace")
+    L.append('game:GetService("Selection"):Set({ model })')
+    return "\n".join(L) + "\n"
+
 def catalog_json():
     out = []
     for m in CATALOG:
@@ -380,7 +450,7 @@ def catalog_json():
                               t=round(float(p.get("transparency", 0)) if p["mat"] != "Glass" else max(0.25, float(p.get("transparency", 0))), 2),
                               h=1 if p.get("transparency", 0) >= 1 else 0, cls=p.get("cls", "Part")))
         out.append(dict(pack=m["pack"], name=m["name"], desc=m["desc"], scripted=bool(m["script"] or any(p.get("script") for p in m["parts"])),
-                        tool=m["kind"] == "Tool", parts=parts))
+                        tool=m["kind"] == "Tool", parts=parts, lua=luau_builder(m)))
     return out
 
 if __name__ == "__main__":
@@ -394,6 +464,11 @@ if __name__ == "__main__":
     here = os.path.dirname(os.path.abspath(__file__))
     with open(os.path.join(here, "vault_catalog.json"), "w") as fh:
         json.dump(catalog_json(), fh, separators=(",", ":"))
+    bd = os.path.join(here, "vault_builders")
+    os.makedirs(bd, exist_ok=True)
+    for m in CATALOG:
+        with open(os.path.join(bd, m["name"].replace(" ", "_") + ".luau"), "w") as fh:
+            fh.write(luau_builder(m))
     sd = os.path.join(here, "vault_scripts")
     os.makedirs(sd, exist_ok=True)
     for k, v in S.items():

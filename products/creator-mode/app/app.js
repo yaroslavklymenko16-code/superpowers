@@ -6,21 +6,20 @@
   var UNIT0_COLOR = "#2fd3e0";
   var app = document.getElementById("app");
 
-  // Big-game build steps, split over two screens. Keys: <mission>-0..5. Test steps start at 6.
+  // Big-game build steps, split over two screens. Keys: <mission>-0..4. Test steps start at 6.
   var SETUP = [
     { t: "Open Roblox Studio. Click New, then Baseplate.", fig: "new" },
-    { t: "In the Explorer, hover ServerScriptService, click +, and choose Script.", fig: "explorer" },
-    { t: "Delete the print(\"Hello world!\") line inside the new Script.", fig: "editor" }
+    { t: "Check Claude is connected: the green light in Assistant ⋯ → Manage MCP Servers.", fig: "mcp" }
   ];
   var SEND = [
-    { t: "Grown-up: paste the Mega Prompt into Claude and send it.", fig: "claude" },
-    { t: "Copy Claude's whole script into your Script.", fig: "editor" },
-    { t: "Press Play (F5) and check out your game!", fig: "play" }
+    { t: "Grown-up: send the Mega Prompt in Claude Desktop.", fig: "claude" },
+    { t: "Watch Claude build it in Studio. If it asks to use a Studio tool, the grown-up clicks Allow.", fig: "allow" },
+    { t: "When Claude says it's ready, press Play and try your game!", fig: "play" }
   ];
   var TEST_OFFSET = 6;
 
   // What each finished step unlocks in the Vault and elsewhere.
-  var PACK_UNLOCK = { "Nature": "q:0c", "Obby": "m:1", "Collectibles": "m:2", "Props": "m:3", "Game Systems": "m:3", "Spooky": "m:4", "Tools": "m:4", "Pets": "m:5", "Sci-Fi": "m:6", "Buildings": "m:7" };
+  var PACK_UNLOCK = { "Nature": "q:0d", "Obby": "m:1", "Collectibles": "m:2", "Props": "m:3", "Game Systems": "m:3", "Spooky": "m:4", "Tools": "m:4", "Pets": "m:5", "Sci-Fi": "m:6", "Buildings": "m:7" };
 
   // ---------- profiles + state ----------
   var PKEY = "creator-quest-profiles", OLDKEY = "creator-quest-v1";
@@ -160,12 +159,12 @@
   function reqDone(req) { var p = req.split(":"); return p[0] === "m" ? !!state.done[p[1]] : !!state.qdone[p[1]]; }
   function reqLabel(req) { var p = req.split(":"); return p[0] === "m" ? "Finish " + M[p[1] - 1].title : "Finish " + Q.filter(function (q) { return q.id === p[1]; })[0].title; }
   function packOpen(p) { return reqDone(PACK_UNLOCK[p]); }
-  function vaultOpen() { return !!state.qdone["0c"]; }
+  function vaultOpen() { return !!state.qdone["0d"]; }
   function labOpen() { return !!state.done[1]; }
   function unlocksFor(req) {
     var out = [];
     for (var p in PACK_UNLOCK) if (PACK_UNLOCK[p] === req) out.push(p + " pack");
-    if (req === "q:0c") out.push("the Creator Vault");
+    if (req === "q:0d") out.push("the Creator Vault");
     if (req === "m:1") out.push("Prompt Lab");
     return out;
   }
@@ -269,7 +268,7 @@
   function promptBox(text, note) {
     var cbtn = el("button", { class: "btn small green", type: "button", text: "Copy prompt" });
     cbtn.addEventListener("click", function () { copy(text, cbtn); });
-    return el("div", { class: "stack" }, [el("div", { class: "prompt-box" }, [el("pre", { text: text })]), el("div", { class: "row" }, [cbtn, el("span", { class: "muted", text: note || "Grown-up pastes it into Claude. Change any part you like!" })])]);
+    return el("div", { class: "stack" }, [el("div", { class: "prompt-box" }, [el("pre", { text: text })]), el("div", { class: "row" }, [cbtn, el("span", { class: "muted", text: note || "Send it in Claude Desktop and Claude builds it right in Studio. Change any part you like first!" })])]);
   }
 
   // A step-by-step lesson shell: top bar with progress, one screen at a time, Continue gated by each screen.
@@ -357,13 +356,13 @@
         el("div", { class: "title-blocks" }, COLORS.slice(0, 5).map(function (c) { return el("span", { style: "background:" + c }); })),
         el("h1", { html: "Creator <span>Quest</span>" }),
         el("p", { style: "font-size:1.2rem;max-width:34ch", text: "Stop playing other people's games. Build your own, with AI as your sidekick." }),
-        el("p", { class: "muted", text: "Warm-up · 8 big games · 21 skill quests · 118 3D models to unlock" }),
+        el("p", { class: "muted", text: "You describe it, Claude builds it in Roblox Studio · 8 big games · 21 skill quests · 118 models to unlock" }),
         profiles.list.length ? el("button", { class: "btn small ghost", type: "button", text: "← Pick a different creator", onclick: function () { go("profiles"); } }) : null
       ]),
       el("div", { class: "panel stack" }, [
         el("label", { class: "label", for: "creator-name", text: "Your creator name" }), input,
         el("span", { class: "label", text: "Your color" }), sw,
-        el("div", { class: "copilot-note", html: "<b>Grab your grown-up!</b> You'll use Claude on their account, with them next to you. They're your co-pilot." }),
+        el("div", { class: "copilot-note", html: "<b>Grab your grown-up!</b> Claude runs in the Claude Desktop app on their account, connected to Roblox Studio. They're your co-pilot." }),
         start
       ])
     ]));
@@ -465,7 +464,7 @@
       if (award("qdone", q.id, q.title)) {
         confetti(); beep([523, 659, 784, 1046]);
         var unl = unlocksFor("q:" + q.id);
-        if (unl.length) setTimeout(function () { rewardModal("Unit " + node.unit + " complete!", "You finished the warm-up. Time for your first big game!", color, "gift", unl, [{ text: "Awesome!" }]); }, 500);
+        if (unl.length) setTimeout(function () { rewardModal("Unit " + node.unit + " complete!", "Claude is connected and you made your first build. Time for your first big game!", color, "gift", unl, [{ text: "Awesome!" }]); }, 500);
       }
     }
     var start = state.qdone[q.id] ? 0 : !tipsDone ? 0 : !stepsDone() ? 1 : 2;
@@ -481,7 +480,7 @@
     var brainDone = !!state.done[m.id] || !!state.quiz[m.id + "-0"];
     function k(i) { return m.id + "-" + i; }
     var setupItems = SETUP.map(function (s, i) { return { key: k(i), t: s.t, fig: s.fig }; });
-    var sendItems = SEND.map(function (s, i) { return { key: k(i + 3), t: s.t, fig: s.fig }; });
+    var sendItems = SEND.map(function (s, i) { return { key: k(i + SETUP.length), t: s.t, fig: s.fig }; });
     var testItems = m.test.map(function (t, i) { return { key: k(TEST_OFFSET + i), t: t }; });
     function all(items) { return items.every(function (it) { return state.steps[it.key]; }); }
     function powerCount() { return m.powerups.filter(function (_, i) { return state.power[k(i)]; }).length; }
@@ -507,17 +506,23 @@
         gate: function () { return all(setupItems); }, hint: "Finish every step" });
       screens.push({ render: function (refresh) {
         return [el("span", { class: "label", text: "Build · the Mega Prompt" }), el("h2", { text: "One prompt. A whole game." }),
-          promptBox(m.megaPrompt, "Add your own ideas to the list before sending! Claude's script can be a bit different each time, and that's normal."),
+          promptBox(m.megaPrompt, "Add your own ideas to the list before sending! Claude builds it in Studio and tests it. Each build can come out a bit different, and that's normal."),
           el("span", { class: "label", style: "margin-top:6px", text: "One step at a time" }), stepList(sendItems, "steps", refresh)];
       }, gate: function () { return all(sendItems); }, hint: "Finish every step" });
       screens.push({ render: function (refresh) {
-        var rescue = window.RESCUE[m.key] || "", rbtn = el("button", { class: "btn small", type: "button", text: "Copy backup script" });
-        rbtn.addEventListener("click", function () { copy(rescue, rbtn); });
+        var rescue = window.RESCUE[m.key] || "";
+        var fixPrompt = "Something in my game isn't working: [say what you did and what happened]. Check the output for errors, fix it, and playtest it again.";
+        var backupPrompt = "My " + m.title + " game isn't working and we want to use the backup. In my open Roblox Studio place, delete the scripts you added to ServerScriptService for this game and add this ONE Script there instead. Don't change it. Then playtest it and tell me when it's ready.\n\n```lua\n" + rescue + "```";
+        var fbtn = el("button", { class: "btn small green", type: "button", text: "Copy fix prompt" });
+        fbtn.addEventListener("click", function () { copy(fixPrompt, fbtn); });
+        var rbtn = el("button", { class: "btn small", type: "button", text: "Copy backup prompt" });
+        rbtn.addEventListener("click", function () { copy(backupPrompt, rbtn); });
         return [el("span", { class: "label", text: "Build · test it" }), el("h2", { text: "Does everything work?" }), stepList(testItems, "steps", refresh),
           el("details", { class: "rescue panel help" }, [el("summary", { text: "Something broken? Open for help" }), el("div", { class: "stack", style: "margin-top:12px" }, [
-            el("p", { text: "1. Look in Output for red text. Copy it and send it to Claude together with your script." }), FIG.make("output"),
-            el("p", { text: "2. Tried 3 fixes and still stuck? Use the backup script. It builds the whole game. Even pro developers use backups!" }),
-            rbtn, el("div", { class: "code" }, [el("pre", { text: rescue })])
+            el("p", { text: "1. Tell Claude what went wrong. Fill in the brackets, then send it. Claude reads the errors in Output itself." }),
+            el("div", { class: "prompt-box" }, [el("pre", { text: fixPrompt })]), fbtn,
+            el("p", { text: "2. Tried 3 fixes and still stuck? Send the backup prompt. Claude swaps in a ready-made version of the whole game. Even pro developers use backups!" }),
+            rbtn, el("details", {}, [el("summary", { class: "muted", text: "Peek at the backup code" }), el("div", { class: "code" }, [el("pre", { text: rescue })])])
           ])])];
       }, gate: function () { return all(testItems); }, hint: "Test every part" });
     } else {
@@ -525,7 +530,7 @@
       var shipItems = testItems;
       screens.push({ render: function (refresh) {
         return [el("span", { class: "label", text: "Build · ship it" }), el("h2", { text: "Build it, test it, publish it" }),
-          el("p", { class: "muted", text: "Build piece by piece with your Dream Prompt. Drop in models from the Creator Vault:" }), FIG.make("insert"),
+          el("p", { class: "muted", text: "Build piece by piece with your Dream Prompt. Need trees, buildings or pets? Open the Vault and tap \"Ask Claude to add it\" on any model." }),
           stepList(shipItems, "steps", refresh)];
       }, gate: function () { return all(shipItems); }, hint: "Finish every step" });
     }
@@ -543,7 +548,7 @@
       function prompt() {
         return "I'm designing my own Roblox game with my parent. It's a " + pick.genre + " game set in " + pick.theme + ", and the twist is: " + pick.twist + "." + (pick.idea ? " My extra idea: " + pick.idea + "." : "") +
           "\nFirst, help me plan it: give it 3 possible names, describe the main game loop in 3 steps, and list the 5 most important pieces to build in order." +
-          "\nThen write ONE Script for ServerScriptService for piece #1 so I can test it right away. Put settings at the top and explain where to paste it. After I test it, I'll ask for the next piece.";
+          "\nThen build piece #1 directly in my open Roblox Studio place, playtest it and fix any errors. After I test it, I'll ask for the next piece.";
       }
       function drawSlots() {
         slots.replaceChildren(
@@ -681,7 +686,11 @@
       info.replaceChildren(
         el("span", { class: "label", text: m.pack + " pack" }), el("h2", { text: m.name }), el("p", { class: "lesson", text: m.desc }),
         el("div", { class: "row" }, [m.scripted ? el("span", { class: "pill", text: "Works out of the box" }) : el("span", { class: "pill", style: "background:var(--panel-2);color:var(--fg)", text: "Decoration" }), m.tool ? el("span", { class: "pill", style: "background:var(--yellow)", text: "Tool: touch to pick up" }) : null].filter(Boolean)),
-        el("p", { class: "muted", text: "Find it in: Creator Vault - " + m.pack + ".rbxmx" }));
+        (function () {
+          var ask = el("button", { class: "btn yellow small", type: "button", text: "Ask Claude to add it" });
+          ask.addEventListener("click", function () { copy("Please run this Luau code with execute_luau in my open Roblox Studio place (Edit mode) to add the " + m.name + " from my Creator Vault in front of the spawn. Don't change anything else. Then tell me where it is.\n\n```lua\n" + m.lua + "```", ask); });
+          return el("div", { class: "stack", style: "gap:6px" }, [ask, el("span", { class: "muted", style: "font-size:.85rem", text: "Copies a prompt. Send it in Claude and the model appears in your game." })]);
+        })());
       grid.querySelectorAll(".tile").forEach(function (t) { t.setAttribute("aria-pressed", String(+t.getAttribute("data-i") === idx)); });
     }
     function drawGrid() {
@@ -702,10 +711,10 @@
     app.replaceChildren(el("div", { class: "stack" }, [
       el("span", { class: "label", text: "Creator Vault" }),
       el("h2", { text: openCount + " of " + CAT.length + " models unlocked" }),
-      el("p", { class: "muted", style: "max-width:70ch", text: "Every big game you finish unlocks a new pack of ready-made models. Ones marked \"works out of the box\" have scripts inside." }),
+      el("p", { class: "muted", style: "max-width:70ch", text: "Every big game you finish unlocks a new pack of ready-made models. Tap \"Ask Claude to add it\" and Claude builds it into your game. Ones marked \"works out of the box\" have scripts inside." }),
       el("div", { class: "vault-top" }, [
         el("div", { class: "viewer" }, [canvas, el("span", { class: "hint", text: has3D ? "Drag to spin" : "3D preview needs an internet connection" })]),
-        el("div", { class: "panel stack" }, [info, el("details", { class: "rescue" }, [el("summary", { text: "How to add models to your game" }), el("div", { class: "stack", style: "margin-top:10px" }, [FIG.make("insert"), el("p", { class: "muted", text: "The whole pack appears in a row. Move what you want, delete the rest. Recolor anything in Properties." })])])])
+        el("div", { class: "panel stack" }, [info, el("details", { class: "rescue" }, [el("summary", { text: "Other ways to add models" }), el("div", { class: "stack", style: "margin-top:10px" }, [el("p", { class: "muted", text: "Ask Claude to change any model after it's added: \"make the tree twice as big and pink\". You can also insert a whole pack yourself from the Creator Vault folder:" }), FIG.make("insert")])])])
       ]),
       chips, grid,
       lockedPacks.length ? el("span", { class: "label", style: "margin-top:16px", text: "Still locked" }) : null,
@@ -718,7 +727,7 @@
   // ---------- badges ----------
   function badgeList() {
     var list = M.map(function (m) { return { name: m.badge, color: m.color, got: !!state.done[m.id], how: "Finish " + m.title }; });
-    list.push({ name: "Warmed Up", color: UNIT0_COLOR, got: !!state.qdone["0c"], how: "Finish the warm-up" });
+    list.push({ name: "Warmed Up", color: UNIT0_COLOR, got: !!state.qdone["0d"], how: "Finish the warm-up" });
     list.push({ name: "Skill Master", color: "#36d67a", got: count(state.qdone) >= Q.length, how: "Finish all " + Q.length + " skill quests" });
     list.push({ name: "On Fire", color: "#ff8a2b", got: streak() >= 3, how: "Build 3 days in a row" });
     list.push({ name: "Bug Hunter", color: "#ff4f4f", got: count(state.boss) >= 7, how: "Squash all 7 Boss Bugs" });
@@ -768,13 +777,14 @@
     app.replaceChildren(el("div", { class: "stack", style: "max-width:760px" }, [
       el("span", { class: "label", text: "For grown-ups" }), el("h2", { text: "You're the co-pilot" }),
       el("div", { class: "panel stack" }, [el("h3", { text: "Why you need to be there" }),
-        el("p", { text: "Claude's terms require users to be 18 or older. Creator Quest is built for you and your kid together: Claude runs on your account, on your screen. Your kid picks what to build, edits the prompts and does the testing. You paste prompts into Claude and stamp each big game when it's done." })]),
+        el("p", { text: "Claude's terms require users to be 18 or older. Creator Quest is built for you and your kid together: Claude runs on your account, on your screen. Your kid picks what to build, edits the prompts and does the testing. You send the prompts in the Claude Desktop app, click Allow when Claude asks to use Studio, and stamp each big game when it's done." })]),
       el("div", { class: "panel stack" }, [el("h3", { text: "What you need" }), el("ul", { style: "margin:0;padding-left:1.2em" }, [
         el("li", { text: "A Windows PC or Mac. Roblox Studio doesn't run on phones, tablets or Chromebooks." }),
         el("li", { text: "Roblox Studio, free from create.roblox.com, and a Roblox account for your kid (turn on Parental Controls for under-13s)." }),
-        el("li", { text: "A Claude account for you at claude.ai. The free plan works; big games go smoother on a paid plan because the scripts are long." })])]),
+        el("li", { text: "The Claude Desktop app on the same computer, signed in to your Claude account. Big games are long builds, so a paid plan is smoother." }),
+        el("li", { text: "Studio's built-in connector: Assistant ⋯ → Manage MCP Servers → Enable Studio as MCP server → Quick connect: Claude Desktop. The warm-up walks you through it." })])]),
       el("div", { class: "panel stack" }, [el("h3", { text: "How the path works" }),
-        el("p", { text: "Unit 0 is a warm-up: install Studio, learn the panels, and run a first script. Then 8 units each end with a big game, with 3 short skill quests (10–15 minutes) before each one. Everything unlocks one step at a time: tips, checklist steps, power-ups, Prompt Lab rounds, and a new Vault pack after every big game." }),
+        el("p", { text: "Unit 0 is a warm-up: install Studio and Claude Desktop, learn the panels, connect Claude to Studio, and do a first build. Then 8 units each end with a big game, with 3 short skill quests (10–15 minutes) before each one. Everything unlocks one step at a time: tips, checklist steps, power-ups, Prompt Lab rounds, and a new Vault pack after every big game." }),
         el("p", { class: "muted", text: "The Studio pictures are simplified drawings. Real buttons may look slightly different depending on your Studio version." })]),
       el("div", { class: "panel stack" }, [el("h3", { text: "Creators on this device" }), el("p", { text: "Each kid gets their own path, XP and badges. Switch by tapping the name in the top bar." }),
         el("div", { class: "row" }, [el("button", { class: "btn small ghost", type: "button", text: "Switch creator", onclick: function () { go("profiles"); } }), sound]), confirmBox,

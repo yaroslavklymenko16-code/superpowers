@@ -47,10 +47,25 @@ window.FIGURES = (function () {
         '<div class="fg-menu"><div class="fg-mi">Insert Object</div><div class="fg-mi fg-hot">Insert from File…<em class="fg-tag">Click!</em></div><div class="fg-mi">Paste Into</div><div class="fg-mi">Rename</div></div></div>',
       frame: FRAME_STUDIO
     },
+    mcp: {
+      cap: "Assistant ⋯ → Manage MCP Servers → turn it on → Quick connect: Claude Desktop.",
+      body: '<div class="fg-panel fg-wide"><div class="fg-ptitle">Assistant · Manage MCP Servers</div>' +
+        '<div class="fg-prop fg-hotrow"><span>Enable Studio as MCP server</span><span><i class="fg-toggle on"></i></span></div>' +
+        '<div class="fg-item"><i class="fg-dot"></i> 1 client connected</div>' +
+        '<div class="fg-ptitle" style="padding-top:8px">Quick connect ▾</div>' +
+        '<div class="fg-prop fg-hotrow"><span>Claude Desktop</span><span><i class="fg-toggle on"></i><em class="fg-tag">Turn on</em></span></div>' +
+        '<div class="fg-prop"><span>Claude Code</span><span><i class="fg-toggle"></i></span></div></div>'
+    },
+    allow: {
+      cap: "Claude asks before using Studio. Grown-up clicks Allow.",
+      frame: "Claude Desktop · on your grown-up's account",
+      body: '<div class="fg-chat"><div class="fg-bubble"><b>Claude wants to use a tool from Roblox_Studio</b><div class="fg-mini">execute_luau · build the obby in your place</div></div>' +
+        '<div class="fg-row" style="gap:8px"><span class="fg-btn fg-hot">Allow</span><span class="fg-btn">Deny</span></div></div>'
+    },
     claude: {
-      cap: "Grown-up pastes the prompt into Claude and presses send.",
-      frame: "claude.ai · on your grown-up's account",
-      body: '<div class="fg-chat"><div class="fg-bubble">Here\'s your script! Paste it into a Script in ServerScriptService…<div class="fg-mini">local part = Instance.new("Part")…</div></div>' +
+      cap: "Grown-up sends the prompt in Claude Desktop. Claude builds it in Studio.",
+      frame: "Claude Desktop · Roblox_Studio connected",
+      body: '<div class="fg-chat"><div class="fg-bubble">Done! I added a Script to ServerScriptService and playtested it. No errors. Press Play to try it!<div class="fg-mini">✓ multi_edit · ✓ start_stop_play · ✓ get_console_output</div></div>' +
         '<div class="fg-input fg-hot"><span>Write a Roblox Script for ServerScriptService that…</span><b class="fg-send">↑</b></div></div>'
     }
   };

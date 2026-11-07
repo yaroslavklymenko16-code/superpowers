@@ -15,7 +15,7 @@ Offer: $29 one-time download: Creator Quest (a Duolingo-style path: 8 big games 
 ## Meta (Facebook + Instagram)
 
 **Ad A: flip the screen time**
-- Primary text: Roblox-obsessed kid? Those hours can turn into something. Creator Quest is a game where kids build real Roblox games with an AI sidekick: a lava obby, a tycoon, zombie survival, a pet simulator, a boss fight. XP, badges, and 118 free 3D models included. They learn real code and how AI works. You're the co-pilot.
+- Primary text: Roblox-obsessed kid? Those hours can turn into something. Creator Quest is a game where kids describe a Roblox game and Claude builds it right inside Roblox Studio: a lava obby, a tycoon, zombie survival, a pet simulator, a boss fight. XP, badges, and 118 free 3D models included. They learn real code and how AI works. You're the co-pilot.
 - Headline: Stop playing Roblox. Start building it.
 - Description: Ages 9–14 · $29 instant download
 - CTA button: Learn More
@@ -31,6 +31,11 @@ Offer: $29 one-time download: Creator Quest (a Duolingo-style path: 8 big games 
 - Headline: A screen-time project you do together
 - Description: No coding experience needed
 - CTA: Shop Now
+
+**Ad G: they describe it, Claude builds it**
+- Primary text: "Make a lava tower with spinning lasers." Your kid types it, and Claude builds it right inside Roblox Studio, tests it and fixes its own bugs. Your kid designs, tests and learns how AI works. 8 big games, 21 skill quests, ages 9–14.
+- Headline: Your kid designs. AI builds. In Roblox Studio.
+- Best creative: a 15-second screen recording of Claude building in Studio (sped up), then the kid pressing Play.
 
 **Ad F: like Duolingo, but for making games**
 - Primary text: Your kid would never skip a Duolingo streak. Now point that at something they love. Creator Quest is a path of 29 steps: short 10-minute skill quests (3D models, tools, NPCs, special effects) that build up to big Roblox games like zombie survival and boss fights. With an AI sidekick and you as co-pilot.

@@ -2,6 +2,7 @@
 
 **Product:** Creator Mode, a $29 download for kids 9–14 (with a grown-up co-pilot).
 **Buyer:** parents of kids who spend a lot of time on Roblox. **User:** the kid.
+**How it works:** every change is made through Claude. Claude Desktop connects to Roblox Studio's built-in MCP server; Claude builds, playtests and fixes directly in Studio. No copy-paste.
 **Hook:** stop playing Roblox, start building it. Screen time that produces something, plus AI skills.
 
 ## What's in the download (`dist/Creator-Mode.zip`)
@@ -11,10 +12,10 @@
 | **Creator Quest.html** | The kid-facing game. Opens in any browser, works offline (3D previews need internet). A Duolingo-style path of 32 steps (3-quest warm-up, 8 big games, 21 skill quests), kid profiles, simplified Studio drawings on every click-step, everything unlocking one step at a time, Vault packs unlocked per big game, XP + 10 ranks, daily streak, 15 badges, AI Brain quizzes, Boss Bug challenges, Prompt Lab mini-game, Dream Game Designer, Vault browser, certificate. Progress saves in the browser. |
 | **Creator Vault/** | 118 Roblox models in 10 packs (.rbxmx, Insert from File). 46 have working scripts: checkpoints, jump pads, moving platforms, coins, gems, portals, follow-you pets, swords, coils, zombie spawner, talking NPC, mini tycoon. |
 | **Rescue Scripts/** | A tested, single-script build of each of Missions 1–7. |
-| **Parent Guide.pdf** | 5 pages: co-pilot rule, setup, mission list, troubleshooting, safety, Creator Hours chart. |
+| **Parent Guide.pdf** | 6 pages: co-pilot rule, setup, mission list, troubleshooting, safety, Creator Hours chart. |
 
 ### The path
-Unit 0 warm-up: Get Roblox Studio · Studio Tour · Hello, Claude (unlocks the Vault + Nature pack). Then 8 units. Each unit ends with a big game. From Unit 2 on, 3 skill quests (10–15 min: learn → try one prompt in Studio → one quiz question) come first and prepare for that game. Every unit has a "Model Maker" quest about getting detailed 3D models from prompts.
+Unit 0 warm-up: Get Your Tools (Studio + Claude Desktop) · Studio Tour · Connect Claude to Studio · Hello, Claude (unlocks the Vault + Nature pack). Then 8 units. Each unit ends with a big game. From Unit 2 on, 3 skill quests (10–15 min: learn → try one prompt in Studio → one quiz question) come first and prepare for that game. Every unit has a "Model Maker" quest about getting detailed 3D models from prompts.
 
 | Before | Skill quests |
 | --- | --- |
@@ -48,10 +49,16 @@ The Studio pictures are drawings, not real screenshots. Swap in real screenshots
 - **Independent course.** No Roblox/Anthropic logos or implied endorsement. Disclaimers in the app, guide, page and ads.
 - **Never stuck.** Every mission has a rescue script, so a bad AI answer can't end the session.
 
+## Requirements (Claude-in-Studio)
+- Windows or Mac, latest Roblox Studio, Claude Desktop app on the same computer.
+- Studio: Assistant › ⋯ › Manage MCP Servers › Enable Studio as MCP server › Quick connect: Claude Desktop.
+- Claude uses Studio's tools (execute_luau, multi_edit, start_stop_play, get_console_output, insert_asset...). Vault models are added by Claude running a generated Luau builder (`build/vault_builders/`).
+- Check before launch: which Claude plans support desktop connectors, and whether Studio's Assistant/MCP menu shows on an under-13 Roblox account (the guide tells parents to sign in with their own account if not).
+
 ## Before launch: test in Roblox Studio (1–2 hours, required)
 
 The scripts are syntax-checked and the app is click-tested, but nothing has been run inside Roblox Studio yet.
-1. Try 3–4 skill quest prompts in Claude and run the results (they have no rescue scripts, so check Claude handles them well).
+1. Do the warm-up end to end with Claude Desktop connected. Then try 3–4 skill quest prompts in Claude and run the results (they have no rescue scripts, so check Claude handles them well).
 2. For each rescue script: new Baseplate → Script in ServerScriptService → paste → Play. Note anything broken.
 3. Insert each Vault pack (right-click Workspace → Insert from File) and press Play. Try a checkpoint, jump pad, coin, pet, sword, portal.
 4. Send any errors back here and they'll get fixed.

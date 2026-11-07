@@ -4,15 +4,15 @@ CREATOR MODE · START HERE
 1. Unzip this folder (right-click > Extract All on Windows, double-click on Mac).
 2. Grown-ups: read "Parent Guide.pdf" (10 minutes).
 3. Kids: double-click "Creator Quest.html" to open your quest in the browser.
-4. Install Roblox Studio (free) from create.roblox.com.
-5. Start Mission 1: Lava Tower!
+4. The warm-up (Unit 0) installs Roblox Studio and Claude Desktop and connects them.
+5. Then Claude builds every game with you, right inside Studio.
 
 What's inside
-- Creator Quest.html .... the game you play through: 8 missions, XP, badges
+- Creator Quest.html .... the game you play through: warm-up, 8 big games, 21 skill quests
 - Creator Vault ......... 118 Roblox models to drop into any game
-- Rescue Scripts ........ tested scripts for Missions 1-7, in case you get stuck
+- Rescue Scripts ........ backup scripts for games 1-7 (the app turns them into prompts for Claude)
 - Parent Guide.pdf ...... for your grown-up co-pilot
 
-Claude requires users to be 18+, so Creator Quest is made for a kid and a grown-up to do together, on the grown-up's Claude account.
+Claude requires users to be 18+, so Creator Quest is made for a kid and a grown-up to do together, on the grown-up's Claude account in the Claude Desktop app.
 
 Creator Mode is an independent course, not made, sponsored or endorsed by Roblox Corporation or Anthropic.

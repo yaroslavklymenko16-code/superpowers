@@ -1,7 +1,11 @@
 CREATOR VAULT · 118 Roblox models
 =================================
 
-HOW TO ADD A PACK TO YOUR GAME
+EASIEST: ASK CLAUDE
+In Creator Quest, open the Vault, pick a model and tap "Ask Claude to add it".
+Send the prompt in Claude Desktop and Claude builds the model into your open place.
+
+OR ADD A WHOLE PACK YOURSELF
 1. Open your game in Roblox Studio.
 2. In the Explorer, right-click Workspace.
 3. Choose "Insert from File...".
