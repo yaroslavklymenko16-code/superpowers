@@ -3,7 +3,7 @@
 window.QUESTS = [
   // ---- Unit 0: warm-up before Mission 1 ----
   {
-    id: "0a", before: 1, icon: "look", title: "Get Your Tools", time: "15 min",
+    id: "0a", before: 1, icon: "look", title: "Get Your Tools", time: "15 min", wait: "predict",
     learn: "Install the two free apps you'll build with: Roblox Studio and Claude.",
     know: [
       "Every Roblox game, even the giant ones, was built in Roblox Studio. It's free, and it runs on a Windows PC or a Mac.",
@@ -16,27 +16,9 @@ window.QUESTS = [
       { t: "Grown-up: download the Claude Desktop app from claude.ai/download and sign in." },
       { t: "Open Studio. Click New, then the Baseplate template.", fig: "new" }
     ],
-    check: { q: "Where are Roblox games built?", options: ["In the Roblox app on a phone", "In Roblox Studio on a computer", "In a web browser game"], answer: 1, explain: "Roblox Studio on a PC or Mac. You've got it now!" }
-  },
-  {
-    id: "0b", before: 1, icon: "look", title: "Studio Tour", time: "10 min",
-    learn: "Find the panels you'll watch while Claude builds.",
-    know: [
-      "Explorer is the list of everything in your game. When Claude adds scripts and parts, they show up here.",
-      "Properties shows the settings of whatever you click: color, size, material...",
-      "Output is where messages and errors show up. Claude can read it too, to find and fix bugs."
-    ],
-    prompt: null,
-    steps: [
-      { t: "Click the View tab and turn on Explorer, Properties and Output.", fig: "panels" },
-      { t: "Find ServerScriptService in the Explorer. That's where Claude puts game scripts.", fig: "explorer" },
-      { t: "On the Home tab click Part. Then change its Color and Material in Properties.", fig: "properties" },
-      { t: "Press Play to walk around your world. Press Stop to go back to building.", fig: "play" }
-    ],
-    check: { q: "Which panel shows errors when something breaks?", options: ["Properties", "Output", "Toolbox"], answer: 1, explain: "Output! Red text there means something needs fixing. Claude checks it too." }
-  },
-  {
-    id: "0c", before: 1, icon: "ai", title: "Connect Claude to Studio", time: "10 min",
+    check: { q: "Where are Roblox games built?", options: ["In the Roblox app on a phone or tablet", "In Roblox Studio on a computer", "In any web browser on the Roblox website"], answer: 1, explain: "Roblox Studio on a PC or Mac. You've got it now!" }
+  },  {
+    id: "0c", before: 1, icon: "ai", title: "Connect Claude to Studio", time: "10 min", wait: "sketch",
     learn: "Plug Claude into Roblox Studio so it can build for you.",
     know: [
       "Roblox Studio has a built-in connector (called an MCP server) that lets Claude work inside Studio.",
@@ -50,9 +32,8 @@ window.QUESTS = [
       { t: "Restart Claude Desktop and Roblox Studio. Open your Baseplate again." },
       { t: "Check for the green light under Enable Studio as MCP server. That means Claude is connected!", fig: "mcp" }
     ],
-    check: { q: "What does the Studio connector let Claude do?", options: ["Play Roblox games for you", "Build and test inside Roblox Studio", "Change your Roblox password"], answer: 1, explain: "Claude can build, test and fix your game right inside Studio." }
-  },
-  {
+    check: { q: "What does the Studio connector let Claude do?", options: ["Play Roblox games for you while you're busy", "Build and test inside Roblox Studio", "Look at your Roblox account and friends list"], answer: 1, explain: "Claude can build, test and fix your game right inside Studio." }
+  },  {
     id: "0d", before: 1, icon: "ai", title: "Hello, Claude", time: "15 min",
     learn: "Your first build: you describe it, Claude makes it in Studio.",
     know: [
@@ -68,7 +49,23 @@ window.QUESTS = [
       { t: "Press Play. Is your block glowing and spinning?", fig: "play" },
       { t: "Ask Claude for one change, like \"make it twice as big\". Watch it update!" }
     ],
-    check: { q: "Who makes the changes to your game?", options: ["I copy and paste code", "Claude builds it in Studio, and I test it and decide what's next", "Nobody"], answer: 1, explain: "Claude builds, you design and test. A great team!" }
+    check: { q: "Who makes the changes to your game?", options: ["I copy and paste code from Claude myself", "Claude builds it, and I test it and decide what's next", "Roblox makes them automatically every night"], answer: 1, explain: "Claude builds, you design and test. A great team!" }
+  },  {
+    id: "0b", before: 1, icon: "look", title: "Studio Tour", time: "10 min",
+    learn: "Look around Studio and find what Claude just built.",
+    know: [
+      "Explorer is the list of everything in your game. When Claude adds scripts and parts, they show up here.",
+      "Properties shows the settings of whatever you click: color, size, material...",
+      "Output is where messages and errors show up. Claude can read it too, to find and fix bugs."
+    ],
+    prompt: null,
+    steps: [
+      { t: "Click the View tab and turn on Explorer, Properties and Output.", fig: "panels" },
+      { t: "Find ServerScriptService in the Explorer. That's where Claude puts game scripts.", fig: "explorer" },
+      { t: "On the Home tab click Part. Then change its Color and Material in Properties.", fig: "properties" },
+      { t: "Press Play to walk around your world. Press Stop to go back to building.", fig: "play" }
+    ],
+    check: { q: "Which panel shows errors when something breaks?", options: ["Properties", "Output", "Toolbox"], answer: 1, explain: "Output! Red text there means something needs fixing. Claude checks it too." }
   },
   // ---- before Mission 2: Coin Rush ----
   {
@@ -81,7 +78,7 @@ window.QUESTS = [
     ],
     prompt: "In my open Roblox Studio place, add a Script to ServerScriptService that builds a detailed treasure coin out of parts, floating at position (0, 6, 0):\n- a thick gold cylinder with Foil material\n- a thinner raised rim around the edge in a darker gold\n- a 5-pointed star on the front made of small yellow Neon parts\n- a PointLight so it glows, and Sparkles\nWeld all the parts together into a Model called FancyCoin and make it spin slowly. Then playtest it and fix any errors.",
     steps: ["Send the prompt and watch Claude build it in Studio. Then press Play", "Ask Claude to add ONE more detail you choose (gems? a crown? a pattern?)", "Compare: build a plain coin with \"make a coin\". Which looks cooler?"],
-    check: { q: "Which prompt gets a more detailed model?", options: ["make a sword", "A sword with a glowing blue Neon blade, a gold Foil handle wrapped in black stripes, and a red gem on the hilt"], answer: 1, explain: "Shape, color, material and extras. That's how you get detail." }
+    check: { q: "Which prompt gets a more detailed model?", options: ["Make an awesome, epic, super cool, amazing, legendary sword please", "A sword with a glowing blue Neon blade, a gold handle and a red gem on the hilt", "A sword like the one in that other game, but better and bigger"], answer: 1, explain: "Shape, color, material and extras. That's how you get detail." }
   },
   {
     id: "2b", before: 2, icon: "code", title: "Leaderboard Lab", time: "10 min",
@@ -93,7 +90,7 @@ window.QUESTS = [
     ],
     prompt: "In my open Roblox Studio place, add a Script to ServerScriptService that gives every player a leaderboard with Points and Level. Also build a big glowing button part at (0, 1, -15). Every time a player touches it they get +1 Point (only once per second), and every 10 Points they go up 1 Level. Explain how leaderstats works. Playtest it when you're done.",
     steps: ["Send the prompt and watch Claude build it in Studio. Then press Play", "Touch the button until you reach Level 2", "Ask Claude to add a third stat of your choice"],
-    check: { q: "What must the leaderboard folder be named?", options: ["Scoreboard", "leaderstats", "Points"], answer: 1, explain: "Exactly \"leaderstats\", all lowercase, or the scoreboard won't show." }
+    check: { q: "What must the leaderboard folder be named?", options: ["Leaderboard", "leaderstats", "PlayerScores"], answer: 1, explain: "Exactly \"leaderstats\", all lowercase, or the scoreboard won't show." }
   },
   {
     id: "2c", before: 2, icon: "look", title: "Floating Signs", time: "10 min",
@@ -105,7 +102,7 @@ window.QUESTS = [
     ],
     prompt: "In my open Roblox Studio place, add a Script to ServerScriptService that builds 3 colorful pads in a row near the spawn. Each pad has a floating BillboardGui label above it: \"Speed Shop\", \"Jump Shop\" and \"Mystery Box\", in big bold text with a black outline. Make the labels gently bob up and down. Playtest it when you're done.",
     steps: ["Send the prompt and watch Claude build it in Studio. Then press Play", "Walk around the signs. Do they always face you?", "Ask Claude to change the font and add a price line under each name"],
-    check: { q: "What does a BillboardGui do?", options: ["Plays music", "Shows text or images floating in the 3D world", "Saves your coins"], answer: 1, explain: "Perfect for name tags, prices and signs." }
+    check: { q: "What does a BillboardGui do?", options: ["Shows a menu on the player's screen", "Shows text floating in the 3D world", "Plays a sound when you get close"], answer: 1, explain: "Perfect for name tags, prices and signs." }
   },
 
   // ---- before Mission 3: Tycoon Factory ----
@@ -119,7 +116,7 @@ window.QUESTS = [
     ],
     prompt: "In my open Roblox Studio place, add a Script to ServerScriptService that builds a ball fountain: a stone base at (0, 1, -20) that shoots a random-colored Neon ball upward every 0.3 seconds. Each ball disappears after 5 seconds using Debris. Put SPEED and COLORS settings at the top. Playtest it when you're done.",
     steps: ["Send the prompt and watch Claude build it in Studio. Then press Play", "Change the wait time to make it faster. What happens?", "Ask Claude to make the fountain switch between two colors every 10 seconds"],
-    check: { q: "What happens if a while true loop has no task.wait()?", options: ["Nothing", "The game freezes", "It runs slower"], answer: 1, explain: "Without a wait, the loop never lets the game breathe. Freeze!" }
+    check: { q: "What happens if a while true loop has no task.wait()?", options: ["It runs a little slower than normal", "The game freezes", "It stops by itself after 10 seconds"], answer: 1, explain: "Without a wait, the loop never lets the game breathe. Freeze!" }
   },
   {
     id: "3b", before: 3, icon: "code", title: "Conveyor Science", time: "10 min",
@@ -131,7 +128,7 @@ window.QUESTS = [
     ],
     prompt: "In my open Roblox Studio place, add a Script to ServerScriptService that builds a conveyor belt course: 4 dark conveyor parts in a square loop with yellow side rails, each pushing in the next direction using AssemblyLinearVelocity, so anything on it goes around and around. Drop 5 unanchored crates on it to test. Playtest it when you're done.",
     steps: ["Send the prompt and watch Claude build it in Studio. Then press Play", "Stand on the conveyor and ride it", "Ask Claude to add a speed-up section that's twice as fast"],
-    check: { q: "How does a conveyor push things without moving itself?", options: ["It's anchored but has a velocity set", "It uses magic", "It's unanchored and rolls"], answer: 0, explain: "Anchored + AssemblyLinearVelocity = conveyor." }
+    check: { q: "How does a conveyor push things without moving itself?", options: ["It's anchored but has a velocity set", "It's unanchored, so it rolls along the floor", "It teleports parts forward every second"], answer: 0, explain: "Anchored + AssemblyLinearVelocity = conveyor." }
   },
   {
     id: "3c", before: 3, icon: "model", title: "Model Maker: Factory Machines", time: "15 min",
@@ -143,7 +140,7 @@ window.QUESTS = [
     ],
     prompt: "In my open Roblox Studio place, add a Script to ServerScriptService that builds a detailed factory dropper machine out of parts at (0, 0, -20): a metal box body on 4 legs, a glass window on the front with a glowing orange inside, pipes on the top, yellow and black hazard stripes along the bottom, a red warning light that blinks, and Smoke coming out of a chimney. Group it into a Model called Dropper. Playtest it when you're done.",
     steps: ["Send the prompt and watch Claude build it in Studio. Then press Play", "Ask Claude to add one more layer of detail", "Insert the Mini Tycoon Kit from the Creator Vault and compare"],
-    check: { q: "What's the best order to build a detailed model?", options: ["Effects first, then the shape", "Big shape, then details, then lights, then effects", "All at once"], answer: 1, explain: "Big to small. Layers keep it tidy." }
+    check: { q: "What's the best order to build a detailed model?", options: ["Effects first, then lights, then the shape", "Big shape, then details, then lights, then effects", "All the details at once, then fix the shape"], answer: 1, explain: "Big to small. Layers keep it tidy." }
   },
 
   // ---- before Mission 4: Zombie Night ----
@@ -157,7 +154,7 @@ window.QUESTS = [
     ],
     prompt: "In my open Roblox Studio place, add a Script to ServerScriptService that makes a full day-night cycle: one full day every 2 minutes. At night, add purple fog and turn on glowing lamp posts around the spawn. At sunrise, the fog fades away and the lamps turn off. Playtest it when you're done.",
     steps: ["Send the prompt and watch Claude build it in Studio. Then press Play. Watch a full day!", "Change the cycle to 1 minute", "Ask Claude for a \"spooky mode\" with green fog that's always night"],
-    check: { q: "What ClockTime is midnight?", options: ["12", "0", "24 only"], answer: 1, explain: "ClockTime 0 is midnight, 12 is noon." }
+    check: { q: "What ClockTime is midnight?", options: ["12", "0", "6"], answer: 1, explain: "ClockTime 0 is midnight, 12 is noon." }
   },
   {
     id: "4b", before: 4, icon: "code", title: "Tool Time", time: "15 min",
@@ -169,7 +166,7 @@ window.QUESTS = [
     ],
     prompt: "In my open Roblox Studio place, add a Script to ServerScriptService that puts a Tool called Party Wand into StarterPack. The Handle is a thin glowing stick with a star on the tip. When you click, it shoots 10 tiny confetti parts out in front of you that fall and disappear after 3 seconds. Add a 1-second cooldown. Playtest it when you're done.",
     steps: ["Send the prompt and watch Claude build it in Studio. Then press Play", "Equip the wand (press 1) and click", "Ask Claude to make it shoot something else, like bubbles or fireworks"],
-    check: { q: "What must the part a player holds be named?", options: ["Grip", "Handle", "Tool"], answer: 1, explain: "Tools need a part named Handle." }
+    check: { q: "What must the part a player holds be named?", options: ["Grip", "Handle", "Holder"], answer: 1, explain: "Tools need a part named Handle." }
   },
   {
     id: "4c", before: 4, icon: "ai", title: "NPC Buddy", time: "15 min",
@@ -181,7 +178,7 @@ window.QUESTS = [
     ],
     prompt: "In my open Roblox Studio place, add a Script to ServerScriptService that spawns a friendly NPC guard with a blue shirt. It patrols between 4 glowing marker parts in a square, waits 2 seconds at each one, and shows a floating name tag \"Guard Bob\". Use Players:CreateHumanoidModelFromDescription and Humanoid:MoveTo. Playtest it when you're done.",
     steps: ["Send the prompt and watch Claude build it in Studio. Then press Play", "Follow the guard around his patrol", "Ask Claude to make him wave or jump at each marker"],
-    check: { q: "What makes an NPC walk to a spot?", options: ["Humanoid:MoveTo(position)", "Teleport()", "WalkSpeed = 0"], answer: 0, explain: "MoveTo tells the Humanoid where to walk." }
+    check: { q: "What makes an NPC walk to a spot?", options: ["Humanoid:MoveTo(position)", "Part:Teleport(position)", "Humanoid.WalkSpeed = 0"], answer: 0, explain: "MoveTo tells the Humanoid where to walk." }
   },
 
   // ---- before Mission 5: Pet Hatchery ----
@@ -207,7 +204,7 @@ window.QUESTS = [
     ],
     prompt: "In my open Roblox Studio place, add a Script to ServerScriptService that builds a tween showcase: a gem that floats up and down forever, a door that slides open when you touch it and closes after 3 seconds, and a button that grows bigger with a Bounce style when touched. Use TweenService for all of them. Playtest it when you're done.",
     steps: ["Send the prompt and watch Claude build it in Studio. Then press Play", "Try each one", "Ask Claude to change the gem's EasingStyle to Elastic. What changes?"],
-    check: { q: "What does TweenService do?", options: ["Smoothly animates a property from one value to another", "Saves data", "Makes NPCs"], answer: 0, explain: "Tweens make movement smooth instead of jumpy." }
+    check: { q: "What does TweenService do?", options: ["Smoothly animates a property over time", "Saves players' coins between visits", "Creates NPCs that walk around"], answer: 0, explain: "Tweens make movement smooth instead of jumpy." }
   },
   {
     id: "5c", before: 5, icon: "model", title: "Model Maker: Cute Creatures", time: "15 min",
@@ -219,7 +216,7 @@ window.QUESTS = [
     ],
     prompt: "In my open Roblox Studio place, add a Script to ServerScriptService that builds a cute pet out of parts at (0, 4, -12): a big round head, a small round body, huge black eyes set low with tiny white shine dots, pink blush cheeks, little ears, and a short tail. All parts welded to the head. Make it bob up and down. Name it after this animal: [your animal]. Playtest it when you're done.",
     steps: ["Pick an animal and send the prompt in Claude", "Press Play and check out your pet", "Ask Claude for a second version in a rare rainbow color"],
-    check: { q: "Which makes a character look cuter?", options: ["Tiny head, big body", "Big head, small body, big eyes", "No eyes"], answer: 1, explain: "Big head + big eyes = cute. Game artists use this trick everywhere!" }
+    check: { q: "Which makes a character look cuter?", options: ["Tiny head, big body, small eyes", "Big head, small body, big eyes", "Long legs and a very tall body"], answer: 1, explain: "Big head + big eyes = cute. Game artists use this trick everywhere!" }
   },
 
   // ---- before Mission 6: Round Arena ----
@@ -233,7 +230,7 @@ window.QUESTS = [
     ],
     prompt: "In my open Roblox Studio place, add a Script to ServerScriptService that gives every player a ScreenGui with a rounded box at the top of the screen saying \"Welcome, [their name]!\" and below it a timer counting how many seconds they've played. Set ResetOnSpawn to false so it stays after respawning. Playtest it when you're done.",
     steps: ["Send the prompt and watch Claude build it in Studio. Then press Play", "Reset your character (Esc, Reset). Is the timer still there?", "Ask Claude to change the colors and add a rainbow border"],
-    check: { q: "Where do ScreenGuis show up?", options: ["Floating over parts", "On the player's screen", "In the Output window"], answer: 1, explain: "ScreenGui = on screen. BillboardGui = in the world." }
+    check: { q: "Where do ScreenGuis show up?", options: ["Floating over parts in the world", "On the player's screen", "Only in the Output window"], answer: 1, explain: "ScreenGui = on screen. BillboardGui = in the world." }
   },
   {
     id: "6b", before: 6, icon: "code", title: "Teleporters", time: "10 min",
@@ -257,7 +254,7 @@ window.QUESTS = [
     ],
     prompt: "In my open Roblox Studio place, add a Script to ServerScriptService that builds a giant scoreboard sign near the spawn. It counts down from 10 to 0 in huge text, then shoots fireworks (Neon balls that fly up and pop), shows \"GO!\" for 3 seconds, and starts the countdown again forever. Playtest it when you're done.",
     steps: ["Send the prompt and watch Claude build it in Studio. Then press Play", "Watch two full countdowns", "Ask Claude to change the countdown to 30 and turn the text red for the last 5 seconds"],
-    check: { q: "Which loop counts DOWN from 10 to 1?", options: ["for t = 10, 1, 1 do", "for t = 10, 1, -1 do", "for t = 1, 10 do"], answer: 1, explain: "Counting down needs a step of -1." }
+    check: { q: "Which loop counts DOWN from 10 to 1?", options: ["for t = 10, 1, 1 do", "for t = 10, 1, -1 do", "for t = 1, 10, 1 do"], answer: 1, explain: "Counting down needs a step of -1." }
   },
 
   // ---- before Mission 7: Boss Battle ----
@@ -271,7 +268,7 @@ window.QUESTS = [
     ],
     prompt: "In my open Roblox Studio place, add a Script to ServerScriptService that builds a training area: a training dummy NPC with 500 health and a floating health bar above its head that shrinks as it takes damage, a red damage pad that hurts you 10 per second, and a green healing pad. Give every player a simple sword to hit the dummy. The dummy respawns 5 seconds after it's defeated. Playtest it when you're done.",
     steps: ["Send the prompt and watch Claude build it in Studio. Then press Play", "Defeat the training dummy", "Ask Claude to make the health bar change from green to red as it drops"],
-    check: { q: "How do you work out how full a health bar should be?", options: ["Health / MaxHealth", "Health + 10", "MaxHealth only"], answer: 0, explain: "250 / 500 = 0.5, so the bar is half full." }
+    check: { q: "How do you work out how full a health bar should be?", options: ["Health / MaxHealth", "MaxHealth - Health", "Health * 10"], answer: 0, explain: "250 / 500 = 0.5, so the bar is half full." }
   },
   {
     id: "7b", before: 7, icon: "look", title: "Special Effects", time: "15 min",
@@ -283,7 +280,7 @@ window.QUESTS = [
     ],
     prompt: "In my open Roblox Studio place, add a Script to ServerScriptService that builds a magic effects garden: a portal ring with swirling purple ParticleEmitter sparks, a campfire with Fire and Smoke, a crystal that pulses its glow brighter and dimmer, and a button that makes a safe Explosion (BlastPressure 0) with a flash of light when touched. Playtest it when you're done.",
     steps: ["Send the prompt and watch Claude build it in Studio. Then press Play", "Try every effect", "Ask Claude to make the portal change color every few seconds"],
-    check: { q: "How do you make an explosion that doesn't fling everything?", options: ["BlastPressure = 0", "Make it bigger", "Use Fire instead"], answer: 0, explain: "BlastPressure 0 = all the looks, none of the chaos." }
+    check: { q: "How do you make an explosion that doesn't fling everything?", options: ["BlastPressure = 0", "BlastRadius = 100", "Explosion.Anchored = true"], answer: 0, explain: "BlastPressure 0 = all the looks, none of the chaos." }
   },
   {
     id: "7c", before: 7, icon: "model", title: "Model Maker: Boss Design", time: "15 min",
@@ -295,7 +292,7 @@ window.QUESTS = [
     ],
     prompt: "In my open Roblox Studio place, add a Script to ServerScriptService that spawns a giant boss character (scaled up 3x with Model:ScaleTo) using Players:CreateHumanoidModelFromDescription. Give it a theme: [fire / ice / robot / your idea]. Weld on extra parts to make a strong silhouette: a crown or horns, big shoulder armor, and a glowing Neon core on its chest. Make it stand on a stone platform and slowly turn to face the nearest player. Playtest it when you're done.",
     steps: ["Pick a theme and send the prompt in Claude", "Press Play and walk around your boss", "Ask Claude to add one more scary detail"],
-    check: { q: "What makes a boss design easy to recognize?", options: ["A strong silhouette (big unique shape)", "Being gray", "Being small"], answer: 0, explain: "A great boss is recognizable from its shadow alone." }
+    check: { q: "What makes a boss design easy to recognize?", options: ["A strong silhouette (big unique shape)", "Lots of tiny details all over it", "Being the same color as the map"], answer: 0, explain: "A great boss is recognizable from its shadow alone." }
   },
 
   // ---- before Mission 8: Dream Game ----
@@ -309,7 +306,7 @@ window.QUESTS = [
     ],
     prompt: "In my open Roblox Studio place, add a Script to ServerScriptService that generates a tropical island with Terrain: a sand beach, grassy hills in the middle made with FillBall, a small rocky mountain, and ocean water all around. Then place 10 simple palm trees made of parts on the island. Remove the baseplate first. Playtest it when you're done.",
     steps: ["Send the prompt and watch Claude build it in Studio. Then press Play", "Explore your island and swim in the ocean", "Ask Claude for a different world: snowy, desert or volcano"],
-    check: { q: "What's Terrain good for?", options: ["Smooth natural ground like grass, sand and water", "Leaderboards", "Saving data"], answer: 0, explain: "Terrain = landscapes. Parts = buildings and objects." }
+    check: { q: "What's Terrain good for?", options: ["Smooth natural ground like grass, sand and water", "Showing scores on the leaderboard", "Saving players' progress"], answer: 0, explain: "Terrain = landscapes. Parts = buildings and objects." }
   },
   {
     id: "8b", before: 8, icon: "ai", title: "Game Designer Brain", time: "15 min",
@@ -321,7 +318,7 @@ window.QUESTS = [
     ],
     prompt: "I want to design my own Roblox game. Interview me like a game designer: ask me 6 questions, ONE at a time, and wait for my answer each time. Ask about the goal, the core loop, the rewards, the world, the challenge, and what makes it special. At the end, write a one-page game design doc from my answers.",
     steps: ["Send the prompt in Claude and answer every question", "Read your design doc out loud to your grown-up", "Save or print your design doc for the Dream Game mission"],
-    check: { q: "What's a core loop?", options: ["The main thing you do again and again in a game", "A while true loop", "A roller coaster"], answer: 0, explain: "Core loop = what players repeat. Make it fun and the game is fun." }
+    check: { q: "What's a core loop?", options: ["The main thing you do again and again in a game", "A while true loop in the main script", "The fastest way to finish a game"], answer: 0, explain: "Core loop = what players repeat. Make it fun and the game is fun." }
   },
   {
     id: "8c", before: 8, icon: "ai", title: "Polish & Publish", time: "10 min",
@@ -333,6 +330,6 @@ window.QUESTS = [
     ],
     prompt: "I'm about to publish my first Roblox game. Here's what it is: [describe your game]. Give me a polish checklist of the 10 most important small things to add or fix before publishing, from easiest to hardest, and 3 ideas for a game name that's totally original.",
     steps: ["Send the prompt (with your game idea) in Claude", "Pick your top 3 polish ideas", "Practice publishing: File > Publish to Roblox with a test place (Friends only)"],
-    check: { q: "What's the best way to find what needs polish?", options: ["Watch someone else playtest without helping", "Ask nobody", "Publish and hope"], answer: 0, explain: "Playtesters find problems you'd never notice yourself." }
+    check: { q: "What's the best way to find what needs polish?", options: ["Watch someone else playtest without helping", "Read through every script one more time", "Publish it and wait for comments"], answer: 0, explain: "Playtesters find problems you'd never notice yourself." }
   }
 ];

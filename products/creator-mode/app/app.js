@@ -1,6 +1,8 @@
 (function () {
   "use strict";
-  var M = window.MISSIONS, Q = window.QUESTS, LAB = window.PROMPT_LAB, RANKS = window.RANKS, FIG = window.FIGURES;
+  var M = window.MISSIONS, Q = window.QUESTS, LAB = window.PROMPT_LAB, KID_RANKS = window.RANKS, FIG = window.FIGURES, EXTRAS = window.MISSION_EXTRAS || {}, GLOSSARY = window.GLOSSARY || {};
+  var TEEN_RANKS = ["Beginner", "Builder", "Scripter", "Debugger", "Prompt Engineer", "Developer", "Senior Dev", "Tech Lead", "Studio Lead", "Creative Director"];
+  var RANKS = KID_RANKS;
   var COLORS = ["#3d8bff", "#ff4f4f", "#ffd23f", "#36d67a", "#ff8a2b", "#ff5fa8", "#b46bff", "#2fd3e0"];
   var LEVELS = [0, 300, 800, 1500, 2400, 3500, 4800, 6300, 8000, 9800];
   var UNIT0_COLOR = "#2fd3e0";
@@ -19,11 +21,11 @@
   var TEST_OFFSET = 6;
 
   // What each finished step unlocks in the Vault and elsewhere.
-  var PACK_UNLOCK = { "Nature": "q:0d", "Obby": "m:1", "Collectibles": "m:2", "Props": "m:3", "Game Systems": "m:3", "Spooky": "m:4", "Tools": "m:4", "Pets": "m:5", "Sci-Fi": "m:6", "Buildings": "m:7" };
+  var PACK_UNLOCK = { "Nature": "u:0", "Obby": "m:1", "Collectibles": "m:2", "Props": "m:3", "Game Systems": "m:3", "Spooky": "m:4", "Tools": "m:4", "Pets": "m:5", "Sci-Fi": "m:6", "Buildings": "m:7" };
 
   // ---------- profiles + state ----------
   var PKEY = "creator-quest-profiles", OLDKEY = "creator-quest-v1";
-  function blank() { return { name: "", color: COLORS[0], done: {}, quiz: {}, steps: {}, boss: {}, power: {}, lab: {}, qdone: {}, qsteps: {}, qquiz: {}, days: [], sound: true, dream: null, dreamSpun: false }; }
+  function blank() { return { name: "", color: COLORS[0], done: {}, quiz: {}, steps: {}, boss: {}, power: {}, lab: {}, qdone: {}, qsteps: {}, qquiz: {}, explain: {}, prompts: {}, choice: {}, days: [], sound: true, teen: false, dream: null, dreamSpun: false }; }
   function readJSON(k) { try { return JSON.parse(localStorage.getItem(k) || "null"); } catch (e) { return null; } }
   function writeJSON(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
   var profiles = readJSON(PKEY) || { list: [], current: null };
@@ -36,6 +38,7 @@
     state = blank();
     var saved = readJSON("creator-quest-p-" + id);
     if (saved) for (var k in saved) state[k] = saved[k];
+    RANKS = state.teen ? TEEN_RANKS : KID_RANKS;
     profiles.current = id; writeJSON(PKEY, profiles);
   }
   function save() {
@@ -48,7 +51,8 @@
   else profiles.current = null;
 
   function count(o) { var n = 0; for (var k in o) if (o[k]) n++; return n; }
-  function xpOf(s) { return count(s.quiz) * 50 + count(s.steps) * 20 + count(s.boss) * 100 + count(s.power) * 40 + count(s.done) * 250 + count(s.lab) * 30 + count(s.qsteps) * 20 + count(s.qquiz) * 50 + count(s.qdone) * 100; }
+  function sumv(o, d) { var n = 0; for (var k in o || {}) { var v = o[k]; if (v === true) n += d; else if (typeof v === "number") n += v; } return n; }
+  function xpOf(s) { return sumv(s.quiz, 50) + count(s.steps) * 20 + count(s.boss) * 100 + count(s.power) * 40 + count(s.done) * 250 + sumv(s.lab, 30) + count(s.qsteps) * 20 + sumv(s.qquiz, 50) + count(s.qdone) * 100 + sumv(s.explain, 50); }
   function xp() { return xpOf(state); }
   function level(x) { var l = 1; for (var i = 0; i < LEVELS.length; i++) if (x >= LEVELS[i]) l = i + 1; return l; }
 
@@ -68,12 +72,23 @@
   }
   function toast(text) {
     var box = document.getElementById("toast");
-    while (box.children.length > 3) box.firstChild.remove();
+    while (box.children.length > 1) box.firstChild.remove();
     var t = document.createElement("div"); t.textContent = text; box.appendChild(t);
     setTimeout(function () { t.remove(); }, 2200);
   }
+  var xpBubble = null, xpSum = 0, xpTimer = null;
+  function xpToast(n, label) {
+    var box = document.getElementById("toast");
+    if (!xpBubble || !xpBubble.isConnected) { xpBubble = document.createElement("div"); xpBubble.className = "xp-toast"; box.appendChild(xpBubble); xpSum = 0; }
+    xpSum += n;
+    xpBubble.textContent = "+" + xpSum + " XP" + (label ? "  " + label : "");
+    xpBubble.style.animation = "none"; void xpBubble.offsetWidth; xpBubble.style.animation = "";
+    clearTimeout(xpTimer);
+    xpTimer = setTimeout(function () { if (xpBubble) xpBubble.remove(); xpBubble = null; }, 1800);
+  }
   var cv = document.getElementById("confetti"), cx = cv.getContext("2d"), bits = [], raf = 0;
   function confetti() {
+    if (state.teen) return;
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     cv.width = innerWidth; cv.height = innerHeight;
     for (var i = 0; i < 140; i++) bits.push({ x: innerWidth / 2, y: innerHeight / 3, vx: (Math.random() - .5) * 14, vy: -Math.random() * 12 - 4, s: 6 + Math.random() * 8, c: COLORS[i % COLORS.length], r: Math.random() * 6, life: 120 });
@@ -86,12 +101,13 @@
     raf = bits.length ? requestAnimationFrame(tick) : 0;
     if (!raf) cx.clearRect(0, 0, cv.width, cv.height);
   }
-  var XP_FOR = { quiz: 50, steps: 20, boss: 100, power: 40, done: 250, lab: 30, qsteps: 20, qquiz: 50, qdone: 100 };
-  function award(bucket, key, label) {
+  var XP_FOR = { quiz: 50, steps: 20, boss: 100, power: 40, done: 250, lab: 30, qsteps: 20, qquiz: 50, qdone: 100, explain: 50 };
+  function award(bucket, key, label, amount) {
+    if (!state[bucket]) state[bucket] = {};
     if (state[bucket][key]) return false;
-    var before = level(xp());
-    state[bucket][key] = true; markToday(); save();
-    toast("+" + XP_FOR[bucket] + " XP" + (label ? "  " + label : ""));
+    var before = level(xp()), gain = amount == null ? XP_FOR[bucket] : amount;
+    state[bucket][key] = amount == null ? true : amount; markToday(); save();
+    xpToast(gain, label);
     beep([660, 880]);
     var after = level(xp());
     if (after > before) { setTimeout(function () { confetti(); beep([523, 659, 784, 1046]); toast("LEVEL UP! You're a " + RANKS[after - 1]); }, 400); }
@@ -130,6 +146,7 @@
     game: '<path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H3v2a4 4 0 0 0 4 4M17 6h4v2a4 4 0 0 1-4 4M10 14h4v4h-4zM7 21h10"/>',
     done: '<path d="M4 12.5l5 5L20 6.5"/>',
     lock: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+    speaker: '<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/>',
     gift: '<rect x="3" y="9" width="18" height="12" rx="2"/><path d="M3 13h18M12 9v12M12 9c-2-4-6-4-6-1s6 1 6 1zm0 0c2-4 6-4 6-1s-6 1-6 1z"/>'
   };
   function icon(name) {
@@ -139,6 +156,37 @@
     return s;
   }
   function go(view) { location.hash = view; }
+  function shuffled(n) { var a = []; for (var i = 0; i < n; i++) a.push(i); for (var j = n - 1; j > 0; j--) { var r = Math.floor(Math.random() * (j + 1)); var t = a[j]; a[j] = a[r]; a[r] = t; } return a; }
+  var TERMS = Object.keys(GLOSSARY).sort(function (a, b) { return b.length - a.length; });
+  var TERM_RE = new RegExp("\\b(" + TERMS.map(function (t) { return t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }).join("|") + ")\\b");
+  // Text with tap-to-explain buttons for Studio words (first match of each word only).
+  function rich(tag, text, attrs) {
+    var node = el(tag, attrs), rest = text, used = {};
+    while (rest) {
+      var m = TERMS.length ? rest.match(TERM_RE) : null;
+      if (!m || used[m[1]]) { node.appendChild(document.createTextNode(rest)); break; }
+      used[m[1]] = true;
+      node.appendChild(document.createTextNode(rest.slice(0, m.index)));
+      (function (term) {
+        var def = el("span", { class: "def", text: GLOSSARY[term] }); def.hidden = true;
+        var b = el("button", { type: "button", class: "term", text: term, "aria-expanded": "false", onclick: function () { def.hidden = !def.hidden; b.setAttribute("aria-expanded", String(!def.hidden)); beep([700]); } });
+        node.appendChild(b); node.appendChild(def);
+      })(m[1]);
+      rest = rest.slice(m.index + m[1].length);
+    }
+    return node;
+  }
+  var canSpeak = "speechSynthesis" in window;
+  function speak(rootEl, btn) {
+    if (!canSpeak) return;
+    if (speechSynthesis.speaking) { speechSynthesis.cancel(); btn.classList.remove("on"); return; }
+    var clone = rootEl.cloneNode(true);
+    clone.querySelectorAll("pre, code, .fig, .bugbox, .code, .def, button, textarea").forEach(function (n) { n.remove(); });
+    var text = clone.innerText.replace(/\s+/g, " ").trim();
+    if (!text) return;
+    var u = new SpeechSynthesisUtterance(text); u.rate = 0.95; u.onend = function () { btn.classList.remove("on"); };
+    btn.classList.add("on"); speechSynthesis.speak(u);
+  }
 
   // ---------- path ----------
   var PATH = [];
@@ -156,15 +204,16 @@
   function unitTitle(u) { return u === 0 ? "Warm-up: get set up" : u === 1 ? "Your first game: " + M[0].title : "Get ready for " + M[u - 1].title; }
   function nodeTitle(n) { return n.kind === "mission" ? n.m.title : n.q.title; }
 
-  function reqDone(req) { var p = req.split(":"); return p[0] === "m" ? !!state.done[p[1]] : !!state.qdone[p[1]]; }
-  function reqLabel(req) { var p = req.split(":"); return p[0] === "m" ? "Finish " + M[p[1] - 1].title : "Finish " + Q.filter(function (q) { return q.id === p[1]; })[0].title; }
+  function unit0Done() { return Q.filter(function (q) { return q.before === 1; }).every(function (q) { return state.qdone[q.id]; }); }
+  function reqDone(req) { var p = req.split(":"); if (p[0] === "u") return unit0Done(); return p[0] === "m" ? !!state.done[p[1]] : !!state.qdone[p[1]]; }
+  function reqLabel(req) { var p = req.split(":"); if (p[0] === "u") return "Finish the warm-up"; return p[0] === "m" ? "Finish " + M[p[1] - 1].title : "Finish " + Q.filter(function (q) { return q.id === p[1]; })[0].title; }
   function packOpen(p) { return reqDone(PACK_UNLOCK[p]); }
-  function vaultOpen() { return !!state.qdone["0d"]; }
+  function vaultOpen() { return unit0Done(); }
   function labOpen() { return !!state.done[1]; }
   function unlocksFor(req) {
     var out = [];
     for (var p in PACK_UNLOCK) if (PACK_UNLOCK[p] === req) out.push(p + " pack");
-    if (req === "q:0d") out.push("the Creator Vault");
+    if (req === "u:0") out.push("the Creator Vault");
     if (req === "m:1") out.push("Prompt Lab");
     return out;
   }
@@ -224,7 +273,7 @@
         var done = !!state[bucket][it.key], isActive = i === active;
         var row = el("div", { class: "step" + (done ? " done" : isActive ? " active" : " locked") });
         var dot = el("span", { class: "step-dot" }, [done ? icon("done") : isActive ? el("b", { text: String(i + 1) }) : icon("lock")]);
-        var main = el("div", { class: "step-main" }, [el("p", { text: it.t })]);
+        var main = el("div", { class: "step-main" }, [rich("p", it.t)]);
         if (isActive) {
           var figName = it.fig || FIG.guess(it.t);
           var f = figName && FIG.make(figName);
@@ -243,7 +292,7 @@
     var wrap = el("div", { class: "stack" }), shown = seenKey && tipsSeen[seenKey] ? texts.length : 1;
     function draw() {
       wrap.replaceChildren();
-      texts.slice(0, shown).forEach(function (t, i) { wrap.appendChild(el("div", { class: "tip" + (i === shown - 1 ? " new" : "") }, [el("span", { class: "tipnum", style: "background:" + color, text: String(i + 1) }), el("p", { text: t })])); });
+      texts.slice(0, shown).forEach(function (t, i) { wrap.appendChild(el("div", { class: "tip" + (i === shown - 1 ? " new" : "") }, [el("span", { class: "tipnum", style: "background:" + color, text: String(i + 1) }), rich("p", t)])); });
       if (shown < texts.length) wrap.appendChild(el("button", { class: "btn ghost small", type: "button", text: "Got it! Next tip (" + (shown + 1) + "/" + texts.length + ")", onclick: function () { shown++; beep([520]); draw(); } }));
       else { if (seenKey) tipsSeen[seenKey] = true; if (onAll) onAll(); }
     }
@@ -251,24 +300,58 @@
     return wrap;
   }
   var tipsSeen = {};
+  var HINTS = ["Not quite! Look back at the tips and try again.", "Close! Think about what the lesson said.", "Try another one. You've got this!"];
   function quiz(qd, bucket, key, onRight) {
-    var exp = el("p", { class: "explain", text: qd.explain });
+    if (!state[bucket]) state[bucket] = {};
+    var exp = rich("p", qd.explain, { class: "explain" });
     exp.hidden = !state[bucket][key];
-    var out = [el("h2", { text: qd.q })];
-    qd.options.forEach(function (o, oi) {
+    var hint = el("p", { class: "hint" }); hint.hidden = true;
+    var misses = 0;
+    var out = [rich("h2", qd.q)];
+    shuffled(qd.options.length).forEach(function (oi) {
+      var o = qd.options[oi];
       var b = el("button", { type: "button", class: "opt" + (state[bucket][key] && oi === qd.answer ? " right" : ""), text: o, onclick: function () {
-        if (oi === qd.answer) { b.className = "opt right"; exp.hidden = false; award(bucket, key, "Correct!"); if (onRight) onRight(); }
-        else { b.className = "opt"; void b.offsetWidth; b.className = "opt wrong"; beep([180, 140]); }
+        if (state[bucket][key]) return;
+        if (oi === qd.answer) { b.className = "opt right"; exp.hidden = false; hint.hidden = true; award(bucket, key, misses === 0 ? "First try!" : "Got it!", misses === 0 ? 50 : 20); if (onRight) onRight(); }
+        else { misses++; b.className = "opt"; void b.offsetWidth; b.className = "opt wrong"; b.disabled = true; hint.textContent = HINTS[(misses - 1) % HINTS.length]; hint.hidden = false; beep([180, 140]); }
       } });
       out.push(b);
     });
-    out.push(exp);
+    out.push(hint, exp);
     return out;
   }
-  function promptBox(text, note) {
+  // Editable prompt with optional tap-to-choose chips. Edits are saved per prompt.
+  function promptBox(text, note, key, choices) {
+    if (!state.prompts) state.prompts = {};
+    if (!state.choice) state.choice = {};
+    var ta = el("textarea", { class: "prompt-edit", spellcheck: "false", "aria-label": "Prompt you can edit" });
+    ta.value = (key && state.prompts[key]) || text;
+    function fit() { ta.style.height = "auto"; ta.style.height = Math.min(ta.scrollHeight + 4, 340) + "px"; }
+    ta.addEventListener("input", function () { if (key) { state.prompts[key] = ta.value; save(); } fit(); });
+    var chipRows = (choices || []).map(function (c, ci) {
+      var ckey = key + "-" + ci, cur = state.choice[ckey];
+      if (cur == null) cur = Math.max(0, c.options.indexOf(c.find));
+      var row = el("div", { class: "choice-row" }, [el("span", { class: "label", text: c.label })]);
+      c.options.forEach(function (opt, oi) {
+        var b = el("button", { type: "button", class: "chip", "aria-pressed": String(oi === cur), text: opt.replace(/ \(.*\)$/, "").replace(/^(a big |builds a big |called |with |makes it |every )/, ""), onclick: function () {
+          var from = c.options[cur];
+          if (ta.value.indexOf(from) >= 0) ta.value = ta.value.replace(from, opt);
+          cur = oi; state.choice[ckey] = oi; if (key) state.prompts[key] = ta.value; save(); fit(); beep([640]);
+          row.querySelectorAll(".chip").forEach(function (x, xi) { x.setAttribute("aria-pressed", String(xi === oi)); });
+        } });
+        row.appendChild(b);
+      });
+      return row;
+    });
     var cbtn = el("button", { class: "btn small green", type: "button", text: "Copy prompt" });
-    cbtn.addEventListener("click", function () { copy(text, cbtn); });
-    return el("div", { class: "stack" }, [el("div", { class: "prompt-box" }, [el("pre", { text: text })]), el("div", { class: "row" }, [cbtn, el("span", { class: "muted", text: note || "Send it in Claude Desktop and Claude builds it right in Studio. Change any part you like first!" })])]);
+    cbtn.addEventListener("click", function () { copy(ta.value, cbtn); });
+    var reset = el("button", { class: "btn small ghost", type: "button", text: "Reset", onclick: function () { ta.value = text; if (key) { delete state.prompts[key]; (choices || []).forEach(function (_, ci) { delete state.choice[key + "-" + ci]; }); save(); } fit(); chipRows.forEach(function (r, ci) { var d = Math.max(0, choices[ci].options.indexOf(choices[ci].find)); r.querySelectorAll(".chip").forEach(function (x, xi) { x.setAttribute("aria-pressed", String(xi === d)); }); }); } });
+    setTimeout(fit, 0);
+    return el("div", { class: "stack" }, [
+      chipRows.length ? el("div", { class: "choices" }, [el("span", { class: "label", text: "Make it yours: tap to choose" })].concat(chipRows)) : null,
+      el("div", { class: "prompt-box editable" }, [ta]),
+      el("div", { class: "row" }, [cbtn, reset, el("span", { class: "muted", text: note || "Tap the text to change anything. Then send it in Claude Desktop and Claude builds it in Studio." })])
+    ].filter(Boolean));
   }
 
   // A step-by-step lesson shell: top bar with progress, one screen at a time, Continue gated by each screen.
@@ -285,7 +368,7 @@
       bar.style.width = Math.round((i / (opts.screens.length - 1)) * 100) + "%";
       counter.textContent = "Step " + (i + 1) + " of " + opts.screens.length;
     }
-    function draw() { body.replaceChildren.apply(body, opts.screens[i].render(refresh).filter(Boolean)); refresh(); }
+    function draw() { if (canSpeak) speechSynthesis.cancel(); body.replaceChildren.apply(body, opts.screens[i].render(refresh).filter(Boolean)); refresh(); }
     cont.addEventListener("click", function () {
       var s = opts.screens[i];
       if (s.gate && !s.gate()) return;
@@ -295,8 +378,9 @@
     app.replaceChildren(el("div", { class: "lesson-wrap" }, [
       el("div", { class: "lesson-top" }, [
         el("button", { class: "x", type: "button", "aria-label": "Back to path", text: "✕", onclick: function () { go("map"); } }),
-        el("div", { class: "bar lbar" }, [bar]), counter
-      ]),
+        el("div", { class: "bar lbar" }, [bar]), counter,
+        canSpeak ? el("button", { class: "x speak", type: "button", "aria-label": "Read this screen out loud", title: "Read to me", onclick: function (e) { speak(body, e.currentTarget); } }, [icon("speaker")]) : null
+      ].filter(Boolean)),
       opts.header || null,
       el("div", { class: "panel lesson-card" }, [body, el("div", { class: "lesson-foot" }, [back, cont])])
     ].filter(Boolean)));
@@ -304,7 +388,8 @@
     return { redraw: draw, refresh: refresh };
   }
 
-  function rewardModal(title, sub, color, iconName, unlocked, buttons) {
+  function rewardModal(title, sub, color, iconName, unlocked, buttons, route) {
+    if (route && location.hash !== route) return;
     var bg = el("div", { class: "modal-bg", role: "dialog", "aria-modal": "true", "aria-label": title });
     var list = unlocked && unlocked.length ? el("div", { class: "unlocks" }, [el("span", { class: "label", text: "Unlocked" })].concat(unlocked.map(function (u) { return el("div", { class: "unlock-item" }, [icon("gift"), el("span", { text: u })]); }))) : null;
     bg.appendChild(el("div", { class: "panel modal stack", style: "align-items:center" }, [
@@ -321,12 +406,12 @@
     var grid = el("div", { class: "profiles" });
     profiles.list.forEach(function (p) {
       var s = readJSON("creator-quest-p-" + p.id) || {};
-      var x = xpOf(Object.assign(blank(), s)), l = level(x);
+      var x = xpOf(Object.assign(blank(), s)), l = level(x), rk = s.teen ? TEEN_RANKS : KID_RANKS;
       grid.appendChild(el("button", { type: "button", class: "profile", onclick: function () { loadProfile(p.id); beep([523, 784]); go("map"); render(); } }, [
-        el("span", { class: "avatar big", style: "background:" + p.color }), el("b", { text: p.name }), el("span", { class: "me-rank", text: "LV " + l + " · " + RANKS[l - 1] }), el("span", { class: "muted", style: "font-size:.85rem", text: x + " XP" })
+        el("span", { class: "avatar big", style: "background:" + p.color }), el("b", { text: p.name }), el("span", { class: "me-rank", text: "LV " + l + " · " + rk[l - 1] }), el("span", { class: "muted", style: "font-size:.85rem", text: x + " XP" })
       ]));
     });
-    if (profiles.list.length < 6) grid.appendChild(el("button", { type: "button", class: "profile add", onclick: function () { profiles.current = null; state = blank(); go("new"); render(); } }, [el("span", { class: "avatar big plus", text: "+" }), el("b", { text: "New creator" }), el("span", { class: "muted", style: "font-size:.85rem", text: "For a brother, sister or friend" })]));
+    if (profiles.list.length < 6) grid.appendChild(el("button", { type: "button", class: "profile add", onclick: function () { profiles.current = null; state = blank(); RANKS = KID_RANKS; go("new"); render(); } }, [el("span", { class: "avatar big plus", text: "+" }), el("b", { text: "New creator" }), el("span", { class: "muted", style: "font-size:.85rem", text: "For a brother, sister or friend" })]));
     app.replaceChildren(el("div", { class: "stack", style: "align-items:center;text-align:center" }, [
       el("div", { class: "title-blocks", style: "justify-content:center" }, COLORS.slice(0, 5).map(function (c) { return el("span", { style: "background:" + c }); })),
       el("h1", { text: "Who's building today?" }), el("p", { class: "muted", text: "Each creator has their own path, XP and badges." }), grid
@@ -418,15 +503,70 @@
       el("span", { class: "cc-text" }, [el("span", { class: "label", text: doneCount === 0 ? "Start here" : "Continue" }), el("b", { text: nodeTitle(cur) })]),
       el("span", { class: "cc-go", text: "Go →" })
     ]) : el("div", { class: "continue-card" }, [el("b", { text: "You finished the whole path! Legendary." })]);
+    var testOut = !state.qdone["0a"] && !state.qdone["0b"] && count(state.qsteps) === 0 ? el("button", { class: "testout-card", type: "button", onclick: function () { go("testout"); } }, [el("b", { text: "Already have Roblox Studio and Claude Desktop?" }), el("span", { text: "Test out of the setup quests →" })]) : null;
     app.replaceChildren(
       el("div", { class: "path-head" }, [
         el("div", {}, [el("span", { class: "label", text: "Your path" }), el("h2", { text: doneCount === 0 ? "Let's go, " + state.name + "!" : doneCount + " of " + PATH.length + " steps done" })]),
         el("span", { class: "streak big" + (streak() > 0 ? " on" : ""), title: "Day streak" }, [el("i"), el("b", { text: String(streak()) }), el("span", { text: " day streak" })])
       ]),
-      next, path
+      next, testOut, path
     );
     var curEl = app.querySelector(".pnode.current");
     if (curEl && curEl.scrollIntoView && doneCount > 0) setTimeout(function () { curEl.scrollIntoView({ block: "center", behavior: "smooth" }); }, 120);
+  }
+
+  // ---------- things to do while a grown-up installs ----------
+  var PREDICT = [["Once upon a ___", ["time", "banana", "Tuesday"]], ["Press Play to ___ your game", ["test", "eat", "paint"]], ["The lava is super ___", ["hot", "sleepy", "fluffy"]], ["I want a pet ___", ["dragon", "sandwich", "cloud"]], ["Roblox games are made in Roblox ___", ["Studio", "Kitchen", "Garden"]]];
+  function waitActivity(kind) {
+    var box = el("div", { class: "panel wait" }, [el("span", { class: "label", text: "While your grown-up sets things up" })]);
+    if (kind === "predict") {
+      var i = 0, score = 0, area = el("div", { class: "stack" });
+      box.appendChild(el("h3", { text: "Be the AI: guess the next word!" }));
+      function draw() {
+        if (i >= PREDICT.length) { area.replaceChildren(el("p", { class: "explain", text: score + " of " + PREDICT.length + "! You just did what Claude does: guess the most likely next word, using patterns you've seen before. Claude does it super fast, with tons of examples." })); return; }
+        var row = el("div", { class: "row" });
+        shuffled(3).forEach(function (oi) { row.appendChild(el("button", { class: "chip", type: "button", text: PREDICT[i][1][oi], onclick: function () { if (oi === 0) { score++; beep([660]); } else beep([220]); i++; draw(); } })); });
+        area.replaceChildren(el("p", { class: "lesson", text: PREDICT[i][0] }), row);
+      }
+      draw(); box.appendChild(area);
+    } else {
+      box.appendChild(el("h3", { text: "Design your first obby on paper" }));
+      ["Grab paper and a pencil", "Draw 5 tricky stages, from start to finish", "Give your tower a cool name", "Pick a lava color: orange, green or purple?"].forEach(function (t, j) {
+        var id = "sk-" + j, c = el("input", { type: "checkbox", id: id });
+        box.appendChild(el("label", { class: "check", for: id }, [c, el("span", { text: t })]));
+      });
+      box.appendChild(el("p", { class: "muted", text: "Keep your drawing! You'll use it in the Lava Tower." }));
+    }
+    return box;
+  }
+
+  function viewTestOut() {
+    var qs = [
+      { q: "Where are scripts for the whole game kept in Studio?", options: ["ServerScriptService", "StarterGui", "Lighting"], answer: 0 },
+      { q: "Which panel shows errors in red?", options: ["Output", "Properties", "Toolbox"], answer: 0 },
+      { q: "How do you test your game in Studio?", options: ["Press Play", "Press Publish", "Close Studio"], answer: 0 }
+    ];
+    var right = {}, wrong = false;
+    var status = el("p", { class: "muted", text: "Get all 3 right to skip Get Your Tools and Studio Tour. You still connect Claude and do your first build." });
+    var cards = qs.map(function (qd, qi) {
+      var card = el("div", { class: "panel stack" }, [el("h3", { text: qd.q })]);
+      shuffled(3).forEach(function (oi) {
+        var b = el("button", { type: "button", class: "opt", text: qd.options[oi], onclick: function () {
+          if (right[qi] || wrong) return;
+          if (oi === qd.answer) { b.className = "opt right"; right[qi] = true; beep([660]); if (Object.keys(right).length === qs.length) pass(); }
+          else { b.className = "opt wrong"; wrong = true; beep([180, 140]); fail(); }
+        } });
+        card.appendChild(b);
+      });
+      return card;
+    });
+    function pass() {
+      award("qdone", "0a", "Tested out!"); award("qdone", "0b", "Tested out!");
+      status.className = "explain"; status.textContent = "You tested out! Next up: connect Claude to Studio.";
+      setTimeout(function () { go("map"); }, 1400);
+    }
+    function fail() { status.className = "hint"; status.textContent = "No worries! Do the warm-up quests instead. They're quick."; setTimeout(function () { go("map"); }, 1800); }
+    app.replaceChildren(el("div", { class: "stack", style: "max-width:640px;margin:0 auto" }, [el("span", { class: "label", text: "Warm-up" }), el("h2", { text: "Already know Studio? Test out!" }), status].concat(cards)));
   }
 
   // ---------- skill quest ----------
@@ -445,6 +585,7 @@
           var out = [el("span", { class: "label", text: "Try it" }), el("h2", { text: q.prompt ? "Send this to Claude, then build it" : "Let's do it" })];
           if (q.prompt) out.push(promptBox(q.prompt));
           out.push(el("span", { class: "label", style: "margin-top:6px", text: "One step at a time" }), stepList(items, "qsteps", refresh));
+          if (q.wait) out.push(waitActivity(q.wait));
           return out;
         }, gate: stepsDone, hint: "Finish every step" },
       { render: function (refresh) { return [el("span", { class: "label", text: "Quick check" })].concat(quiz(q.check, "qquiz", q.id, refresh)); },
@@ -463,8 +604,8 @@
     function completeQuest() {
       if (award("qdone", q.id, q.title)) {
         confetti(); beep([523, 659, 784, 1046]);
-        var unl = unlocksFor("q:" + q.id);
-        if (unl.length) setTimeout(function () { rewardModal("Unit " + node.unit + " complete!", "Claude is connected and you made your first build. Time for your first big game!", color, "gift", unl, [{ text: "Awesome!" }]); }, 500);
+        var here = location.hash;
+        if (node.unit === 0 && unit0Done()) setTimeout(function () { rewardModal("Unit 0 complete!", "Claude is connected and you made your first build. Time for your first big game!", color, "gift", unlocksFor("u:0"), [{ text: "Awesome!" }], here); }, 400);
       }
     }
     var start = state.qdone[q.id] ? 0 : !tipsDone ? 0 : !stepsDone() ? 1 : 2;
@@ -489,13 +630,13 @@
     screens.push({ render: function () {
       return [
         el("section", { class: "mhead", style: "background:" + m.color }, [
-          el("div", {}, [el("span", { class: "label", text: "Big game " + m.id + " · " + m.time }), el("h1", { text: m.title }), el("p", { text: m.story })]), stars(m.stars)
+          el("div", {}, [el("span", { class: "label", text: "Big game " + m.id + " · " + m.time }), el("h1", { text: m.title }), rich("p", m.story)]), stars(m.stars)
         ]),
         el("span", { class: "label", text: "You'll build" }),
         el("ul", { class: "builds" }, m.builds.map(function (b) { return el("li", { text: b }); }))
       ];
     }, next: "Let's go!" });
-    screens.push({ render: function (refresh) { return [el("span", { class: "label", text: "AI Brain unlock" }), el("h2", { text: m.brain.title }), tipReveal(m.brain.text, m.color, brainDone ? "m" + m.id : null, function () { brainDone = true; refresh(); })]; },
+    screens.push({ render: function (refresh) { return [el("span", { class: "label", text: "AI Brain unlock" }), rich("h2", m.brain.title), tipReveal(m.brain.text, m.color, brainDone ? "m" + m.id : null, function () { brainDone = true; refresh(); })]; },
       gate: function () { return brainDone; }, hint: "Read all the tips first" });
     m.brain.quiz.forEach(function (qd, qi) {
       screens.push({ render: function (refresh) { return [el("span", { class: "label", text: "Brain quiz " + (qi + 1) + " of " + m.brain.quiz.length })].concat(quiz(qd, "quiz", k(qi), refresh)); },
@@ -506,7 +647,7 @@
         gate: function () { return all(setupItems); }, hint: "Finish every step" });
       screens.push({ render: function (refresh) {
         return [el("span", { class: "label", text: "Build · the Mega Prompt" }), el("h2", { text: "One prompt. A whole game." }),
-          promptBox(m.megaPrompt, "Add your own ideas to the list before sending! Claude builds it in Studio and tests it. Each build can come out a bit different, and that's normal."),
+          promptBox(m.megaPrompt, "Tap the text to add your own ideas. Claude builds it in Studio and tests it. Each build can come out a bit different, and that's normal.", "m" + m.id, (EXTRAS[m.id] || {}).choices),
           el("span", { class: "label", style: "margin-top:6px", text: "One step at a time" }), stepList(sendItems, "steps", refresh)];
       }, gate: function () { return all(sendItems); }, hint: "Finish every step" });
       screens.push({ render: function (refresh) {
@@ -534,6 +675,13 @@
           stepList(shipItems, "steps", refresh)];
       }, gate: function () { return all(shipItems); }, hint: "Finish every step" });
     }
+    var ex = (EXTRAS[m.id] || {}).explain;
+    if (ex) screens.push({ render: function (refresh) {
+      return [el("span", { class: "label", text: "Explain it" }), el("h2", { text: "How does it work?" }),
+        el("p", { class: "lesson", text: "Claude built it. Now find out how! Ask Claude to explain, read the answer together, then answer the question." }),
+        promptBox(ex.prompt, "Send it in Claude Desktop and read the answer together.", "x" + m.id),
+        el("span", { class: "label", style: "margin-top:6px", text: "Check your understanding" })].concat(quiz(ex.q, "explain", "m" + m.id, refresh));
+    }, gate: function () { return !!(state.explain || {})["m" + m.id]; }, hint: "Answer the question first" });
     if (m.bossBug) screens.push({ render: function (refresh) { return bossBug(refresh); }, gate: function () { return !!state.boss[m.id]; }, hint: "Find the bug first" });
     screens.push({ render: function (refresh) { return powerups(refresh); }, gate: function () { return powerCount() >= 1; }, hint: "Add at least 1 power-up" });
     screens.push({ render: function () { return finish(); }, noContinue: true });
@@ -589,7 +737,7 @@
         });
         box.appendChild(btn);
       });
-      return [el("span", { class: "label", text: "Boss Bug" }), el("h2", { text: "Find the bug!" }), el("p", { class: "lesson", text: b.intro }), el("p", { class: "muted", text: "Tap the line with the bug." }), box, res];
+      return [el("span", { class: "label", text: "Boss Bug · spot Claude's mistake" }), el("h2", { text: "Claude made a mistake!" }), el("p", { class: "lesson", text: b.intro }), el("p", { class: "muted", text: "AI can be wrong. This is code Claude might write, and one line is broken. Tap it." }), box, res];
     }
 
     function powerups(refresh) {
@@ -622,7 +770,7 @@
         award("done", m.id, m.badge + " badge!"); confetti(); beep([523, 659, 784, 1046, 1318]);
         var unl = unlocksFor("m:" + m.id), nxt = nextAfter("mission", m.id);
         rewardModal("Unit " + m.id + " complete!", "You earned the " + m.badge + " badge. +250 XP", m.color, "game", unl,
-          [unl.some(function (u) { return / pack$/.test(u); }) ? { text: "Open the Vault", go: "vault" } : null, nxt ? { text: "Back to the path", go: "map", cls: unl.length ? "ghost" : "yellow" } : { text: "See your certificate", go: "badges" }].filter(Boolean));
+          [unl.some(function (u) { return / pack$/.test(u); }) ? { text: "Open the Vault", go: "vault" } : null, nxt ? { text: "Back to the path", go: "map", cls: unl.length ? "ghost" : "yellow" } : { text: "See your certificate", go: "badges" }].filter(Boolean), location.hash);
       }
       btn.addEventListener("pointerdown", startHold); btn.addEventListener("pointerup", stopHold); btn.addEventListener("pointerleave", stopHold);
       btn.addEventListener("keydown", function (e) { if ((e.key === " " || e.key === "Enter") && !timer) startHold(e); });
@@ -642,31 +790,68 @@
   }
 
   // ---------- prompt lab ----------
+  var RUBRIC = {
+    where: { label: "Says WHERE", re: /(spawn|next to|in my|place|ServerScriptService|Workspace|above|near|in front|on top|middle|corner|lobby|map)/i },
+    what: { label: "Says WHAT it does", test: function (t) { return t.trim().split(/\s+/).length >= 8; } },
+    detail: { label: "Has a DETAIL", re: /(\d|red|blue|green|yellow|purple|pink|orange|gold|white|black|rainbow|neon|glow|big|small|giant|tiny|fast|slow|second|high|tall|cute)/i },
+    test: { label: "Asks Claude to TEST", re: /(playtest|test|check|try it|make sure)/i },
+    did: { label: "Says what you DID", re: /(when i|i touch|i touched|i click|i press|i walk|i step|after i)/i },
+    happened: { label: "Says what HAPPENED", re: /(doesn'?t|does not|didn'?t|nothing|stays|won'?t|instead|still|not going|isn'?t)/i },
+    output: { label: "Mentions errors / Output", re: /(output|error)/i },
+    looks: { label: "Says what it LOOKS like", re: /(looks|shaped|color|colour|fluffy|round|eyes|ears|tail|wings|cute|tiny|big|small|red|blue|green|pink|purple|gold)/i },
+    moves: { label: "Says HOW it moves", re: /(follow|float|bounce|fly|walk|hop|spin|chase|behind|next to me)/i }
+  };
+  var WRITE_KEYS = [["where", "what", "detail", "test"], ["did", "happened", "output", "test"], ["looks", "moves", "detail", "test"]];
   function viewLab() {
     if (!labOpen()) { toast("Prompt Lab unlocks after " + M[0].title + "!"); return go("map"); }
     var i = 0; while (i < LAB.length - 1 && state.lab[String(i)]) i++;
-    var wrap = el("div", { class: "stack" });
+    var wrap = el("div", { class: "stack" }), writeIdx = 0;
+    function dots() { return el("span", { class: "dots" }, LAB.map(function (_, j) { return el("i", { class: state.lab[String(j)] ? "on" : j === i ? "cur" : "" }); })); }
     function draw() {
-      var r = LAB[i], key = String(i);
-      var why = el("p", { class: "explain", text: r.why }); why.hidden = !state.lab[key];
+      var r = LAB[i], key = String(i), done = !!state.lab[key];
       var nextBtn = el("button", { class: "btn small yellow", type: "button", text: "Next round →", onclick: function () { i++; draw(); } });
-      nextBtn.hidden = !state.lab[key] || i >= LAB.length - 1;
-      var card = el("div", { class: "panel stack" }, [
-        el("div", { class: "row", style: "justify-content:space-between" }, [el("span", { class: "label", text: "Round " + (i + 1) + " of " + LAB.length }), el("span", { class: "dots" }, LAB.map(function (_, j) { return el("i", { class: state.lab[String(j)] ? "on" : j === i ? "cur" : "" }); }))]),
-        el("h2", { text: r.goal }), el("p", { class: "muted", text: "Which prompt should you send to Claude?" })]);
-      r.options.forEach(function (o, oi) {
-        var b = el("button", { type: "button", class: "opt" + (state.lab[key] && oi === r.answer ? " right" : ""), style: "font-family:var(--mono);font-weight:500", text: o, onclick: function () {
-          if (oi === r.answer) { b.className = "opt right"; why.hidden = false; award("lab", key, "Prompt pro!"); nextBtn.hidden = i >= LAB.length - 1; if (i >= LAB.length - 1) { confetti(); } }
-          else { b.className = "opt"; void b.offsetWidth; b.className = "opt wrong"; beep([180, 140]); }
+      nextBtn.hidden = !done || i >= LAB.length - 1;
+      var card = el("div", { class: "panel stack" }, [el("div", { class: "row", style: "justify-content:space-between" }, [el("span", { class: "label", text: (r.type === "write" ? "Write it · " : "") + "Round " + (i + 1) + " of " + LAB.length }), dots()]), el("h2", { text: r.goal })]);
+      if (r.type === "write") {
+        var wi = LAB.slice(0, i).filter(function (x) { return x.type === "write"; }).length, keys = WRITE_KEYS[wi % WRITE_KEYS.length];
+        var ta = el("textarea", { class: "prompt-edit lab-write", placeholder: "Type your prompt here...", "aria-label": "Your prompt" });
+        ta.value = (state.prompts && state.prompts["lab" + i]) || "";
+        var list = el("div", { class: "rubric" });
+        function score() {
+          var t = ta.value, n = 0;
+          list.replaceChildren.apply(list, keys.map(function (k) { var c = RUBRIC[k], ok = c.re ? c.re.test(t) : c.test(t); if (ok) n++; return el("span", { class: "rb" + (ok ? " ok" : "") }, [icon(ok ? "done" : "lock"), c.label]); }));
+          return n;
+        }
+        ta.addEventListener("input", function () { if (!state.prompts) state.prompts = {}; state.prompts["lab" + i] = ta.value; save(); score(); });
+        var res = el("p", { class: "hint" }); res.hidden = true;
+        var check = el("button", { class: "btn yellow small", type: "button", text: "Check my prompt", onclick: function () {
+          var n = score();
+          if (n >= 3) { res.className = "explain"; res.textContent = n === 4 ? "Perfect prompt! Claude would know exactly what to build." : "Great prompt! Add the missing piece to make it perfect."; res.hidden = false; if (award("lab", key, "Prompt pro!", n === 4 ? 60 : 40)) { confetti(); } nextBtn.hidden = i >= LAB.length - 1; }
+          else { res.className = "hint"; res.textContent = "Almost! Add " + (4 - n) + " more of the pieces below."; res.hidden = false; beep([220]); }
         } });
-        card.appendChild(b);
-      });
-      card.appendChild(why);
+        card.appendChild(el("p", { class: "muted", text: "A great prompt has these pieces:" }));
+        card.appendChild(list); card.appendChild(ta); card.appendChild(el("div", { class: "row" }, [check])); card.appendChild(res);
+        score();
+      } else {
+        card.appendChild(el("p", { class: "muted", text: "Which prompt should you send to Claude?" }));
+        var why = el("p", { class: "explain", text: r.why }); why.hidden = !done;
+        var hint = el("p", { class: "hint" }); hint.hidden = true;
+        var misses = 0;
+        shuffled(r.options.length).forEach(function (oi) {
+          var b = el("button", { type: "button", class: "opt" + (done && oi === r.answer ? " right" : ""), style: "font-family:var(--mono);font-weight:500", text: r.options[oi], onclick: function () {
+            if (state.lab[key]) return;
+            if (oi === r.answer) { b.className = "opt right"; why.hidden = false; hint.hidden = true; award("lab", key, misses ? "Got it!" : "First try!", misses ? 15 : 30); nextBtn.hidden = i >= LAB.length - 1; }
+            else { misses++; b.className = "opt"; void b.offsetWidth; b.className = "opt wrong"; b.disabled = true; hint.textContent = "Not that one. Which prompt says what, where and how?"; hint.hidden = false; beep([180, 140]); }
+          } });
+          card.appendChild(b);
+        });
+        card.appendChild(hint); card.appendChild(why);
+      }
       card.appendChild(el("div", { class: "row" }, [i > 0 ? el("button", { class: "btn small ghost", type: "button", text: "← Back", onclick: function () { i--; draw(); } }) : null, nextBtn,
-        i === LAB.length - 1 && count(state.lab) === LAB.length ? el("span", { class: "explain", text: "Perfect score! You're a Prompt Wizard." }) : null].filter(Boolean)));
+        i === LAB.length - 1 && count(state.lab) === LAB.length ? el("span", { class: "explain", text: "All rounds done! You're a Prompt Wizard." }) : null].filter(Boolean)));
       wrap.replaceChildren(card);
     }
-    app.replaceChildren(el("div", { class: "stack", style: "max-width:720px;margin:0 auto" }, [el("span", { class: "label", text: "Mini-game" }), el("h2", { text: "Prompt Lab" }), el("p", { class: "muted", text: "Get each round right to unlock the next one." }), wrap]));
+    app.replaceChildren(el("div", { class: "stack", style: "max-width:720px;margin:0 auto" }, [el("span", { class: "label", text: "Mini-game" }), el("h2", { text: "Prompt Lab" }), el("p", { class: "muted", text: "Pick or write the best prompt. Each round unlocks the next." }), wrap]));
     draw();
   }
 
@@ -727,7 +912,7 @@
   // ---------- badges ----------
   function badgeList() {
     var list = M.map(function (m) { return { name: m.badge, color: m.color, got: !!state.done[m.id], how: "Finish " + m.title }; });
-    list.push({ name: "Warmed Up", color: UNIT0_COLOR, got: !!state.qdone["0d"], how: "Finish the warm-up" });
+    list.push({ name: "Warmed Up", color: UNIT0_COLOR, got: unit0Done(), how: "Finish the warm-up" });
     list.push({ name: "Skill Master", color: "#36d67a", got: count(state.qdone) >= Q.length, how: "Finish all " + Q.length + " skill quests" });
     list.push({ name: "On Fire", color: "#ff8a2b", got: streak() >= 3, how: "Build 3 days in a row" });
     list.push({ name: "Bug Hunter", color: "#ff4f4f", got: count(state.boss) >= 7, how: "Squash all 7 Boss Bugs" });
@@ -774,6 +959,7 @@
     } });
     confirmBox.appendChild(resetBtn); confirmBox.appendChild(delBtn);
     var sound = el("button", { class: "btn small ghost", type: "button", text: state.sound ? "Sound: on" : "Sound: off", onclick: function () { state.sound = !state.sound; save(); viewGrownups(); } });
+    var teen = el("button", { class: "btn small " + (state.teen ? "green" : "ghost"), type: "button", text: state.teen ? "Style: Teen (calm)" : "Style: Kid (fun)", onclick: function () { state.teen = !state.teen; RANKS = state.teen ? TEEN_RANKS : KID_RANKS; save(); hud(); viewGrownups(); } });
     app.replaceChildren(el("div", { class: "stack", style: "max-width:760px" }, [
       el("span", { class: "label", text: "For grown-ups" }), el("h2", { text: "You're the co-pilot" }),
       el("div", { class: "panel stack" }, [el("h3", { text: "Why you need to be there" }),
@@ -787,7 +973,8 @@
         el("p", { text: "Unit 0 is a warm-up: install Studio and Claude Desktop, learn the panels, connect Claude to Studio, and do a first build. Then 8 units each end with a big game, with 3 short skill quests (10–15 minutes) before each one. Everything unlocks one step at a time: tips, checklist steps, power-ups, Prompt Lab rounds, and a new Vault pack after every big game." }),
         el("p", { class: "muted", text: "The Studio pictures are simplified drawings. Real buttons may look slightly different depending on your Studio version." })]),
       el("div", { class: "panel stack" }, [el("h3", { text: "Creators on this device" }), el("p", { text: "Each kid gets their own path, XP and badges. Switch by tapping the name in the top bar." }),
-        el("div", { class: "row" }, [el("button", { class: "btn small ghost", type: "button", text: "Switch creator", onclick: function () { go("profiles"); } }), sound]), confirmBox,
+        el("div", { class: "row" }, [el("button", { class: "btn small ghost", type: "button", text: "Switch creator", onclick: function () { go("profiles"); } }), sound, teen]),
+        el("p", { class: "muted", style: "font-size:.9rem", text: "Teen style turns off confetti and uses grown-up rank names (Builder, Developer, Tech Lead…). Good for ages 13+." }), confirmBox,
         el("p", { class: "muted", style: "font-size:.9rem", text: "Progress is saved in this browser on this computer." })]),
       el("p", { class: "muted", style: "font-size:.85rem", text: "Creator Quest is an independent course. It is not made, sponsored or endorsed by Roblox Corporation or Anthropic. Roblox and Roblox Studio are trademarks of Roblox Corporation. Claude is a product of Anthropic." })
     ]));
@@ -799,6 +986,7 @@
     if (h === "new") return viewWelcome();
     if (!profiles.current) return profiles.list.length ? viewProfiles() : viewWelcome();
     if (h === "profiles") return viewProfiles();
+    if (h === "testout") return viewTestOut();
     if (h.indexOf("mission-") === 0) viewMission(parseInt(h.slice(8), 10));
     else if (h.indexOf("quest-") === 0) viewQuest(h.slice(6));
     else if (h === "lab") viewLab();
@@ -808,6 +996,6 @@
     else viewMap();
     hud();
   }
-  window.addEventListener("hashchange", function () { document.querySelectorAll(".modal-bg").forEach(function (b) { b.remove(); }); render(); window.scrollTo(0, 0); });
+  window.addEventListener("hashchange", function () { if (canSpeak) speechSynthesis.cancel(); document.querySelectorAll(".modal-bg").forEach(function (b) { b.remove(); }); render(); window.scrollTo(0, 0); });
   render();
 })();

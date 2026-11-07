@@ -15,7 +15,7 @@
 | **Parent Guide.pdf** | 6 pages: co-pilot rule, setup, mission list, troubleshooting, safety, Creator Hours chart. |
 
 ### The path
-Unit 0 warm-up: Get Your Tools (Studio + Claude Desktop) · Studio Tour · Connect Claude to Studio · Hello, Claude (unlocks the Vault + Nature pack). Then 8 units. Each unit ends with a big game. From Unit 2 on, 3 skill quests (10–15 min: learn → try one prompt in Studio → one quiz question) come first and prepare for that game. Every unit has a "Model Maker" quest about getting detailed 3D models from prompts.
+Unit 0 warm-up: Get Your Tools (Studio + Claude Desktop) · Connect Claude to Studio · Hello, Claude · Studio Tour (unlocks the Vault + Nature pack). Kids who know Studio can test out of Tools and Tour. Then 8 units. Each unit ends with a big game. From Unit 2 on, 3 skill quests (10–15 min: learn → try one prompt in Studio → one quiz question) come first and prepare for that game. Every unit has a "Model Maker" quest about getting detailed 3D models from prompts.
 
 | Before | Skill quests |
 | --- | --- |
@@ -27,7 +27,9 @@ Unit 0 warm-up: Get Your Tools (Studio + Claude Desktop) · Studio Tour · Conne
 | Boss Battle | Health & Damage · Special Effects · Model Maker: Boss Design |
 | Dream Game | World Builder (terrain) · Game Designer Brain · Polish & Publish |
 
-Quest content lives in `app/quests.js`, app logic in `app/app.js`, Studio drawings in `app/figures.js`.
+Persona test and fixes: `research/persona-test.md`.
+
+Quest content lives in `app/quests.js`, prompt choices / explain checks / harder Prompt Lab / glossary in the bottom of `app/missions.js`, app logic in `app/app.js`, Studio drawings in `app/figures.js`.
 
 Unlocks: Vault + Nature after warm-up · Obby + Prompt Lab after Game 1 · Collectibles after 2 · Props + Game Systems after 3 · Spooky + Tools after 4 · Pets after 5 · Sci-Fi after 6 · Buildings after 7 · certificate after 8.
 

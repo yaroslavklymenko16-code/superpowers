@@ -95,3 +95,19 @@ Did Scratch at school, curious how code really works, allergic to anything "baby
 ## Next step
 
 Run the same three checks with 3–5 real families during the beta: minutes to first build, where kids tap without reading, and which words they ask about.
+
+## Fixes shipped (v6)
+
+| # | Fix | Result |
+| --- | --- | --- |
+| 1 | Quiz options rewritten and shuffled every time | Correct answer is the longest in 20 of 41 (was 36), and its position is random |
+| 2 | First-try bonus + hints | 50 XP first try, 20 after a miss; wrong options grey out with an encouraging hint |
+| 3 | One XP counter; reward pop-up only shows on the screen that earned it | Max 1 pop-up on screen (was 4) |
+| 4 | Warm-up test-out + first build moved earlier (Tools → Connect → Hello Claude → Tour) | 26–28 taps to the first Claude build with test-out (was 47) |
+| 5 | Kid activities during installs | "Be the AI: guess the next word" game and "design your obby on paper" |
+| 6 | Editable prompts with tap-to-choose options | 2 choice rows per big game; edits saved; copy sends the edited version |
+| 7 | Tap-to-explain glossary | 27 Studio words underlined; tap for a one-line meaning |
+| 8 | "Explain it" step in every big game; Boss Bugs reframed as "spot Claude's mistake" | 7 explain prompts + understanding checks |
+| 9 | Read-aloud | Speaker button on every lesson screen (browser voice) |
+| 10 | Teen style | Calm mode: no confetti, ranks Beginner → Creative Director |
+| 11 | Harder Prompt Lab | 14 rounds (was 6), including 3 "write your own prompt" rounds scored on what/where/detail/test |
