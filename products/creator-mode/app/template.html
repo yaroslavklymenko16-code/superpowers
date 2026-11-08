@@ -335,6 +335,39 @@
   .rb.ok { background: var(--green); color: var(--ink); }
   .lab-write { background: var(--bg-2); border: 3px solid var(--ink); border-radius: 12px; padding: 12px; min-height: 110px; }
 
+
+  /* v7: desktop layout */
+  .map-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; align-items: start; }
+  .map-main { min-width: 0; }
+  .side { display: none; }
+  .side-card { display: flex; flex-direction: column; gap: 10px; }
+  .side-card .bar { flex: none; }
+  .side-big { font: 700 1.25rem var(--display); }
+  .small { font-size: .88rem; }
+  .week { display: flex; justify-content: space-between; gap: 4px; }
+  .day { display: flex; flex-direction: column; align-items: center; gap: 4px; font: 700 .75rem var(--display); color: var(--muted); }
+  .day i { width: 26px; height: 26px; border-radius: 50%; border: 3px solid var(--ink); background: var(--edge); display: block; }
+  .day.on i { background: linear-gradient(var(--yellow), var(--orange)); }
+  .day.today b { color: var(--yellow); }
+  .side-medals { display: flex; gap: 6px; flex-wrap: wrap; min-height: 36px; }
+  .medal.mini { border-radius: 50%; display: grid; place-items: center; color: var(--ink); width: 36px; height: 36px; margin: 0; font-size: 1rem; border-width: 3px; box-shadow: 0 3px 0 var(--ink); }
+  .tip-card { border-style: dashed; }
+  @media (min-width: 1100px) {
+    .map-layout { grid-template-columns: minmax(0, 1fr) 320px; }
+    .side { display: flex; flex-direction: column; gap: 16px; position: sticky; top: calc(84px + env(safe-area-inset-top, 0px)); }
+    .path-head, .continue-card, .testout-card, .path { margin-left: auto; margin-right: auto; }
+  }
+  @media (min-width: 1400px) {
+    body { font-size: 17.5px; }
+    .wrap { max-width: 1240px; }
+    .lesson-wrap { max-width: 860px; }
+    .path, .path-head, .continue-card, .testout-card { max-width: 680px; }
+    .pnode { width: 84px; height: 84px; } .pnode.big { width: 124px; height: 124px; }
+    .fig { max-width: 600px; font-size: 14px; }
+    .prompt-edit { font-size: .98rem; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  }
+
   /* Vault */
   .vault-top { display: grid; grid-template-columns: 1.2fr 1fr; gap: 18px; }
   .vault-top > * { min-width: 0; }

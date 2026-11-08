@@ -504,13 +504,14 @@
       el("span", { class: "cc-go", text: "Go →" })
     ]) : el("div", { class: "continue-card" }, [el("b", { text: "You finished the whole path! Legendary." })]);
     var testOut = !state.qdone["0a"] && !state.qdone["0b"] && count(state.qsteps) === 0 ? el("button", { class: "testout-card", type: "button", onclick: function () { go("testout"); } }, [el("b", { text: "Already have Roblox Studio and Claude Desktop?" }), el("span", { text: "Test out of the setup quests →" })]) : null;
-    app.replaceChildren(
+    var main = el("div", { class: "map-main" }, [
       el("div", { class: "path-head" }, [
         el("div", {}, [el("span", { class: "label", text: "Your path" }), el("h2", { text: doneCount === 0 ? "Let's go, " + state.name + "!" : doneCount + " of " + PATH.length + " steps done" })]),
         el("span", { class: "streak big" + (streak() > 0 ? " on" : ""), title: "Day streak" }, [el("i"), el("b", { text: String(streak()) }), el("span", { text: " day streak" })])
       ]),
       next, testOut, path
-    );
+    ].filter(Boolean));
+    app.replaceChildren(el("div", { class: "map-layout" }, [main, sidebar()]));
     var curEl = app.querySelector(".pnode.current");
     if (curEl && curEl.scrollIntoView && doneCount > 0) setTimeout(function () { curEl.scrollIntoView({ block: "center", behavior: "smooth" }); }, 120);
   }
@@ -567,6 +568,31 @@
     }
     function fail() { status.className = "hint"; status.textContent = "No worries! Do the warm-up quests instead. They're quick."; setTimeout(function () { go("map"); }, 1800); }
     app.replaceChildren(el("div", { class: "stack", style: "max-width:640px;margin:0 auto" }, [el("span", { class: "label", text: "Warm-up" }), el("h2", { text: "Already know Studio? Test out!" }), status].concat(cards)));
+  }
+
+  // Desktop sidebar on the path: streak week, level, next unlock, recent badges.
+  function sidebar() {
+    var x = xp(), l = level(x), lo = LEVELS[l - 1], hi = LEVELS[l] || lo + 1000;
+    var set = {}; (state.days || []).forEach(function (d) { set[d] = 1; });
+    var week = el("div", { class: "week" }), names = ["S", "M", "T", "W", "T", "F", "S"];
+    for (var i = 6; i >= 0; i--) { var d = new Date(); d.setDate(d.getDate() - i); var key = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); week.appendChild(el("span", { class: "day" + (set[key] ? " on" : "") + (i === 0 ? " today" : "") }, [el("i"), el("b", { text: names[d.getDay()] })])); }
+    var nextGame = null; for (var j = 0; j < M.length; j++) if (!state.done[M[j].id]) { nextGame = M[j]; break; }
+    var unl = nextGame ? unlocksFor("m:" + nextGame.id) : [];
+    if (!unit0Done()) { nextGame = null; unl = unlocksFor("u:0"); }
+    var badges = badgeList().filter(function (b) { return b.got; });
+    return el("aside", { class: "side" }, [
+      el("div", { class: "panel side-card" }, [el("span", { class: "label", text: "Streak" }), el("div", { class: "streak big" + (streak() > 0 ? " on" : "") }, [el("i"), el("b", { text: String(streak()) }), el("span", { text: " day streak" })]), week,
+        el("p", { class: "muted small", text: streak() > 0 ? "Build something today to keep it going!" : "Finish any step today to start a streak." })]),
+      el("div", { class: "panel side-card" }, [el("span", { class: "label", text: "Level " + l }), el("b", { class: "side-big", text: RANKS[l - 1] }),
+        el("div", { class: "bar" }, [el("i", { style: "width:" + (l >= LEVELS.length ? 100 : Math.round(((x - lo) / (hi - lo)) * 100)) + "%" })]),
+        el("p", { class: "muted small", text: l >= LEVELS.length ? "Max level. Legendary!" : (hi - x) + " XP to " + RANKS[l] })]),
+      unl.length ? el("div", { class: "panel side-card" }, [el("span", { class: "label", text: "Next unlock" }), el("b", { class: "side-big", text: nextGame ? "Finish " + nextGame.title : "Finish the warm-up" }),
+        el("div", { class: "unlocks" }, unl.map(function (u) { return el("div", { class: "unlock-item" }, [icon("gift"), el("span", { text: u })]); }))]) : null,
+      el("div", { class: "panel side-card" }, [el("span", { class: "label", text: "Badges" }), el("b", { class: "side-big", text: badges.length + " of " + badgeList().length }),
+        el("div", { class: "side-medals" }, badges.slice(-5).map(function (b) { return el("span", { class: "medal mini", style: "background:" + b.color, title: b.name, text: "★" }); })),
+        el("button", { class: "btn small ghost", type: "button", text: "Trophy room", onclick: function () { go("badges"); } })]),
+      el("div", { class: "panel side-card tip-card" }, [el("span", { class: "label", text: "PC tip" }), el("p", { class: "small", text: "Snap this window to one side and Roblox Studio to the other. Windows: press Windows key + ←. Mac: hover the green button and pick Tile Window to Left of Screen." })])
+    ].filter(Boolean));
   }
 
   // ---------- skill quest ----------
