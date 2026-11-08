@@ -35,4 +35,4 @@ TIPS
 - Every pet, coin and checkpoint can be copied as many times as you want.
 - Want even more? Roblox Studio's Toolbox (View > Toolbox) has millions of free models.
 
-All Creator Vault models were made for Creator Mode. Use them in any game you make, including games you publish.
+All Creator Vault models were made for Creator Quest. Use them in any game you make, including games you publish.

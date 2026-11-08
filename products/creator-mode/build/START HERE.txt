@@ -1,4 +1,4 @@
-CREATOR MODE · START HERE
+CREATOR QUEST · START HERE
 =========================
 
 1. Unzip this folder (right-click > Extract All on Windows, double-click on Mac).
@@ -15,4 +15,4 @@ What's inside
 
 Claude requires users to be 18+, so Creator Quest is made for a kid and a grown-up to do together, on the grown-up's Claude account in the Claude Desktop app.
 
-Creator Mode is an independent course, not made, sponsored or endorsed by Roblox Corporation or Anthropic.
+Creator Quest is an independent course, not made, sponsored or endorsed by Roblox Corporation or Anthropic.

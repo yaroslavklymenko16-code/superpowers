@@ -6,7 +6,7 @@ Out:
   dist/Creator-Mode/Creator Quest.html   the kid app (open in any browser)
   dist/Creator-Mode/Creator Vault/       Roblox model packs + how-to
   dist/Creator-Mode/Rescue Scripts/      tested mission scripts
-  dist/Creator-Mode.zip                  what you upload to your store
+  dist/Creator-Quest.zip                  what you upload to your store
 """
 import glob, json, os, shutil, zipfile
 
@@ -40,7 +40,7 @@ full = ('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
         '<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}</style>\n'
         '</head>\n<body>\n' + page + '\n</body>\n</html>\n')
 
-dist = J("dist", "Creator-Mode")
+dist = J("dist", "Creator-Quest")
 shutil.rmtree(J("dist"), ignore_errors=True)
 os.makedirs(os.path.join(dist, "Creator Vault"))
 os.makedirs(os.path.join(dist, "Rescue Scripts"))
@@ -56,7 +56,7 @@ for extra in ("START HERE.txt", "Parent Guide.pdf"):
     if os.path.exists(J("build", extra)):
         shutil.copy(J("build", extra), os.path.join(dist, extra))
 
-zpath = J("dist", "Creator-Mode.zip")
+zpath = J("dist", "Creator-Quest.zip")
 with zipfile.ZipFile(zpath, "w", zipfile.ZIP_DEFLATED) as z:
     for folder, _, files in os.walk(dist):
         for f in files:
