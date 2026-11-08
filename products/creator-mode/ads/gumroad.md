@@ -36,10 +36,10 @@ Creator Quest is a game-like course where your kid makes real Roblox games with 
 
 Every game teaches one big idea: how AI predicts, why it makes mistakes, how to give clear instructions, how to check its work, and how to stay safe online. An "Explain it" step after each game makes sure they understand what got built.
 
-**What's in the download**
+**What you get**
 
-- **Creator Quest app**: opens in your web browser, works on PC and Mac
-- **Creator Vault**: 118 ready-made Roblox models in 10 packs (46 work as soon as you press Play)
+- **Creator Quest**: opens right in your browser on PC or Mac. Nothing to install or unzip.
+- **Creator Vault**: 118 ready-made Roblox models in 10 packs, built into the app (46 work as soon as you press Play)
 - **Backup scripts** for every big game, so nobody gets stuck
 - **Parent guide** (6 pages): setup, safety tips and troubleshooting
 
@@ -57,3 +57,22 @@ Claude is for users 18 and over, so Creator Quest runs on your Claude account wi
 **Questions?** Email [your support email]. Not a fit? Full refund within 30 days.
 
 *Creator Quest is an independent course. It is not made, sponsored or endorsed by Roblox Corporation or Anthropic. Roblox and Roblox Studio are trademarks of Roblox Corporation. Claude is a product of Anthropic.*
+
+
+---
+
+## Content tab (what buyers see after purchase)
+
+1. **Link:** "▶ Open Creator Quest" → https://creator-quest.pages.dev
+2. **File:** Parent Guide.pdf
+3. **File (optional):** Creator Quest extras.zip (raw model files + backup scripts)
+
+**Text block for the Content tab:**
+
+> **Start here**
+> 1. Grown-ups: read the Parent Guide (10 minutes).
+> 2. On the computer you'll build on, open **Creator Quest** (link above) in Chrome, Edge or Safari, and bookmark it.
+> 3. Start the warm-up. It walks you through installing Roblox Studio and Claude Desktop and connecting them.
+>
+> Progress saves in that browser on that computer, so use the same one each time.
+> The extras download is optional. Everything you need is already inside Creator Quest.

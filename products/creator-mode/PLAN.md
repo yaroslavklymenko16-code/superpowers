@@ -5,7 +5,13 @@
 **How it works:** every change is made through Claude. Claude Desktop connects to Roblox Studio's built-in MCP server; Claude builds, playtests and fixes directly in Studio. No copy-paste.
 **Hook:** stop playing Roblox, start building it. Screen time that produces something, plus AI skills.
 
-## What's in the download (`dist/Creator-Mode.zip`)
+## Live app
+
+**https://creator-quest.pages.dev** (Cloudflare Pages, free, not indexed by search engines). Redeploy after changes with `deploy/deploy.sh`.
+
+Gumroad Content tab: a link to the live app + `deploy/gumroad/Parent Guide.pdf` + optional `deploy/gumroad/Creator Quest extras.zip`. Exact text is in `ads/gumroad.md`.
+
+## What's in the product
 
 | Item | What it is |
 | --- | --- |
