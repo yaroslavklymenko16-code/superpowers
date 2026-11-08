@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Atkinson+Hyperlegible:wght@700&display=swap');
+:root { --bg:#13213a; --ink:#0b1528; --y:#ffd23f; --b:#3d8bff; --r:#ff4f4f; --g:#36d67a; --o:#ff8a2b; --p:#ff5fa8; --fg:#f3f7ff; }
+* { box-sizing:border-box; margin:0; }
+body { background:var(--bg); color:var(--fg); font-family:'Atkinson Hyperlegible',sans-serif; overflow:hidden; }
+.canvas { position:relative; overflow:hidden; background:var(--bg);
+  background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px); background-size:32px 32px; }
+.glow { position:absolute; border-radius:50%; filter:blur(60px); opacity:.45; }
+.blocks { display:flex; gap:10px; } .blocks i { width:34px; height:34px; border:4px solid var(--ink); border-radius:8px; box-shadow:0 5px 0 var(--ink); }
+h1 { font-family:'Fredoka',sans-serif; font-weight:700; line-height:.92; letter-spacing:-.01em; }
+h1 span { color:var(--y); display:block; }
+.sub { font-family:'Fredoka',sans-serif; font-weight:600; }
+.chip { display:inline-flex; align-items:center; gap:8px; font-family:'Fredoka',sans-serif; font-weight:700; background:#1d3157; border:4px solid var(--ink); border-radius:14px; box-shadow:0 5px 0 var(--ink); padding:8px 14px; color:var(--fg); }
+.chip b { color:var(--y); }
+.screen { position:absolute; border:6px solid var(--ink); border-radius:18px; overflow:hidden; box-shadow:0 14px 0 var(--ink), 0 30px 60px rgba(0,0,0,.45); background:var(--bg); }
+.screen img { display:block; width:100%; }
+.sticker { position:absolute; filter:drop-shadow(0 10px 0 rgba(11,21,40,.55)); }
+.badge { position:absolute; font-family:'Fredoka',sans-serif; font-weight:700; color:var(--ink); background:var(--y); border:5px solid var(--ink); border-radius:16px; box-shadow:0 7px 0 var(--ink); }
+.ai { background:var(--p); color:#fff; }
